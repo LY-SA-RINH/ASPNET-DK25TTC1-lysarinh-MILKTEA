@@ -1,0 +1,117 @@
+﻿.hero-section {
+    padding: 40px 0;
+}
+
+.hero-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff3e6;
+    border-radius: 24px;
+    padding: 48px;
+}
+
+.hero-text h1 {
+    color: #5a2d0c;
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.hero-text p {
+    color: #6f4e37;
+    margin: 16px 0 24px;
+}
+
+.hero-button {
+    display: inline-block;
+    background: #6f3b12;
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.hero-image-placeholder {
+    width: 420px;
+    height: 260px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #f6cfa8, #fff8f0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6f3b12;
+    font-weight: 700;
+}
+/* =========================
+   Feature Section
+========================= */
+
+.feature-section {
+    margin-top: 35px;
+    margin-bottom: 40px;
+}
+
+.feature-card {
+    background: #fff;
+    border-radius: 18px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,.08);
+    transition: .3s;
+}
+
+    .feature-card:hover {
+        transform: translateY(-8px);
+    }
+
+.feature-icon {
+    font-size: 42px;
+    color: #7B3F00;
+    margin-bottom: 18px;
+}
+
+.feature-card h4 {
+    font-weight: 700;
+    color: #5D4037;
+}
+
+.feature-card p {
+    color: #777;
+    margin-top: 10px;
+}
+/* ===========================
+   SECTION HEADING
+=========================== */
+
+.featured-products {
+    margin-top: 60px;
+    margin-bottom: 40px;
+}
+
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+    .section-heading h2 {
+        margin: 0;
+        font-size: 38px;
+        font-weight: 700;
+        color: #4E342E;
+    }
+
+    .section-heading a {
+        text-decoration: none;
+        font-weight: 600;
+        color: #8B4513;
+        transition: .3s;
+    }
+
+        .section-heading a:hover {
+            color: #C46B28;
+        }
