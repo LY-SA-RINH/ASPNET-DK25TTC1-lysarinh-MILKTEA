@@ -1,0 +1,54 @@
+﻿.main-header {
+    background: #fffaf5;
+    border-bottom: 1px solid #f0e1d2;
+    padding: 14px 0;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #5a2d0c;
+    font-size: 20px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.brand-icon {
+    font-size: 24px;
+}
+
+.main-menu {
+    display: flex;
+    gap: 28px;
+}
+
+    .main-menu a {
+        color: #3d2b1f;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+        .main-menu a:hover {
+            color: #8b4513;
+        }
+
+.header-icons {
+    display: flex;
+    gap: 18px;
+}
+
+    .header-icons a {
+        color: #3d2b1f;
+        font-size: 20px;
+    }
+
+        .header-icons a:hover {
+            color: #8b4513;
+        }
