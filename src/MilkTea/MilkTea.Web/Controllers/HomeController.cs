@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MilkTea.Web.Data;
 using MilkTea.Web.Models;
 using System.Diagnostics;
 
@@ -6,9 +8,22 @@ namespace MilkTea.Web.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly MilkTeaDbContext _context;
+
+        public HomeController(MilkTeaDbContext context)
         {
-            return View();
+            _context = context;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            var sanPhams = await _context.SanPhams
+                .Where(sp => sp.TrangThai == true)
+                .OrderBy(sp => sp.ThuTuHienThi)
+                .Take(4)
+                .ToListAsync();
+
+            return View(sanPhams);
         }
 
         public IActionResult Privacy()
