@@ -188,159 +188,72 @@
             </div>
         </div>
     </section>
-
 <section class="featured-products">
 
     <div class="container">
 
-            <div class="section-heading">
-               
-                <h2>Sản phẩm nổi bật</h2>
+        <div class="section-heading">
+            <h2>Sản phẩm nổi bật</h2>
+            <a href="#">Xem tất cả →</a>
+        </div>
 
-                <a href="#">Xem tất cả →</a>
-
-            </div>
-
-            <!-- Card sản phẩm sẽ đặt ở đây -->
         <div class="product-list">
 
-            <div class="product-card">
-                <div class="product-image">
-                    <span class="product-badge">🔥 HOT</span>
-                    <img src="~/images/products/tra-sua-matcha.png"
-                         alt="Trà sữa Matcha"
-                         class="product-photo" />
-                </div>
+            @foreach (var item in Model)
+            {
+                <div class="product-card">
+                    <div class="product-image">
 
-                <div class="product-info">
-                    <h4>Trà sữa Matcha</h4>
+                        @if (item.NhanSanPham == 1)
+                        {
+                            <span class="product-badge">🔥 HOT</span>
+                        }
+                        else if (item.NhanSanPham == 2)
+                        {
+                            <span class="product-badge new">NEW</span>
+                        }
 
-                    <div class="product-rating">
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <span>(4.9)</span>
+                        <img src="@item.HinhAnh"
+                             alt="@item.TenSanPham"
+                             class="product-photo" />
                     </div>
 
-                    <div class="product-price">
-                        <span class="old-price">35.000đ</span>
-                        <span class="new-price">29.000đ</span>
-                    </div>
-                </div>
+                    <div class="product-info">
+                        <h4>@item.TenSanPham</h4>
 
-                <div class="product-action">
-                    <a href="#" class="btn-add-cart">
-                        <i class="bi bi-cart-plus"></i>
-                        Thêm vào giỏ
-                    </a>
-                </div>
-            </div>
+                        <div class="product-rating">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <span>(@item.DanhGia)</span>
+                        </div>
 
-            <div class="product-card">
-                <div class="product-image">
-                    <span class="product-badge">🔥 HOT</span>
-                    <img src="~/images/products/tra-sua-duong-den.png"
-                         alt="Trà sữa Đường đen"
-                         class="product-photo" />
-                </div>
-
-                <div class="product-info">
-                    <h4>Trà sữa đường đen</h4>
-
-                    <div class="product-rating">
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <span>(4.8)</span>
+                        <div class="product-price">
+                            @if (item.GiaGoc != null && item.GiaGoc > item.Gia)
+                            {
+                                <span class="old-price">@item.GiaGoc.Value.ToString("N0")đ</span>
+                                <span class="new-price">@item.Gia.ToString("N0")đ</span>
+                            }
+                            else
+                            {
+                                <span class="new-price">@item.Gia.ToString("N0")đ</span>
+                            }
+                        </div>
                     </div>
 
-                    <div class="product-price">
-                        <span class="old-price">35.000đ</span>
-                        <span class="new-price">29.000đ</span>
+                    <div class="product-action">
+                        <a href="#" class="btn-add-cart">
+                            <i class="bi bi-cart-plus"></i>
+                            Thêm vào giỏ
+                        </a>
                     </div>
                 </div>
-
-                <div class="product-action">
-                    <a href="#" class="btn-add-cart">
-                        <i class="bi bi-cart-plus"></i>
-                        Thêm vào giỏ
-                    </a>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <div class="product-image">
-                    <span class="product-badge new">NEW</span>
-                    <img src="~/images/products/tra-sua-truyen-thong.png"
-                         alt="Trà sữa Truyền thống"
-                         class="product-photo" />
-                </div>
-
-                <div class="product-info">
-                    <h4>Trà sữa truyền thống</h4>
-
-                    <div class="product-rating">
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <span>(4.7)</span>
-                    </div>
-
-                    <div class="product-price">
-                        <span class="old-price">30.000đ</span>
-                        <span class="new-price">25.000đ</span>
-                    </div>
-                </div>
-
-                <div class="product-action">
-                    <a href="#" class="btn-add-cart">
-                        <i class="bi bi-cart-plus"></i>
-                        Thêm vào giỏ
-                    </a>
-                </div>
-            </div>
-
-            <div class="product-card">
-                <div class="product-image">
-                    <span class="product-badge">🔥 HOT</span>
-                    <img src="~/images/products/tra-sua-socola.png"
-                         alt="Trà sữa Socola"
-                         class="product-photo" />
-                </div>
-
-                <div class="product-info">
-                    <h4>Trà sữa Socola</h4>
-
-                    <div class="product-rating">
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <i class="bi bi-star-fill"></i>
-                        <span>(4.8)</span>
-                    </div>
-
-                    <div class="product-price">
-                        <span class="old-price">35.000đ</span>
-                        <span class="new-price">29.000đ</span>
-                    </div>
-                </div>
-
-                <div class="product-action">
-                    <a href="#" class="btn-add-cart">
-                        <i class="bi bi-cart-plus"></i>
-                        Thêm vào giỏ
-                    </a>
-                </div>
-            </div>
+            }
 
         </div>
-     </div>
+
+    </div>
 
 </section>
