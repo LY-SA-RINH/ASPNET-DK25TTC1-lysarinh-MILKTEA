@@ -1,61 +1,73 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MilkTea.Web</title>
-    <script type="importmap"></script>
+
+    <title>@ViewData["Title"] - MilkTea House</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
     <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/header.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/product.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/MilkTea.Web.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
+
 <body>
 
-    <header>
-        <header class="main-header">
-            <div class="container header-container">
-                <a class="brand-logo" asp-area="" asp-controller="Home" asp-action="Index">
-                    <span class="brand-icon">🧋</span>
-                    <span>MilkTea House</span>
+    <header class="main-header">
+        <div class="header-inner">
+
+            <a class="brand-logo" asp-controller="Home" asp-action="Index">
+                <i class="bi bi-house-heart"></i>
+                <span>MilkTea House</span>
+            </a>
+
+            <nav class="main-menu">
+                <a class="active" asp-controller="Home" asp-action="Index">Trang chủ</a>
+                <a href="#products">Sản phẩm</a>
+                <a href="#">Khuyến mãi</a>
+                <a href="#">Tin tức</a>
+                <a asp-controller="Home" asp-action="Privacy">Liên hệ</a>
+            </nav>
+
+            <div class="header-icons">
+                <a href="#" title="Tìm kiếm"><i class="bi bi-search"></i></a>
+                <a href="#" title="Tài khoản"><i class="bi bi-person"></i></a>
+                <a href="#" class="cart-icon" title="Giỏ hàng">
+                    <i class="bi bi-cart3"></i>
                 </a>
-
-                <nav class="main-menu">
-                    <a asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
-                    <a asp-area="" asp-controller="Home" asp-action="Index">Sản phẩm</a>
-                    <a asp-area="" asp-controller="Home" asp-action="Index">Khuyến mãi</a>
-                    <a asp-area="" asp-controller="Home" asp-action="Index">Tin tức</a>
-                    <a asp-area="" asp-controller="Home" asp-action="Privacy">Liên hệ</a>
-                </nav>
-
-                <div class="header-icons">
-                    <a href="#"><i class="bi bi-search"></i></a>
-                    <a href="#"><i class="bi bi-person"></i></a>
-                    <a href="#"><i class="bi bi-cart3"></i></a>
-                </div>
             </div>
-        </header>
+
+        </div>
     </header>
 
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <main>
+        @RenderBody()
+    </main>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - MilkTea.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <strong>MilkTea House</strong>
+                <p>Trà sữa thơm ngon, an toàn và phù hợp với mọi độ tuổi.</p>
+            </div>
+
+            <div class="footer-copy">
+                &copy; 2026 - MilkTea House
+            </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

@@ -4,197 +4,309 @@
     ViewData["Title"] = "Trang chủ";
 }
 
-    <section class="hero-section">
-    
-        <div id="milkTeaHero" class="carousel slide" data-bs-ride="carousel">
+<section class="landing-hero">
 
-            <div class="carousel-indicators">
-                <button type="button" data-bs-target="#milkTeaHero" data-bs-slide-to="0" class="active"></button>
-                <button type="button" data-bs-target="#milkTeaHero" data-bs-slide-to="1"></button>
-                <button type="button" data-bs-target="#milkTeaHero" data-bs-slide-to="2"></button>
+    <div id="milkTeaLandingHero"
+         class="carousel slide"
+         data-bs-ride="carousel"
+         data-bs-interval="3800">
+
+        <div class="carousel-indicators hero-indicators">
+            <button type="button" data-bs-target="#milkTeaLandingHero" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#milkTeaLandingHero" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#milkTeaLandingHero" data-bs-slide-to="2"></button>
+        </div>
+
+        <div class="carousel-inner">
+
+            <!-- SLIDE 1 -->
+            <div class="carousel-item active">
+                <div class="hero-container">
+
+                    <div class="hero-left">
+                        <div class="hero-badge">
+                            <i class="bi bi-star-fill"></i>
+                            BEST SELLER
+                        </div>
+
+                        <h1>
+                            Trà sữa ngon<br />
+                            Uống là mê!
+                        </h1>
+
+                        <p class="hero-desc">
+                            Nguyên liệu tuyển chọn, hương vị đậm đà, topping tươi ngon.
+                            Mang đến trải nghiệm trà sữa trọn vẹn mỗi ngày.
+                        </p>
+
+                        <div class="hero-highlights">
+                            <div class="hero-highlight-item">
+                                <span><i class="bi bi-flower1"></i></span>
+                                <strong>Matcha<br />Nhật Bản</strong>
+                            </div>
+
+                            <div class="hero-highlight-item">
+                                <span><i class="bi bi-droplet-fill"></i></span>
+                                <strong>Trân châu<br />tươi</strong>
+                            </div>
+
+                            <div class="hero-highlight-item">
+                                <span><i class="bi bi-truck"></i></span>
+                                <strong>Giao nhanh<br />30 phút</strong>
+                            </div>
+                        </div>
+
+                        <div class="hero-actions">
+                            <a href="#products" class="btn-hero primary">
+                                <i class="bi bi-bag-heart"></i>
+                                Đặt ngay
+                            </a>
+
+                            <a href="#products" class="btn-hero secondary">
+                                <i class="bi bi-card-list"></i>
+                                Xem menu
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="hero-right">
+                        <div class="milk-splash"></div>
+
+                        <img src="~/images/products/tra-sua-duong-den.png"
+                             alt="Trà sữa đường đen"
+                             class="hero-main-drink" />
+
+                        <img src="~/images/products/tra-sua-matcha.png"
+                             alt="Trà sữa Matcha"
+                             class="hero-second-drink" />
+
+                        <div class="bubble b1"></div>
+                        <div class="bubble b2"></div>
+                        <div class="bubble b3"></div>
+                    </div>
+
+                </div>
             </div>
 
-            <div class="carousel-inner">
+            <!-- SLIDE 2 -->
+            <div class="carousel-item">
+                <div class="hero-container">
 
-                <!-- HERO 1 -->
-                <div class="carousel-item active">
-                    <div class="hero-content hero-matcha">
+                    <div class="hero-left">
+                        <div class="hero-badge sale">
+                            <i class="bi bi-gift-fill"></i>
+                            KHUYẾN MÃI
+                        </div>
 
-                        <div class="hero-text">
-                            <span class="hero-badge">🔥 BEST SELLER</span>
+                        <h1>
+                            Mua 2 ly<br />
+                            Tặng ngay 1!
+                        </h1>
 
-                            <h1>Trà sữa ngon<br />Uống là mê!</h1>
+                        <p class="hero-desc">
+                            Ưu đãi hấp dẫn dành cho các món trà sữa bán chạy.
+                            Áp dụng trong tuần này tại MilkTea House.
+                        </p>
 
-                            <p>
-                                Matcha thơm béo, trân châu nấu mới mỗi ngày,
-                                giao nhanh tận nơi chỉ trong 30 phút.
-                            </p>
-
-                            <div class="hero-features">
-                                <span><i class="bi bi-check-circle-fill"></i> Matcha Nhật Bản</span>
-                                <span><i class="bi bi-check-circle-fill"></i> Trân châu tươi</span>
-                                <span><i class="bi bi-check-circle-fill"></i> Giao nhanh 30 phút</span>
+                        <div class="hero-highlights">
+                            <div class="hero-highlight-item">
+                                <span><i class="bi bi-fire"></i></span>
+                                <strong>Ưu đãi<br />hấp dẫn</strong>
                             </div>
 
-                            <div class="hero-actions">
-                                <a href="#" class="hero-button primary">
-                                    <i class="bi bi-cart-plus"></i>
-                                    Đặt ngay
-                                </a>
+                            <div class="hero-highlight-item">
+                                <span><i class="bi bi-cup-straw"></i></span>
+                                <strong>Toàn bộ<br />menu</strong>
+                            </div>
 
-                                <a href="#" class="hero-button secondary">
-                                    Xem menu
-                                </a>
+                            <div class="hero-highlight-item">
+                                <span><i class="bi bi-clock"></i></span>
+                                <strong>Số lượng<br />có hạn</strong>
                             </div>
                         </div>
 
-                        <div class="hero-image">
-                            <img src="~/images/products/tra-sua-matcha.png"
-                                 alt="Trà sữa Matcha" />
-                        </div>
+                        <div class="hero-actions">
+                            <a href="#products" class="btn-hero primary">
+                                <i class="bi bi-gift"></i>
+                                Nhận ưu đãi
+                            </a>
 
+                            <a href="#products" class="btn-hero secondary">
+                                <i class="bi bi-card-list"></i>
+                                Xem chi tiết
+                            </a>
+                        </div>
                     </div>
-                </div>
 
-                <!-- HERO 2 -->
-                <div class="carousel-item">
-                    <div class="hero-content hero-sale">
+                    <div class="hero-right">
+                        <div class="milk-splash"></div>
 
-                        <div class="hero-text">
-                            <span class="hero-badge sale">🎁 KHUYẾN MÃI</span>
+                        <img src="~/images/products/tra-sua-socola.png"
+                             alt="Trà sữa Socola"
+                             class="hero-main-drink" />
 
-                            <h1>Mua 2<br />Tặng 1!</h1>
+                        <img src="~/images/products/tra-sua-duong-den.png"
+                             alt="Trà sữa đường đen"
+                             class="hero-second-drink" />
 
-                            <p>
-                                Ưu đãi đặc biệt cho các món trà sữa bán chạy.
-                                Áp dụng trong tuần này tại MilkTea House.
-                            </p>
-
-                            <div class="hero-features">
-                                <span><i class="bi bi-check-circle-fill"></i> Ưu đãi hấp dẫn</span>
-                                <span><i class="bi bi-check-circle-fill"></i> Áp dụng toàn menu</span>
-                                <span><i class="bi bi-check-circle-fill"></i> Số lượng có hạn</span>
-                            </div>
-
-                            <div class="hero-actions">
-                                <a href="#" class="hero-button primary">
-                                    <i class="bi bi-gift"></i>
-                                    Nhận ưu đãi
-                                </a>
-
-                                <a href="#" class="hero-button secondary">
-                                    Xem chi tiết
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="hero-image">
-                            <img src="~/images/products/tra-sua-duong-den.png"
-                                 alt="Trà sữa Đường đen" />
-                        </div>
-
+                        <div class="bubble b1"></div>
+                        <div class="bubble b2"></div>
+                        <div class="bubble b3"></div>
                     </div>
+
                 </div>
-
-                <!-- HERO 3 -->
-                <div class="carousel-item">
-                    <div class="hero-content hero-brand">
-
-                        <div class="hero-text">
-                            <span class="hero-badge brand">🧋 MILKTEA HOUSE</span>
-
-                            <h1>Nguyên liệu tốt<br />Vị ngon chuẩn!</h1>
-
-                            <p>
-                                MilkTea House mang đến những ly trà sữa thơm ngon,
-                                an toàn và phù hợp với mọi độ tuổi.
-                            </p>
-
-                            <div class="hero-features">
-                                <span><i class="bi bi-check-circle-fill"></i> Nguyên liệu chọn lọc</span>
-                                <span><i class="bi bi-check-circle-fill"></i> Pha chế chuẩn vị</span>
-                                <span><i class="bi bi-check-circle-fill"></i> Phục vụ tận tâm</span>
-                            </div>
-
-                            <div class="hero-actions">
-                                <a href="#" class="hero-button primary">
-                                    Khám phá ngay
-                                </a>
-
-                                <a href="#" class="hero-button secondary">
-                                    Liên hệ
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="hero-image hero-image-group">
-                            <img src="~/images/products/tra-sua-truyen-thong.png"
-                                 alt="Trà sữa Truyền thống" />
-                        </div>
-
-                    </div>
-                </div>
-
             </div>
 
-            <button class="carousel-control-prev" type="button" data-bs-target="#milkTeaHero" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </button>
+            <!-- SLIDE 3 -->
+            <div class="carousel-item">
+                <div class="hero-container">
 
-            <button class="carousel-control-next" type="button" data-bs-target="#milkTeaHero" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </button>
+                    <div class="hero-left">
+                        <div class="hero-badge brand">
+                            <i class="bi bi-cup-hot-fill"></i>
+                            MILKTEA HOUSE
+                        </div>
+
+                        <h1>
+                            Nguyên liệu tốt<br />
+                            Vị ngon chuẩn!
+                        </h1>
+
+                        <p class="hero-desc">
+                            Từ trà, sữa đến topping đều được chọn lọc kỹ,
+                            mang đến ly trà sữa thơm ngon và an toàn.
+                        </p>
+
+                        <div class="hero-highlights">
+                            <div class="hero-highlight-item">
+                                <span><i class="bi bi-shield-check"></i></span>
+                                <strong>An toàn<br />chất lượng</strong>
+                            </div>
+
+                            <div class="hero-highlight-item">
+                                <span><i class="bi bi-heart-fill"></i></span>
+                                <strong>Phục vụ<br />tận tâm</strong>
+                            </div>
+
+                            <div class="hero-highlight-item">
+                                <span><i class="bi bi-stars"></i></span>
+                                <strong>Hương vị<br />khó quên</strong>
+                            </div>
+                        </div>
+
+                        <div class="hero-actions">
+                            <a href="#products" class="btn-hero primary">
+                                <i class="bi bi-search-heart"></i>
+                                Khám phá
+                            </a>
+
+                            <a href="#" class="btn-hero secondary">
+                                <i class="bi bi-telephone"></i>
+                                Liên hệ
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="hero-right">
+                        <div class="milk-splash"></div>
+
+                        <img src="~/images/products/tra-sua-matcha.png"
+                             alt="Trà sữa Matcha"
+                             class="hero-main-drink" />
+
+                        <img src="~/images/products/tra-sua-truyen-thong.png"
+                             alt="Trà sữa truyền thống"
+                             class="hero-second-drink" />
+
+                        <div class="bubble b1"></div>
+                        <div class="bubble b2"></div>
+                        <div class="bubble b3"></div>
+                    </div>
+
+                </div>
+            </div>
 
         </div>
 
-    </section>
-    <section class="features-section">
-        <div class="container">
+        <button class="carousel-control-prev hero-control-prev"
+                type="button"
+                data-bs-target="#milkTeaLandingHero"
+                data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
 
-            <div class="section-title">
-                <h2>Vì sao chọn MilkTea House?</h2>
-                <p>Chúng tôi luôn mang đến những ly trà sữa thơm ngon, an toàn và chất lượng.</p>
-            </div>
+        <button class="carousel-control-next hero-control-next"
+                type="button"
+                data-bs-target="#milkTeaLandingHero"
+                data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
 
-            <div class="features-grid">
+    </div>
 
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="bi bi-cup-straw"></i>
-                    </div>
+    <div class="hero-features-wrap">
 
-                    <h3>Hương vị thơm ngon</h3>
-                    <p>Trà sữa được pha chế theo công thức riêng, vị ngọt béo hài hòa, dễ uống.</p>
+        <div class="section-mini-title">
+            <span></span>
+            <h2>Vì sao chọn MilkTea House?</h2>
+            <span></span>
+        </div>
+
+        <div class="hero-features">
+
+            <div class="hero-feature-card">
+                <div class="feature-round-icon">
+                    <i class="bi bi-shield-check"></i>
                 </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="bi bi-patch-check"></i>
-                    </div>
-
+                <div class="hero-feature-text">
                     <h3>Nguyên liệu chất lượng</h3>
-                    <p>Sử dụng trà, sữa và topping được chọn lọc kỹ, đảm bảo an toàn cho khách hàng.</p>
+                    <p>Tuyển chọn nguyên liệu tươi ngon, an toàn cho sức khỏe.</p>
                 </div>
-
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="bi bi-truck"></i>
-                    </div>
-
-                    <h3>Phục vụ nhanh chóng</h3>
-                    <p>Đặt hàng dễ dàng, xử lý đơn nhanh, phù hợp với học sinh, sinh viên và nhân viên văn phòng.</p>
-                </div>
-
             </div>
+
+            <div class="hero-feature-card">
+                <div class="feature-round-icon">
+                    <i class="bi bi-cup-hot"></i>
+                </div>
+                <div class="hero-feature-text">
+                    <h3>Hương vị đặc trưng</h3>
+                    <p>Công thức độc quyền, hương vị đậm đà, khó quên.</p>
+                </div>
+            </div>
+
+            <div class="hero-feature-card">
+                <div class="feature-round-icon">
+                    <i class="bi bi-truck"></i>
+                </div>
+                <div class="hero-feature-text">
+                    <h3>Giao hàng nhanh chóng</h3>
+                    <p>Giao nhanh 30 phút trong khu vực nội thành.</p>
+                </div>
+            </div>
+
         </div>
-    </section>
-<section class="featured-products">
 
-    <div class="container">
+    </div>
 
-        <div class="section-heading">
-            <h2>Sản phẩm nổi bật</h2>
-            <a href="#">Xem tất cả →</a>
+</section>
+
+<section class="featured-products" id="products">
+
+    <div class="product-container">
+
+        <div class="product-section-header">
+            <div class="center-heading">
+                <span></span>
+                <h2>Sản phẩm nổi bật</h2>
+                <span></span>
+            </div>
+
+            <a asp-controller="SanPham"
+               asp-action="Index"
+               class="view-all-products">
+                Xem tất cả
+                <i class="bi bi-arrow-right"></i>
+            </a>
         </div>
 
         <div class="product-list">
@@ -202,15 +314,20 @@
             @foreach (var item in Model)
             {
                 <div class="product-card">
+
                     <div class="product-image">
 
                         @if (item.NhanSanPham == 1)
                         {
-                            <span class="product-badge">🔥 HOT</span>
+                            <span class="product-badge hot">
+                                <i class="bi bi-fire"></i> HOT
+                            </span>
                         }
                         else if (item.NhanSanPham == 2)
                         {
-                            <span class="product-badge new">NEW</span>
+                            <span class="product-badge new">
+                                NEW
+                            </span>
                         }
 
                         <img src="@item.HinhAnh"
@@ -227,28 +344,24 @@
                             <i class="bi bi-star-fill"></i>
                             <i class="bi bi-star-fill"></i>
                             <i class="bi bi-star-fill"></i>
-                            <span>(@item.DanhGia)</span>
+                            <span>(@item.DanhGia.ToString("0.00"))</span>
                         </div>
 
                         <div class="product-price">
                             @if (item.GiaGoc != null && item.GiaGoc > item.Gia)
                             {
                                 <span class="old-price">@item.GiaGoc.Value.ToString("N0")đ</span>
-                                <span class="new-price">@item.Gia.ToString("N0")đ</span>
                             }
-                            else
-                            {
-                                <span class="new-price">@item.Gia.ToString("N0")đ</span>
-                            }
-                        </div>
-                    </div>
 
-                    <div class="product-action">
+                            <span class="new-price">@item.Gia.ToString("N0")đ</span>
+                        </div>
+
                         <a href="#" class="btn-add-cart">
-                            <i class="bi bi-cart-plus"></i>
+                            <i class="bi bi-cart3"></i>
                             Thêm vào giỏ
                         </a>
                     </div>
+
                 </div>
             }
 
