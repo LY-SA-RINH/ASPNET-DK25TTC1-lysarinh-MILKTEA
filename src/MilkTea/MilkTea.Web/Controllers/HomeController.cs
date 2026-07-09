@@ -18,6 +18,9 @@ namespace MilkTea.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var sanPhams = await _context.SanPhams
+                .Where(sp => sp.TrangThai == true)
+                .OrderBy(sp => sp.ThuTuHienThi)
+                .Take(4)
                 .ToListAsync();
 
             return View(sanPhams);

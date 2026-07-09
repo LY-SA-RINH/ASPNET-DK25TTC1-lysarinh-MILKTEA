@@ -11,7 +11,6 @@ namespace MilkTea.Web.Data
         }
 
         public DbSet<DanhMuc> DanhMucs { get; set; }
-
         public DbSet<SanPham> SanPhams { get; set; }
     }
 }
