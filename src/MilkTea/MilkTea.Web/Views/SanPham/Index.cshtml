@@ -1,0 +1,241 @@
+﻿@model List<MilkTea.Web.Models.SanPham>
+
+@{
+    ViewData["Title"] = "Tất cả sản phẩm";
+
+    int trangHienTai = ViewBag.TrangHienTai ?? 1;
+    int tongSoTrang = ViewBag.TongSoTrang ?? 0;
+    int tongSoSanPham = ViewBag.TongSoSanPham ?? 0;
+}
+
+<style>
+    .product-page {
+        padding: 125px 20px 70px;
+        background: #fffdfb;
+        min-height: 100vh;
+    }
+
+    .product-page-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .product-page-heading {
+        text-align: center;
+        margin-bottom: 12px;
+        color: #4a1f08;
+        font-size: 38px;
+        font-weight: 800;
+    }
+
+    .product-page-description {
+        text-align: center;
+        color: #75655c;
+        margin-bottom: 38px;
+    }
+
+    .product-page-description strong {
+        color: #9a4c00;
+    }
+
+    .product-pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin-top: 42px;
+        flex-wrap: wrap;
+    }
+
+    .product-pagination a,
+    .product-pagination span {
+        min-width: 42px;
+        height: 42px;
+        padding: 0 13px;
+        border: 1px solid #e8c9aa;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: #6b3108;
+        background: #ffffff;
+        font-weight: 700;
+        transition: 0.2s ease;
+    }
+
+    .product-pagination a:hover {
+        background: #fff0df;
+        border-color: #bd6a24;
+        color: #8c3f00;
+    }
+
+    .product-pagination .active {
+        background: #9b4a00;
+        border-color: #9b4a00;
+        color: #ffffff;
+    }
+
+    .product-pagination .disabled {
+        opacity: 0.45;
+        pointer-events: none;
+    }
+
+    .product-empty {
+        padding: 60px 20px;
+        border: 1px dashed #dfbd9d;
+        border-radius: 18px;
+        background: #fff8f0;
+        text-align: center;
+        color: #75523a;
+        font-size: 18px;
+    }
+</style>
+
+<section class="product-page">
+
+    <div class="product-page-container">
+
+        <h1 class="product-page-heading">
+            Tất cả sản phẩm
+        </h1>
+
+        <p class="product-page-description">
+            Hiện có <strong>@tongSoSanPham</strong> sản phẩm đang được bán tại MilkTea House.
+        </p>
+
+        @if (Model != null && Model.Count > 0)
+        {
+            <div class="product-list">
+
+                @foreach (var item in Model)
+                {
+                    <div class="product-card">
+
+                        <div class="product-image">
+
+                            @if (item.NhanSanPham == 1)
+                            {
+                                <span class="product-badge hot">
+                                    <i class="bi bi-fire"></i>
+                                    HOT
+                                </span>
+                            }
+                            else if (item.NhanSanPham == 2)
+                            {
+                                <span class="product-badge new">
+                                    NEW
+                                </span>
+                            }
+
+                            <img src="/images/products/@item.HinhAnh"
+                                 alt="@item.TenSanPham"
+                                 class="product-photo"
+                                 loading="lazy"
+                                 onerror="this.onerror=null; this.src='/images/products/tra-sua-truyen-thong.png';" />
+
+                        </div>
+
+                        <div class="product-info">
+
+                            <h4>@item.TenSanPham</h4>
+
+                            <div class="product-rating">
+
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+
+                                <span>
+                                    (@item.DanhGia.ToString("0.00"))
+                                </span>
+
+                            </div>
+
+                            <div class="product-price">
+
+                                @if (item.GiaGoc.HasValue &&
+                                     item.GiaGoc.Value > item.Gia)
+                                {
+                                    <span class="old-price">
+                                        @item.GiaGoc.Value.ToString("N0")đ
+                                    </span>
+                                }
+
+                                <span class="new-price">
+                                    @item.Gia.ToString("N0")đ
+                                </span>
+
+                            </div>
+
+                            <a href="#"
+                               class="btn-add-cart">
+
+                                <i class="bi bi-cart3"></i>
+                                Thêm vào giỏ
+                            </a>
+
+                        </div>
+
+                    </div>
+                }
+
+            </div>
+
+            @if (tongSoTrang > 1)
+            {
+                <nav class="product-pagination"
+                     aria-label="Phân trang sản phẩm">
+
+                    <a asp-controller="SanPham"
+                       asp-action="Index"
+                       asp-route-trang="@(trangHienTai - 1)"
+                       class="@(trangHienTai <= 1 ? "disabled" : "")">
+
+                        <i class="bi bi-chevron-left"></i>
+                        Trước
+                    </a>
+
+                    @for (int soTrang = 1; soTrang <= tongSoTrang; soTrang++)
+                    {
+                        if (soTrang == trangHienTai)
+                        {
+                            <span class="active">
+                                @soTrang
+                            </span>
+                        }
+                        else
+                        {
+                            <a asp-controller="SanPham"
+                               asp-action="Index"
+                               asp-route-trang="@soTrang">
+
+                                @soTrang
+                            </a>
+                        }
+                    }
+
+                    <a asp-controller="SanPham"
+                       asp-action="Index"
+                       asp-route-trang="@(trangHienTai + 1)"
+                       class="@(trangHienTai >= tongSoTrang ? "disabled" : "")">
+
+                        Sau
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+
+                </nav>
+            }
+        }
+        else
+        {
+            <div class="product-empty">
+                Hiện chưa có sản phẩm nào đang được bán.
+            </div>
+        }
+
+    </div>
+
+</section>

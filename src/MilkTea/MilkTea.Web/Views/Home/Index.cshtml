@@ -12,18 +12,32 @@
          data-bs-interval="3800">
 
         <div class="carousel-indicators hero-indicators">
-            <button type="button" data-bs-target="#milkTeaLandingHero" data-bs-slide-to="0" class="active"></button>
-            <button type="button" data-bs-target="#milkTeaLandingHero" data-bs-slide-to="1"></button>
-            <button type="button" data-bs-target="#milkTeaLandingHero" data-bs-slide-to="2"></button>
+            <button type="button"
+                    data-bs-target="#milkTeaLandingHero"
+                    data-bs-slide-to="0"
+                    class="active">
+            </button>
+
+            <button type="button"
+                    data-bs-target="#milkTeaLandingHero"
+                    data-bs-slide-to="1">
+            </button>
+
+            <button type="button"
+                    data-bs-target="#milkTeaLandingHero"
+                    data-bs-slide-to="2">
+            </button>
         </div>
 
         <div class="carousel-inner">
 
             <!-- SLIDE 1 -->
             <div class="carousel-item active">
+
                 <div class="hero-container">
 
                     <div class="hero-left">
+
                         <div class="hero-badge">
                             <i class="bi bi-star-fill"></i>
                             BEST SELLER
@@ -35,41 +49,71 @@
                         </h1>
 
                         <p class="hero-desc">
-                            Nguyên liệu tuyển chọn, hương vị đậm đà, topping tươi ngon.
-                            Mang đến trải nghiệm trà sữa trọn vẹn mỗi ngày.
+                            Nguyên liệu tuyển chọn, hương vị đậm đà,
+                            topping tươi ngon. Mang đến trải nghiệm
+                            trà sữa trọn vẹn mỗi ngày.
                         </p>
 
                         <div class="hero-highlights">
+
                             <div class="hero-highlight-item">
-                                <span><i class="bi bi-flower1"></i></span>
-                                <strong>Matcha<br />Nhật Bản</strong>
+                                <span>
+                                    <i class="bi bi-flower1"></i>
+                                </span>
+
+                                <strong>
+                                    Matcha<br />
+                                    Nhật Bản
+                                </strong>
                             </div>
 
                             <div class="hero-highlight-item">
-                                <span><i class="bi bi-droplet-fill"></i></span>
-                                <strong>Trân châu<br />tươi</strong>
+                                <span>
+                                    <i class="bi bi-droplet-fill"></i>
+                                </span>
+
+                                <strong>
+                                    Trân châu<br />
+                                    tươi
+                                </strong>
                             </div>
 
                             <div class="hero-highlight-item">
-                                <span><i class="bi bi-truck"></i></span>
-                                <strong>Giao nhanh<br />30 phút</strong>
+                                <span>
+                                    <i class="bi bi-truck"></i>
+                                </span>
+
+                                <strong>
+                                    Giao nhanh<br />
+                                    30 phút
+                                </strong>
                             </div>
+
                         </div>
 
                         <div class="hero-actions">
-                            <a href="#products" class="btn-hero primary">
+
+                            <a href="#products"
+                               class="btn-hero primary">
+
                                 <i class="bi bi-bag-heart"></i>
                                 Đặt ngay
                             </a>
 
-                            <a href="#products" class="btn-hero secondary">
+                            <a asp-controller="SanPham"
+                               asp-action="Index"
+                               class="btn-hero secondary">
+
                                 <i class="bi bi-card-list"></i>
                                 Xem menu
                             </a>
+
                         </div>
+
                     </div>
 
                     <div class="hero-right">
+
                         <div class="milk-splash"></div>
 
                         <img src="~/images/products/tra-sua-duong-den.png"
@@ -83,16 +127,20 @@
                         <div class="bubble b1"></div>
                         <div class="bubble b2"></div>
                         <div class="bubble b3"></div>
+
                     </div>
 
                 </div>
+
             </div>
 
             <!-- SLIDE 2 -->
             <div class="carousel-item">
+
                 <div class="hero-container">
 
                     <div class="hero-left">
+
                         <div class="hero-badge sale">
                             <i class="bi bi-gift-fill"></i>
                             KHUYẾN MÃI
@@ -109,36 +157,65 @@
                         </p>
 
                         <div class="hero-highlights">
+
                             <div class="hero-highlight-item">
-                                <span><i class="bi bi-fire"></i></span>
-                                <strong>Ưu đãi<br />hấp dẫn</strong>
+                                <span>
+                                    <i class="bi bi-fire"></i>
+                                </span>
+
+                                <strong>
+                                    Ưu đãi<br />
+                                    hấp dẫn
+                                </strong>
                             </div>
 
                             <div class="hero-highlight-item">
-                                <span><i class="bi bi-cup-straw"></i></span>
-                                <strong>Toàn bộ<br />menu</strong>
+                                <span>
+                                    <i class="bi bi-cup-straw"></i>
+                                </span>
+
+                                <strong>
+                                    Toàn bộ<br />
+                                    menu
+                                </strong>
                             </div>
 
                             <div class="hero-highlight-item">
-                                <span><i class="bi bi-clock"></i></span>
-                                <strong>Số lượng<br />có hạn</strong>
+                                <span>
+                                    <i class="bi bi-clock"></i>
+                                </span>
+
+                                <strong>
+                                    Số lượng<br />
+                                    có hạn
+                                </strong>
                             </div>
+
                         </div>
 
                         <div class="hero-actions">
-                            <a href="#products" class="btn-hero primary">
+
+                            <a href="#products"
+                               class="btn-hero primary">
+
                                 <i class="bi bi-gift"></i>
                                 Nhận ưu đãi
                             </a>
 
-                            <a href="#products" class="btn-hero secondary">
+                            <a asp-controller="SanPham"
+                               asp-action="Index"
+                               class="btn-hero secondary">
+
                                 <i class="bi bi-card-list"></i>
                                 Xem chi tiết
                             </a>
+
                         </div>
+
                     </div>
 
                     <div class="hero-right">
+
                         <div class="milk-splash"></div>
 
                         <img src="~/images/products/tra-sua-socola.png"
@@ -152,16 +229,20 @@
                         <div class="bubble b1"></div>
                         <div class="bubble b2"></div>
                         <div class="bubble b3"></div>
+
                     </div>
 
                 </div>
+
             </div>
 
             <!-- SLIDE 3 -->
             <div class="carousel-item">
+
                 <div class="hero-container">
 
                     <div class="hero-left">
+
                         <div class="hero-badge brand">
                             <i class="bi bi-cup-hot-fill"></i>
                             MILKTEA HOUSE
@@ -178,36 +259,64 @@
                         </p>
 
                         <div class="hero-highlights">
+
                             <div class="hero-highlight-item">
-                                <span><i class="bi bi-shield-check"></i></span>
-                                <strong>An toàn<br />chất lượng</strong>
+                                <span>
+                                    <i class="bi bi-shield-check"></i>
+                                </span>
+
+                                <strong>
+                                    An toàn<br />
+                                    chất lượng
+                                </strong>
                             </div>
 
                             <div class="hero-highlight-item">
-                                <span><i class="bi bi-heart-fill"></i></span>
-                                <strong>Phục vụ<br />tận tâm</strong>
+                                <span>
+                                    <i class="bi bi-heart-fill"></i>
+                                </span>
+
+                                <strong>
+                                    Phục vụ<br />
+                                    tận tâm
+                                </strong>
                             </div>
 
                             <div class="hero-highlight-item">
-                                <span><i class="bi bi-stars"></i></span>
-                                <strong>Hương vị<br />khó quên</strong>
+                                <span>
+                                    <i class="bi bi-stars"></i>
+                                </span>
+
+                                <strong>
+                                    Hương vị<br />
+                                    khó quên
+                                </strong>
                             </div>
+
                         </div>
 
                         <div class="hero-actions">
-                            <a href="#products" class="btn-hero primary">
+
+                            <a href="#products"
+                               class="btn-hero primary">
+
                                 <i class="bi bi-search-heart"></i>
                                 Khám phá
                             </a>
 
-                            <a href="#" class="btn-hero secondary">
+                            <a href="#"
+                               class="btn-hero secondary">
+
                                 <i class="bi bi-telephone"></i>
                                 Liên hệ
                             </a>
+
                         </div>
+
                     </div>
 
                     <div class="hero-right">
+
                         <div class="milk-splash"></div>
 
                         <img src="~/images/products/tra-sua-matcha.png"
@@ -221,9 +330,11 @@
                         <div class="bubble b1"></div>
                         <div class="bubble b2"></div>
                         <div class="bubble b3"></div>
+
                     </div>
 
                 </div>
+
             </div>
 
         </div>
@@ -232,6 +343,7 @@
                 type="button"
                 data-bs-target="#milkTeaLandingHero"
                 data-bs-slide="prev">
+
             <span class="carousel-control-prev-icon"></span>
         </button>
 
@@ -239,6 +351,7 @@
                 type="button"
                 data-bs-target="#milkTeaLandingHero"
                 data-bs-slide="next">
+
             <span class="carousel-control-next-icon"></span>
         </button>
 
@@ -255,33 +368,54 @@
         <div class="hero-features">
 
             <div class="hero-feature-card">
+
                 <div class="feature-round-icon">
                     <i class="bi bi-shield-check"></i>
                 </div>
+
                 <div class="hero-feature-text">
                     <h3>Nguyên liệu chất lượng</h3>
-                    <p>Tuyển chọn nguyên liệu tươi ngon, an toàn cho sức khỏe.</p>
+
+                    <p>
+                        Tuyển chọn nguyên liệu tươi ngon,
+                        an toàn cho sức khỏe.
+                    </p>
                 </div>
+
             </div>
 
             <div class="hero-feature-card">
+
                 <div class="feature-round-icon">
                     <i class="bi bi-cup-hot"></i>
                 </div>
+
                 <div class="hero-feature-text">
                     <h3>Hương vị đặc trưng</h3>
-                    <p>Công thức độc quyền, hương vị đậm đà, khó quên.</p>
+
+                    <p>
+                        Công thức độc quyền,
+                        hương vị đậm đà, khó quên.
+                    </p>
                 </div>
+
             </div>
 
             <div class="hero-feature-card">
+
                 <div class="feature-round-icon">
                     <i class="bi bi-truck"></i>
                 </div>
+
                 <div class="hero-feature-text">
                     <h3>Giao hàng nhanh chóng</h3>
-                    <p>Giao nhanh 30 phút trong khu vực nội thành.</p>
+
+                    <p>
+                        Giao nhanh 30 phút
+                        trong khu vực nội thành.
+                    </p>
                 </div>
+
             </div>
 
         </div>
@@ -290,11 +424,13 @@
 
 </section>
 
-<section class="featured-products" id="products">
+<section class="featured-products"
+         id="products">
 
     <div class="product-container">
 
         <div class="product-section-header">
+
             <div class="center-heading">
                 <span></span>
                 <h2>Sản phẩm nổi bật</h2>
@@ -304,68 +440,132 @@
             <a asp-controller="SanPham"
                asp-action="Index"
                class="view-all-products">
+
                 Xem tất cả
                 <i class="bi bi-arrow-right"></i>
             </a>
+
         </div>
 
-        <div class="product-list">
+        @if (Model != null && Model.Count > 0)
+        {
+            <div class="product-list">
 
-            @foreach (var item in Model)
-            {
-                <div class="product-card">
+                @foreach (var item in Model)
+                {
+                    var tenHinhAnh =
+                        (item.HinhAnh ?? string.Empty)
+                        .Trim()
+                        .Replace("\\", "/");
 
-                    <div class="product-image">
+                    string duongDanHinhAnh;
 
-                        @if (item.NhanSanPham == 1)
-                        {
-                            <span class="product-badge hot">
-                                <i class="bi bi-fire"></i> HOT
-                            </span>
-                        }
-                        else if (item.NhanSanPham == 2)
-                        {
-                            <span class="product-badge new">
-                                NEW
-                            </span>
-                        }
+                    if (string.IsNullOrWhiteSpace(tenHinhAnh))
+                    {
+                        duongDanHinhAnh =
+                            "/images/products/tra-sua-truyen-thong.png";
+                    }
+                    else if (tenHinhAnh.StartsWith("~/"))
+                    {
+                        duongDanHinhAnh =
+                            Url.Content(tenHinhAnh);
+                    }
+                    else if (tenHinhAnh.StartsWith("/"))
+                    {
+                        duongDanHinhAnh =
+                            tenHinhAnh;
+                    }
+                    else if (tenHinhAnh.StartsWith("images/"))
+                    {
+                        duongDanHinhAnh =
+                            "/" + tenHinhAnh;
+                    }
+                    else
+                    {
+                        duongDanHinhAnh =
+                            "/images/products/" + tenHinhAnh;
+                    }
 
-                        <img src="@item.HinhAnh"
-                             alt="@item.TenSanPham"
-                             class="product-photo" />
-                    </div>
+                    <div class="product-card">
 
-                    <div class="product-info">
-                        <h4>@item.TenSanPham</h4>
+                        <div class="product-image">
 
-                        <div class="product-rating">
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <i class="bi bi-star-fill"></i>
-                            <span>(@item.DanhGia.ToString("0.00"))</span>
-                        </div>
-
-                        <div class="product-price">
-                            @if (item.GiaGoc != null && item.GiaGoc > item.Gia)
+                            @if (item.NhanSanPham == 1)
                             {
-                                <span class="old-price">@item.GiaGoc.Value.ToString("N0")đ</span>
+                                <span class="product-badge hot">
+                                    <i class="bi bi-fire"></i>
+                                    HOT
+                                </span>
+                            }
+                            else if (item.NhanSanPham == 2)
+                            {
+                                <span class="product-badge new">
+                                    NEW
+                                </span>
                             }
 
-                            <span class="new-price">@item.Gia.ToString("N0")đ</span>
+                            <img src="@duongDanHinhAnh"
+                                 alt="@item.TenSanPham"
+                                 class="product-photo"
+                                 loading="lazy"
+                                 onerror="this.onerror=null; this.src='/images/products/tra-sua-truyen-thong.png';" />
+
                         </div>
 
-                        <a href="#" class="btn-add-cart">
-                            <i class="bi bi-cart3"></i>
-                            Thêm vào giỏ
-                        </a>
+                        <div class="product-info">
+
+                            <h4>@item.TenSanPham</h4>
+
+                            <div class="product-rating">
+
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+
+                                <span>
+                                    (@item.DanhGia.ToString("0.00"))
+                                </span>
+
+                            </div>
+
+                            <div class="product-price">
+
+                                @if (item.GiaGoc.HasValue &&
+                                     item.GiaGoc.Value > item.Gia)
+                                {
+                                    <span class="old-price">
+                                        @item.GiaGoc.Value.ToString("N0")đ
+                                    </span>
+                                }
+
+                                <span class="new-price">
+                                    @item.Gia.ToString("N0")đ
+                                </span>
+
+                            </div>
+
+                            <a href="#"
+                               class="btn-add-cart">
+
+                                <i class="bi bi-cart3"></i>
+                                Thêm vào giỏ
+                            </a>
+
+                        </div>
+
                     </div>
+                }
 
-                </div>
-            }
-
-        </div>
+            </div>
+        }
+        else
+        {
+            <div class="product-empty">
+                Hiện chưa có sản phẩm nổi bật.
+            </div>
+        }
 
     </div>
 

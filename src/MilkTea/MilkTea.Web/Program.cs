@@ -3,16 +3,25 @@ using MilkTea.Web.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Đăng ký Controller và View
 builder.Services.AddControllersWithViews();
 
-// Đăng ký DbContext để kết nối SQL Server
+// Kết nối MilkTeaDbContext với SQL Server
 builder.Services.AddDbContext<MilkTeaDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MilkTeaConnection")));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Thêm dữ liệu mẫu vào database
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider
+        .GetRequiredService<MilkTeaDbContext>();
+
+    KhoiTaoDuLieu.KhoiTao(context);
+}
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -20,7 +29,6 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
 
 app.UseRouting();
