@@ -4,10 +4,10 @@
 
 - Tên đề tài: Website bán trà sữa
 - Tên website: MilkTea House
-- Sinh viên thực hiện: LY SA RINH
+- Sinh viên thực hiện: LÝ SA RINH
 - Lớp: DK25TTC1
 - Môn học: Chuyên đề ASP.NET
-- Giảng viên hướng dẫn: TS. Nguyễn Nhứt Lam
+- Giảng viên hướng dẫn: TS. NGUYỄN NHỨT LAM
 - Email sinh viên: rinhls260889@tvu-onschool.edu.vn
 - Số điện thoại: 0917628587
 
@@ -151,6 +151,6 @@ README.md sẽ tiếp tục được cập nhật trong quá trình thực hiệ
 
 ## 11. Thông tin liên hệ
 
-- Sinh viên: LY SA RINH
+- Sinh viên: LÝ SA RINH
 - Email: rinhls260889@tvu-onschool.edu.vn
 - Điện thoại: 0917628587
