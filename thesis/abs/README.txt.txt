@@ -1,0 +1,1 @@
+Thư mục chứa slide PowerPoint và tài liệu phục vụ báo cáo đồ án.
