@@ -1,0 +1,135 @@
+﻿@model MilkTea.Web.Models.DonHang
+
+@{
+    ViewData["Title"] = "Đặt hàng thành công";
+}
+
+<style>
+    .order-success-page {
+        min-height: 100vh;
+        padding: 145px 20px 80px;
+        background: #fffdfb;
+    }
+
+    .order-success-card {
+        max-width: 650px;
+        margin: 0 auto;
+        padding: 42px 34px;
+        border: 1px solid #d9e8dc;
+        border-radius: 24px;
+        background: #ffffff;
+        box-shadow: 0 16px 40px rgba(58, 96, 66, 0.10);
+        text-align: center;
+    }
+
+    .order-success-icon {
+        width: 82px;
+        height: 82px;
+        margin: 0 auto 22px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        background: #26945a;
+        font-size: 42px;
+    }
+
+    .order-success-card h1 {
+        margin-bottom: 12px;
+        color: #244b32;
+        font-size: 34px;
+        font-weight: 800;
+    }
+
+    .order-success-card p {
+        color: #68766d;
+        line-height: 1.7;
+    }
+
+    .order-success-info {
+        margin: 25px 0;
+        padding: 19px;
+        border-radius: 14px;
+        background: #f1faf4;
+        color: #375a43;
+        line-height: 1.9;
+    }
+
+        .order-success-info strong {
+            color: #1f442d;
+        }
+
+    .order-success-total {
+        color: #c8001b;
+        font-size: 22px;
+        font-weight: 800;
+    }
+
+    .order-success-button {
+        min-height: 48px;
+        padding: 0 24px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: #ffffff;
+        background: #9b4a00;
+        text-decoration: none;
+        font-weight: 800;
+    }
+</style>
+
+<section class="order-success-page">
+
+    <div class="order-success-card">
+
+        <div class="order-success-icon">
+            <i class="bi bi-check-lg"></i>
+        </div>
+
+        <h1>Đặt hàng thành công!</h1>
+
+        <p>
+            MilkTea House đã tiếp nhận đơn hàng của bạn.
+            Nhân viên sẽ liên hệ xác nhận trong thời gian sớm nhất.
+        </p>
+
+        <div class="order-success-info">
+
+            <div>
+                <strong>Mã đơn hàng:</strong>
+                DH-@Model.DonHangID.ToString("D6")
+            </div>
+
+            <div>
+                <strong>Người nhận:</strong>
+                @Model.HoTen
+            </div>
+
+            <div>
+                <strong>Trạng thái:</strong>
+                @Model.TrangThai
+            </div>
+
+            <div>
+                <strong>Tổng tiền:</strong>
+                <span class="order-success-total">
+                    @Model.TongTien.ToString("N0")đ
+                </span>
+            </div>
+
+        </div>
+
+        <a asp-controller="SanPham"
+           asp-action="Index"
+           class="order-success-button">
+
+            <i class="bi bi-cup-straw"></i>
+            Tiếp tục mua hàng
+        </a>
+
+    </div>
+
+</section>

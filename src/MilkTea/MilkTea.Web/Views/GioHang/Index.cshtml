@@ -229,9 +229,15 @@
         border: 1px solid #9b4a00;
         color: #ffffff;
         background: #9b4a00;
-        cursor: not-allowed;
-        opacity: 0.65;
+        cursor: pointer;
+        transition: 0.2s ease;
     }
+
+        .cart-checkout-button:hover {
+            color: #ffffff;
+            background: #743500;
+            border-color: #743500;
+        }
 
     .cart-continue-button {
         border: 1px solid #d5ad87;
@@ -467,12 +473,13 @@
                         <strong>@tongTien.ToString("N0")đ</strong>
                     </div>
 
-                    <button type="button"
-                            class="cart-checkout-button"
-                            disabled>
+                    <a asp-controller="ThanhToan"
+                       asp-action="Index"
+                       class="cart-checkout-button">
+
                         <i class="bi bi-credit-card"></i>
                         Tiến hành đặt hàng
-                    </button>
+                    </a>
 
                     <a asp-controller="SanPham"
                        asp-action="Index"
