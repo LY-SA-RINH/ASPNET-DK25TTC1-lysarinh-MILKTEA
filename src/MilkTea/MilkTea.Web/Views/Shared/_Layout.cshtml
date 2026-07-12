@@ -51,15 +51,77 @@
 
             <nav class="main-menu">
                 <a class="active" asp-controller="Home" asp-action="Index">Trang chủ</a>
-                <a href="#products">Sản phẩm</a>
+                <a asp-controller="SanPham"
+                   asp-action="Index">
+                    Sản phẩm
+                </a>
                 <a href="#">Khuyến mãi</a>
                 <a href="#">Tin tức</a>
                 <a asp-controller="Home" asp-action="Privacy">Liên hệ</a>
             </nav>
 
             <div class="header-icons">
-                <a href="#" title="Tìm kiếm"><i class="bi bi-search"></i></a>
-                <a href="#" title="Tài khoản"><i class="bi bi-person"></i></a>
+
+                <a href="#" title="Tìm kiếm">
+                    <i class="bi bi-search"></i>
+                </a>
+
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    @if (User.IsInRole("NhanVien") ||
+                         User.IsInRole("QuanTriVien"))
+                    {
+                        <a asp-controller="QuanLyDonHang"
+                           asp-action="Index"
+                           title="Quản lý đơn hàng">
+                            <i class="bi bi-clipboard-check"></i>
+                        </a>
+                    }
+
+                    <span title="@User.Identity.Name"
+                          style="max-width: 145px;
+                        overflow: hidden;
+                        color: #6f3814;
+                        font-size: 13px;
+                        font-weight: 700;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;">
+                        @User.Identity.Name
+                    </span>
+
+                    <form asp-controller="TaiKhoan"
+                          asp-action="DangXuat"
+                          method="post"
+                          style="margin: 0;">
+
+                        <button type="submit"
+                                title="Đăng xuất"
+                                style="padding: 0;
+                            border: 0;
+                            color: #6f3814;
+                            background: transparent;
+                            font-size: 20px;
+                            cursor: pointer;">
+                            <i class="bi bi-box-arrow-right"></i>
+                        </button>
+
+                    </form>
+                }
+                else
+                {
+                    <a asp-controller="TaiKhoan"
+                       asp-action="DangKy"
+                       title="Đăng ký">
+                        <i class="bi bi-person-plus"></i>
+                    </a>
+
+                    <a asp-controller="TaiKhoan"
+                       asp-action="DangNhap"
+                       title="Đăng nhập">
+                        <i class="bi bi-person"></i>
+                    </a>
+                }
+
                 <a asp-controller="GioHang"
                    asp-action="Index"
                    class="cart-icon"
@@ -75,6 +137,7 @@
                     }
 
                 </a>
+
             </div>
 
         </div>

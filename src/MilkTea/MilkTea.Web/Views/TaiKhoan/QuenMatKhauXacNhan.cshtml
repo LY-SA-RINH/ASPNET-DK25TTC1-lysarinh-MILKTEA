@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "Kiểm tra yêu cầu";
+
+    string? lienKetDatLai =
+        TempData["LienKetDatLaiMatKhau"] as string;
+}
+
+<section class="container text-center"
+         style="max-width: 680px;
+    padding-top: 155px;
+    padding-bottom: 90px;">
+
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4 p-md-5">
+
+            <i class="bi bi-envelope-check"
+               style="font-size: 68px;
+                color: #278553;">
+            </i>
+
+            <h1 class="fw-bold mt-3"
+                style="color: #4a1f08;">
+                Yêu cầu đã được tiếp nhận
+            </h1>
+
+            <p class="text-secondary mt-3">
+                Nếu email tồn tại trong hệ thống,
+                liên kết đặt lại mật khẩu sẽ được tạo.
+            </p>
+
+            @if (!string.IsNullOrWhiteSpace(lienKetDatLai))
+            {
+                <div class="alert alert-warning mt-4 text-start">
+                    <strong>Chế độ kiểm thử Development:</strong>
+
+                    <p class="mb-3 mt-2">
+                        Khi triển khai thật, liên kết này sẽ được
+                        gửi đến email của người dùng.
+                    </p>
+
+                    <a href="@lienKetDatLai"
+                       class="btn text-white fw-bold"
+                       style="background: #9b4a00;">
+                        Mở liên kết đặt lại mật khẩu
+                    </a>
+                </div>
+            }
+
+            <a asp-controller="TaiKhoan"
+               asp-action="DangNhap"
+               class="btn btn-outline-secondary fw-bold mt-3">
+                Trở về đăng nhập
+            </a>
+
+        </div>
+    </div>
+
+</section>

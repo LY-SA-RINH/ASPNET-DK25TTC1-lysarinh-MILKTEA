@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MilkTea.Web.Data;
 using MilkTea.Web.Models;
 
 namespace MilkTea.Web.Controllers
 {
+    [Authorize(Roles = "NhanVien,QuanTriVien")]
     public class QuanLyDonHangController : Controller
     {
         private readonly MilkTeaDbContext _context;

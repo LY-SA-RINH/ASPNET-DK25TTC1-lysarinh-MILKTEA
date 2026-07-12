@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using MilkTea.Web.Models;
 
 namespace MilkTea.Web.Data
 {
-    public class MilkTeaDbContext : DbContext
+    public class MilkTeaDbContext
+        : IdentityDbContext<NguoiDung>
     {
         public MilkTeaDbContext(
             DbContextOptions<MilkTeaDbContext> options)

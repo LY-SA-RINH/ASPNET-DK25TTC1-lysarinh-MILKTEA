@@ -1,0 +1,79 @@
+﻿@model MilkTea.Web.Models.QuenMatKhauViewModel
+
+@{
+    ViewData["Title"] = "Quên mật khẩu";
+}
+
+<section class="container"
+         style="max-width: 560px;
+    padding-top: 145px;
+    padding-bottom: 80px;">
+
+    <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4 p-md-5">
+
+            <div class="text-center mb-4">
+                <i class="bi bi-key"
+                   style="font-size: 58px;
+                    color: #9b4a00;">
+                </i>
+
+                <h1 class="fw-bold mt-3"
+                    style="color: #4a1f08;">
+                    Quên mật khẩu
+                </h1>
+
+                <p class="text-secondary">
+                    Nhập email đã đăng ký để tạo liên kết
+                    đặt lại mật khẩu.
+                </p>
+            </div>
+
+            <form asp-controller="TaiKhoan"
+                  asp-action="QuenMatKhau"
+                  method="post">
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3">
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="Email"
+                           class="form-label fw-bold">
+                    </label>
+
+                    <input asp-for="Email"
+                           class="form-control"
+                           placeholder="Nhập email đã đăng ký" />
+
+                    <span asp-validation-for="Email"
+                          class="text-danger">
+                    </span>
+                </div>
+
+                <button type="submit"
+                        class="btn w-100 text-white fw-bold"
+                        style="background: #9b4a00;">
+                    Tạo liên kết đặt lại mật khẩu
+                </button>
+
+                <div class="text-center mt-4">
+                    <a asp-controller="TaiKhoan"
+                       asp-action="DangNhap"
+                       class="fw-bold"
+                       style="color: #9b4a00;">
+                        <i class="bi bi-arrow-left"></i>
+                        Quay lại đăng nhập
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

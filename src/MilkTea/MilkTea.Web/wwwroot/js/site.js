@@ -1,4 +1,39 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿document.addEventListener("DOMContentLoaded", function () {
+    const cacNutHienMatKhau =
+        document.querySelectorAll(".password-toggle");
 
-// Write your JavaScript code.
+    cacNutHienMatKhau.forEach(function (nut) {
+        nut.addEventListener("click", function () {
+            const idOTrong = nut.getAttribute("data-target");
+            const oMatKhau = document.getElementById(idOTrong);
+
+            if (!oMatKhau) {
+                return;
+            }
+
+            const dangAnMatKhau =
+                oMatKhau.type === "password";
+
+            oMatKhau.type =
+                dangAnMatKhau ? "text" : "password";
+
+            const bieuTuong = nut.querySelector("i");
+
+            if (bieuTuong) {
+                bieuTuong.className =
+                    dangAnMatKhau
+                        ? "bi bi-eye-slash"
+                        : "bi bi-eye";
+            }
+
+            nut.title =
+                dangAnMatKhau
+                    ? "Ẩn mật khẩu"
+                    : "Hiện mật khẩu";
+
+            nut.setAttribute(
+                "aria-label",
+                nut.title);
+        });
+    });
+});
