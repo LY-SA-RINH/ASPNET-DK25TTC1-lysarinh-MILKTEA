@@ -20,6 +20,25 @@
         margin: 0 auto;
     }
 
+    .product-detail-notice {
+        margin-bottom: 20px;
+        padding: 14px 18px;
+        border-radius: 12px;
+        font-weight: 700;
+    }
+
+        .product-detail-notice.success {
+            color: #17653b;
+            background: #eaf8f0;
+            border: 1px solid #bce4cc;
+        }
+
+        .product-detail-notice.error {
+            color: #9b1c1c;
+            background: #fff0f0;
+            border: 1px solid #f0c1c1;
+        }
+
     .product-detail-breadcrumb {
         margin-bottom: 22px;
         color: #806d61;
@@ -185,19 +204,75 @@
                 background: #fff4e8;
             }
 
-        .product-detail-button.cart {
-            color: #ffffff;
-            background: #9b4a00;
-            border: 1px solid #9b4a00;
-            cursor: not-allowed;
-            opacity: 0.72;
+    .product-detail-cart-form {
+        width: 100%;
+        margin-top: 18px;
+    }
+
+    .product-detail-cart-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .product-detail-quantity-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .product-detail-quantity-label {
+        color: #5d4030;
+        font-weight: 800;
+    }
+
+    .product-detail-quantity-input {
+        width: 82px;
+        height: 48px;
+        padding: 0 10px;
+        border: 1px solid #d8b793;
+        border-radius: 11px;
+        color: #4a1f08;
+        background: #ffffff;
+        font-size: 16px;
+        font-weight: 800;
+        text-align: center;
+        outline: none;
+    }
+
+        .product-detail-quantity-input:focus {
+            border-color: #9b4a00;
+            box-shadow: 0 0 0 3px rgba(155, 74, 0, 0.12);
         }
 
-    .product-detail-note {
-        margin-top: 13px;
-        color: #94857c;
-        font-size: 13px;
+    .product-detail-cart-button {
+        min-height: 48px;
+        padding: 0 24px;
+        border: 1px solid #9b4a00;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        color: #ffffff;
+        background: #9b4a00;
+        font-family: inherit;
+        font-weight: 800;
+        cursor: pointer;
+        transition: 0.2s ease;
     }
+
+        .product-detail-cart-button:hover {
+            background: #753500;
+            border-color: #753500;
+        }
+
+        .product-detail-cart-button:disabled {
+            background: #b9ada5;
+            border-color: #b9ada5;
+            cursor: not-allowed;
+        }
 
     @@media (max-width: 850px) {
         .product-detail-card {
@@ -245,6 +320,19 @@
         .product-detail-new-price {
             font-size: 27px;
         }
+
+        .product-detail-cart-row {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .product-detail-quantity-group {
+            justify-content: space-between;
+        }
+
+        .product-detail-cart-button {
+            width: 100%;
+        }
     }
 </style>
 
@@ -252,7 +340,24 @@
 
     <div class="product-detail-container">
 
+        @if (TempData["ThanhCong"] != null)
+        {
+            <div class="product-detail-notice success">
+                <i class="bi bi-check-circle"></i>
+                @TempData["ThanhCong"]
+            </div>
+        }
+
+        @if (TempData["Loi"] != null)
+        {
+            <div class="product-detail-notice error">
+                <i class="bi bi-exclamation-circle"></i>
+                @TempData["Loi"]
+            </div>
+        }
+
         <div class="product-detail-breadcrumb">
+
             <a asp-controller="Home"
                asp-action="Index">
                 Trang chủ
@@ -266,6 +371,7 @@
             </a>
 
             <span> / @Model.TenSanPham</span>
+
         </div>
 
         <div class="product-detail-card">
@@ -314,14 +420,18 @@
                 </div>
 
                 <div class="product-detail-description">
+
                     @if (!string.IsNullOrWhiteSpace(Model.MoTa))
                     {
                         @Model.MoTa
                     }
                     else
                     {
-                        <span>Sản phẩm thơm ngon được phục vụ tại MilkTea House.</span>
+                        <span>
+                            Sản phẩm thơm ngon được phục vụ tại MilkTea House.
+                        </span>
                     }
+
                 </div>
 
                 <div class="product-detail-price">
@@ -377,19 +487,75 @@
                         Quay lại sản phẩm
                     </a>
 
-                    <button type="button"
-                            class="product-detail-button cart"
-                            disabled>
-
-                        <i class="bi bi-cart3"></i>
-                        Thêm vào giỏ
-                    </button>
-
                 </div>
 
-                <div class="product-detail-note">
-                    Chức năng giỏ hàng sẽ được xây dựng ở bước tiếp theo.
-                </div>
+                <form asp-controller="GioHang"
+                      asp-action="Them"
+                      method="post"
+                      class="product-detail-cart-form">
+
+                    <input type="hidden"
+                           name="id"
+                           value="@Model.SanPhamID" />
+
+                    <input type="hidden"
+                           name="returnUrl"
+                           value="@(Context.Request.Path + Context.Request.QueryString)" />
+
+                    <div class="product-detail-cart-row">
+
+                        <div class="product-detail-quantity-group">
+
+                            <label for="soLuong"
+                                   class="product-detail-quantity-label">
+                                Số lượng:
+                            </label>
+
+                            @if (Model.SoLuongTon > 0)
+                            {
+                                <input type="number"
+                                       id="soLuong"
+                                       name="soLuong"
+                                       value="1"
+                                       min="1"
+                                       max="@Model.SoLuongTon"
+                                       class="product-detail-quantity-input" />
+                            }
+                            else
+                            {
+                                <input type="number"
+                                       id="soLuong"
+                                       name="soLuong"
+                                       value="0"
+                                       class="product-detail-quantity-input"
+                                       disabled />
+                            }
+
+                        </div>
+
+                        @if (Model.SoLuongTon > 0)
+                        {
+                            <button type="submit"
+                                    class="product-detail-cart-button">
+
+                                <i class="bi bi-cart3"></i>
+                                Thêm vào giỏ
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button"
+                                    class="product-detail-cart-button"
+                                    disabled>
+
+                                <i class="bi bi-cart-x"></i>
+                                Sản phẩm hết hàng
+                            </button>
+                        }
+
+                    </div>
+
+                </form>
 
             </div>
 
