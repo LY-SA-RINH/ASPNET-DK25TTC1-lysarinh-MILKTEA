@@ -109,17 +109,25 @@
                 }
                 else
                 {
-                    <a asp-controller="TaiKhoan"
-                       asp-action="DangKy"
-                       title="Đăng ký">
-                        <i class="bi bi-person-plus"></i>
-                    </a>
+                    <div class="account-auth-links">
 
-                    <a asp-controller="TaiKhoan"
-                       asp-action="DangNhap"
-                       title="Đăng nhập">
-                        <i class="bi bi-person"></i>
-                    </a>
+                        <a asp-controller="TaiKhoan"
+                           asp-action="DangKy"
+                           class="account-auth-link">
+                            Đăng ký
+                        </a>
+
+                        <span class="account-auth-divider">
+                            /
+                        </span>
+
+                        <a asp-controller="TaiKhoan"
+                           asp-action="DangNhap"
+                           class="account-auth-link">
+                            Đăng nhập
+                        </a>
+
+                    </div>
                 }
 
                 <a asp-controller="GioHang"

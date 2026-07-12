@@ -154,3 +154,34 @@
     font-weight: 800;
     line-height: 1;
 }
+.account-auth-links {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+}
+
+.header-icons .account-auth-link {
+    width: auto;
+    height: auto;
+    padding: 5px 2px;
+    display: inline-block;
+    color: #4a1f08;
+    background: transparent;
+    border-radius: 0;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-decoration: none;
+}
+
+    .header-icons .account-auth-link:hover {
+        color: #9b4a00;
+        background: transparent;
+    }
+
+.account-auth-divider {
+    color: #9b806e;
+    font-size: 14px;
+    font-weight: 600;
+}
