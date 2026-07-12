@@ -185,3 +185,158 @@
     font-size: 14px;
     font-weight: 600;
 }
+/* =========================================================
+   KHẮC PHỤC HEADER BỊ XUỐNG DÒNG SAU KHI ĐĂNG NHẬP
+   ========================================================= */
+
+.main-header {
+    width: 100%;
+}
+
+.header-inner {
+    width: calc(100% - 40px);
+    max-width: 1500px;
+    min-height: 76px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+/* Logo không bị co và không xuống dòng */
+.brand-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+    .brand-logo span {
+        display: inline-block;
+        white-space: nowrap;
+    }
+
+/* Menu chính luôn nằm trên cùng một dòng */
+.main-menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+}
+
+    .main-menu a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+        width: auto;
+        min-width: max-content;
+        white-space: nowrap;
+        word-break: normal;
+        line-height: 1.2;
+    }
+
+/* Khu vực tài khoản và giỏ hàng */
+.header-icons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 14px;
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+    .header-icons > a,
+    .header-icons > span,
+    .header-icons > form,
+    .account-auth-links {
+        flex: 0 0 auto;
+    }
+
+    /* Tên tài khoản chỉ hiện một dòng */
+    .header-icons > span {
+        display: inline-block;
+        max-width: 145px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* Đơn hàng của tôi không bị xuống dòng */
+    .header-icons a[title="Đơn hàng của tôi"] {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        width: auto;
+        min-width: max-content;
+        white-space: nowrap;
+    }
+
+    /* Nút đăng xuất căn giữa */
+    .header-icons form {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+    }
+
+        .header-icons form button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+/* Giỏ hàng không bị co */
+.cart-icon {
+    position: relative;
+    flex: 0 0 auto;
+}
+
+/* Thu nhỏ khoảng cách trên màn hình vừa */
+@media (max-width: 1350px) {
+    .header-inner {
+        width: calc(100% - 24px);
+        gap: 16px;
+    }
+
+    .main-menu {
+        gap: 20px;
+    }
+
+    .header-icons {
+        gap: 10px;
+    }
+
+        .header-icons > span {
+            max-width: 110px;
+        }
+}
+
+/* Màn hình nhỏ hơn: giảm chữ để giữ cùng một hàng */
+@media (max-width: 1150px) {
+    .brand-logo span {
+        font-size: 20px;
+    }
+
+    .main-menu {
+        gap: 14px;
+    }
+
+        .main-menu a {
+            font-size: 14px;
+        }
+
+    .header-icons a[title="Đơn hàng của tôi"] span {
+        display: none;
+    }
+
+    .header-icons > span {
+        max-width: 90px;
+        font-size: 12px !important;
+    }
+}

@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MilkTea.Web.Data;
 
 #nullable disable
 
-namespace MilkTea.Web.Migrations
+namespace MilkTea.Web.Migrations.MilkTeaDb
 {
     [DbContext(typeof(MilkTeaDbContext))]
-    partial class MilkTeaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260712102534_ThemNguoiDungIDVaoDonHang")]
+    partial class ThemNguoiDungIDVaoDonHang
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -281,10 +284,6 @@ namespace MilkTea.Web.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DiaChi")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)

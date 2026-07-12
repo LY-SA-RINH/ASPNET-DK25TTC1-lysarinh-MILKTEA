@@ -1,0 +1,357 @@
+﻿@model MilkTea.Web.Models.ThongTinCaNhanViewModel
+
+@{
+    ViewData["Title"] = "Thông tin cá nhân";
+}
+
+<style>
+    .profile-page {
+        min-height: 100vh;
+        padding: 130px 20px 70px;
+        background: #fffdfb;
+    }
+
+    .profile-container {
+        max-width: 720px;
+        margin: 0 auto;
+    }
+
+    .profile-heading {
+        margin: 0 0 8px;
+        color: #4a1f08;
+        font-size: 38px;
+        font-weight: 800;
+        text-align: center;
+    }
+
+    .profile-description {
+        margin-bottom: 30px;
+        color: #75655c;
+        text-align: center;
+    }
+
+    .profile-card {
+        padding: 30px;
+        background: #ffffff;
+        border: 1px solid #ecd7c4;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(91, 47, 15, 0.08);
+    }
+
+    .profile-alert {
+        margin-bottom: 22px;
+    }
+
+    .profile-note {
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        padding: 14px 16px;
+        margin-bottom: 24px;
+        color: #654028;
+        background: #fff5e9;
+        border: 1px solid #ead2b8;
+        border-radius: 12px;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+        .profile-note i {
+            margin-top: 2px;
+            color: #9b4a00;
+            font-size: 16px;
+        }
+
+    .profile-validation {
+        margin-bottom: 18px;
+        color: #b42020;
+        font-weight: 700;
+    }
+
+    .profile-field {
+        margin-bottom: 20px;
+    }
+
+        .profile-field label {
+            display: block;
+            margin-bottom: 7px;
+            color: #57331e;
+            font-weight: 800;
+        }
+
+        .profile-field input {
+            width: 100%;
+            min-height: 48px;
+            padding: 10px 14px;
+            border: 1px solid #d9bfa7;
+            border-radius: 11px;
+            box-sizing: border-box;
+            color: #3f2a1e;
+            background: #ffffff;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+            .profile-field input:focus {
+                border-color: #9b4a00;
+                box-shadow: 0 0 0 3px rgba(155, 74, 0, 0.12);
+            }
+
+            .profile-field input[readonly] {
+                color: #75675f;
+                background: #f5f1ed;
+                cursor: not-allowed;
+            }
+
+    .profile-error {
+        display: block;
+        margin-top: 5px;
+        color: #be2020;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .profile-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 28px;
+    }
+
+    .profile-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 50px;
+        padding: 10px 18px;
+        border-radius: 12px;
+        box-sizing: border-box;
+        font-size: 15px;
+        font-weight: 800;
+        line-height: 1.2;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .profile-action:hover {
+            transform: translateY(-1px);
+        }
+
+    .profile-action-primary {
+        grid-column: 1 / -1;
+        border: 1px solid #9b4a00;
+        color: #ffffff;
+        background: #9b4a00;
+        box-shadow: 0 7px 16px rgba(155, 74, 0, 0.18);
+    }
+
+        .profile-action-primary:hover {
+            border-color: #743500;
+            color: #ffffff;
+            background: #743500;
+            box-shadow: 0 9px 20px rgba(116, 53, 0, 0.22);
+        }
+
+    .profile-action-secondary {
+        border: 1px solid #c97835;
+        color: #7c3c0d;
+        background: #fffaf5;
+    }
+
+        .profile-action-secondary:hover {
+            border-color: #9b4a00;
+            color: #ffffff;
+            background: #9b4a00;
+        }
+
+    .profile-action i {
+        font-size: 17px;
+    }
+
+    @@media (max-width: 600px) {
+        .profile-page {
+            padding: 115px 12px 45px;
+        }
+
+        .profile-card {
+            padding: 20px;
+        }
+
+        .profile-heading {
+            font-size: 30px;
+        }
+
+        .profile-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .profile-action-primary {
+            grid-column: auto;
+        }
+    }
+</style>
+
+<section class="profile-page">
+
+    <div class="profile-container">
+
+        <h1 class="profile-heading">
+            Thông tin cá nhân
+        </h1>
+
+        <p class="profile-description">
+            Cập nhật thông tin để đặt hàng nhanh hơn.
+        </p>
+
+        @if (TempData["ThanhCong"] != null)
+        {
+            <div class="alert alert-success
+                alert-dismissible fade show
+                profile-alert"
+                 role="alert">
+
+                <i class="bi bi-check-circle-fill me-2"></i>
+
+                @TempData["ThanhCong"]
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Đóng">
+                </button>
+
+            </div>
+        }
+
+        <div class="profile-card">
+
+            <div class="profile-note">
+
+                <i class="bi bi-info-circle"></i>
+
+                <span>
+                    Họ tên, số điện thoại và địa chỉ đã lưu sẽ được
+                    tự động điền khi bạn thanh toán.
+                </span>
+
+            </div>
+
+            <form asp-controller="TaiKhoan"
+                  asp-action="ThongTinCaNhan"
+                  method="post">
+
+                <div asp-validation-summary="ModelOnly"
+                     class="profile-validation">
+                </div>
+
+                <div class="profile-field">
+
+                    <label asp-for="Email">
+                        Email đăng nhập
+                    </label>
+
+                    <input asp-for="Email"
+                           readonly />
+
+                    <span asp-validation-for="Email"
+                          class="profile-error">
+                    </span>
+
+                </div>
+
+                <div class="profile-field">
+
+                    <label asp-for="HoTen">
+                        Họ và tên
+                    </label>
+
+                    <input asp-for="HoTen"
+                           placeholder="Nhập họ và tên" />
+
+                    <span asp-validation-for="HoTen"
+                          class="profile-error">
+                    </span>
+
+                </div>
+
+                <div class="profile-field">
+
+                    <label asp-for="SoDienThoai">
+                        Số điện thoại
+                    </label>
+
+                    <input asp-for="SoDienThoai"
+                           type="tel"
+                           placeholder="Ví dụ: 0912345678" />
+
+                    <span asp-validation-for="SoDienThoai"
+                          class="profile-error">
+                    </span>
+
+                </div>
+
+                <div class="profile-field">
+
+                    <label asp-for="DiaChi">
+                        Địa chỉ giao hàng
+                    </label>
+
+                    <input asp-for="DiaChi"
+                           placeholder="Nhập địa chỉ giao hàng" />
+
+                    <span asp-validation-for="DiaChi"
+                          class="profile-error">
+                    </span>
+
+                </div>
+
+                <div class="profile-actions">
+
+                    <button type="submit"
+                            class="profile-action
+                        profile-action-primary">
+
+                        <i class="bi bi-floppy"></i>
+
+                        Lưu thay đổi
+
+                    </button>
+
+                    <a asp-controller="DonHangCuaToi"
+                       asp-action="Index"
+                       class="profile-action
+                        profile-action-secondary">
+
+                        <i class="bi bi-bag-check"></i>
+
+                        Đơn hàng của tôi
+
+                    </a>
+
+                    <a asp-controller="TaiKhoan"
+                       asp-action="DoiMatKhau"
+                       class="profile-action
+                        profile-action-secondary">
+
+                        <i class="bi bi-key"></i>
+
+                        Đổi mật khẩu
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

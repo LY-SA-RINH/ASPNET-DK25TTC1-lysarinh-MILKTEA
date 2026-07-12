@@ -1,0 +1,150 @@
+﻿@model List<MilkTea.Web.Models.DonHang>
+
+@{
+    ViewData["Title"] = "Đơn hàng của tôi";
+
+    string LayLopTrangThai(string trangThai)
+    {
+        return trangThai switch
+        {
+            "Chờ xác nhận" => "bg-warning text-dark",
+            "Đã xác nhận" => "bg-info text-dark",
+            "Đang giao" => "bg-primary",
+            "Hoàn thành" => "bg-success",
+            "Đã hủy" => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+}
+
+<section class="container"
+         style="padding-top: 130px;
+    padding-bottom: 80px;">
+
+    <div class="mb-4">
+        <h1 class="fw-bold mb-2"
+            style="color: #4a1f08;">
+            Đơn hàng của tôi
+        </h1>
+
+        <p class="text-secondary mb-0">
+            Theo dõi danh sách và trạng thái các đơn hàng bạn đã đặt.
+        </p>
+    </div>
+
+    @if (Model.Count == 0)
+    {
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body text-center p-5">
+
+                <h4 class="fw-bold mb-3"
+                    style="color: #4a1f08;">
+                    Bạn chưa có đơn hàng nào
+                </h4>
+
+                <p class="text-secondary mb-4">
+                    Hãy chọn sản phẩm yêu thích và đặt đơn đầu tiên.
+                </p>
+
+                <a asp-controller="SanPham"
+                   asp-action="Index"
+                   class="btn px-4 py-2 text-white"
+                   style="background-color: #8b4513;">
+                    Xem sản phẩm
+                </a>
+
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-body p-0">
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+
+                        <thead style="background-color: #f7efe8;">
+                            <tr>
+                                <th class="px-4 py-3">
+                                    Mã đơn
+                                </th>
+
+                                <th class="py-3">
+                                    Ngày đặt
+                                </th>
+
+                                <th class="py-3">
+                                    Người nhận
+                                </th>
+
+                                <th class="py-3">
+                                    Tổng tiền
+                                </th>
+
+                                <th class="py-3">
+                                    Trạng thái
+                                </th>
+
+                                <th class="text-end px-4 py-3">
+                                    Thao tác
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (DonHang donHang in Model)
+                            {
+                                <tr>
+                                    <td class="px-4 fw-semibold">
+                                        @($"DH-{donHang.DonHangID:D6}")
+                                    </td>
+
+                                    <td>
+                                        @donHang.NgayDat.ToString(
+                                            "dd/MM/yyyy HH:mm")
+                                    </td>
+
+                                    <td>
+                                        <div class="fw-semibold">
+                                            @donHang.HoTen
+                                        </div>
+
+                                        <small class="text-secondary">
+                                            @donHang.SoDienThoai
+                                        </small>
+                                    </td>
+
+                                    <td class="fw-bold"
+                                        style="color: #8b4513;">
+                                        @donHang.TongTien.ToString("N0") ₫
+                                    </td>
+
+                                    <td>
+                                        <span class="badge rounded-pill
+                                            @LayLopTrangThai(
+                                                  donHang.TrangThai)">
+                                            @donHang.TrangThai
+                                        </span>
+                                    </td>
+
+                                    <td class="text-end px-4">
+                                        <a asp-controller="DonHangCuaToi"
+                                           asp-action="ChiTiet"
+                                           asp-route-id="@donHang.DonHangID"
+                                           class="btn btn-sm btn-outline-secondary">
+                                            Xem chi tiết
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    }
+
+</section>

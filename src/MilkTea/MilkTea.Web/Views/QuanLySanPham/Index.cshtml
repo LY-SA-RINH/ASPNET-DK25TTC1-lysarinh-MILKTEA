@@ -1,0 +1,822 @@
+﻿@using MilkTea.Web.Models
+@model MilkTea.Web.Models.QuanLySanPhamViewModel
+
+@{
+    ViewData["Title"] = "Quản lý sản phẩm";
+}
+
+<style>
+    .admin-product-page {
+        min-height: 100vh;
+        padding: 125px 20px 70px;
+        background: #fffdfb;
+    }
+
+    .admin-product-container {
+        max-width: 1350px;
+        margin: 0 auto;
+    }
+
+    .admin-product-heading {
+        margin-bottom: 8px;
+        color: #4a1f08;
+        font-size: 36px;
+        font-weight: 800;
+    }
+
+    .admin-product-description {
+        margin-bottom: 28px;
+        color: #75655c;
+    }
+
+    .admin-product-statistics {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .admin-product-statistic {
+        padding: 20px;
+        background: #ffffff;
+        border: 1px solid #ecd7c4;
+        border-radius: 16px;
+        box-shadow: 0 7px 20px rgba(91, 47, 15, 0.06);
+    }
+
+    .admin-product-statistic-label {
+        margin-bottom: 7px;
+        color: #7a675b;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .admin-product-statistic-value {
+        color: #4a1f08;
+        font-size: 28px;
+        font-weight: 800;
+    }
+
+    .admin-product-filter {
+        display: grid;
+        grid-template-columns: minmax(240px, 1fr) minmax(180px, 230px) minmax(160px, 200px) auto auto;
+        gap: 12px;
+        padding: 20px;
+        margin-bottom: 24px;
+        background: #ffffff;
+        border: 1px solid #ecd7c4;
+        border-radius: 16px;
+        box-shadow: 0 7px 20px rgba(91, 47, 15, 0.06);
+    }
+
+        .admin-product-filter input,
+        .admin-product-filter select {
+            width: 100%;
+            min-height: 45px;
+            padding: 9px 12px;
+            border: 1px solid #d9bfa7;
+            border-radius: 10px;
+            color: #4a2b19;
+            background: #ffffff;
+            outline: none;
+        }
+
+            .admin-product-filter input:focus,
+            .admin-product-filter select:focus {
+                border-color: #9b4a00;
+                box-shadow: 0 0 0 3px rgba(155, 74, 0, 0.12);
+            }
+
+    .admin-product-filter-button,
+    .admin-product-reset-button {
+        min-height: 45px;
+        padding: 0 18px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        font-weight: 800;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .admin-product-filter-button {
+        border: 1px solid #9b4a00;
+        color: #ffffff;
+        background: #9b4a00;
+    }
+
+        .admin-product-filter-button:hover {
+            color: #ffffff;
+            background: #743500;
+            border-color: #743500;
+        }
+
+    .admin-product-reset-button {
+        border: 1px solid #d3ad8b;
+        color: #754018;
+        background: #ffffff;
+    }
+
+        .admin-product-reset-button:hover {
+            color: #ffffff;
+            background: #9b4a00;
+            border-color: #9b4a00;
+        }
+
+    .admin-product-result {
+        margin-bottom: 12px;
+        color: #675247;
+        font-weight: 700;
+    }
+
+    .admin-product-card {
+        overflow: hidden;
+        background: #ffffff;
+        border: 1px solid #ecd7c4;
+        border-radius: 18px;
+        box-shadow: 0 10px 28px rgba(91, 47, 15, 0.07);
+    }
+
+    .admin-product-table {
+        width: 100%;
+        margin: 0;
+        border-collapse: collapse;
+    }
+
+        .admin-product-table th {
+            padding: 15px 14px;
+            color: #4a1f08;
+            background: #fff4e8;
+            font-size: 14px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .admin-product-table td {
+            padding: 14px;
+            border-top: 1px solid #f0e3d8;
+            color: #4c392e;
+            vertical-align: middle;
+        }
+
+    .admin-product-image {
+        width: 62px;
+        height: 62px;
+        padding: 4px;
+        border: 1px solid #ead8ca;
+        border-radius: 11px;
+        object-fit: contain;
+        background: #fffaf5;
+    }
+
+    .admin-product-name {
+        min-width: 190px;
+        color: #4a1f08;
+        font-weight: 800;
+    }
+
+    .admin-product-code {
+        margin-top: 4px;
+        color: #8a776c;
+        font-size: 12px;
+    }
+
+    .admin-product-price {
+        color: #9b4a00;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .admin-product-old-price {
+        margin-top: 3px;
+        color: #99908a;
+        font-size: 12px;
+        text-decoration: line-through;
+    }
+
+    .admin-product-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+        .admin-product-badge.active {
+            color: #17653b;
+            background: #e5f7ec;
+        }
+
+        .admin-product-badge.inactive {
+            color: #8b2828;
+            background: #fdeaea;
+        }
+
+    .admin-product-stock {
+        font-weight: 800;
+    }
+
+        .admin-product-stock.low {
+            color: #d07800;
+        }
+
+        .admin-product-stock.empty {
+            color: #c12020;
+        }
+
+        .admin-product-stock.normal {
+            color: #17653b;
+        }
+
+    .admin-product-status-button {
+        min-width: 102px;
+        min-height: 38px;
+        padding: 6px 12px;
+        border-radius: 9px;
+        font-size: 13px;
+        font-weight: 800;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: 0.2s ease;
+    }
+
+        .admin-product-status-button.stop {
+            border: 1px solid #d34b4b;
+            color: #a52222;
+            background: #ffffff;
+        }
+
+            .admin-product-status-button.stop:hover {
+                color: #ffffff;
+                background: #c73434;
+            }
+
+        .admin-product-status-button.open {
+            border: 1px solid #278453;
+            color: #17653b;
+            background: #ffffff;
+        }
+
+            .admin-product-status-button.open:hover {
+                color: #ffffff;
+                background: #278453;
+            }
+
+    .admin-product-empty {
+        padding: 55px 20px;
+        color: #765744;
+        text-align: center;
+    }
+
+    .admin-product-pagination {
+        display: flex;
+        justify-content: center;
+        gap: 7px;
+        margin-top: 28px;
+        flex-wrap: wrap;
+    }
+
+    .admin-product-page-link {
+        min-width: 42px;
+        height: 42px;
+        padding: 0 12px;
+        border: 1px solid #dfc5ae;
+        border-radius: 9px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #744019;
+        background: #ffffff;
+        font-weight: 800;
+        text-decoration: none;
+    }
+
+        .admin-product-page-link:hover,
+        .admin-product-page-link.current {
+            color: #ffffff;
+            background: #8b4108;
+            border-color: #8b4108;
+        }
+
+    @@media (max-width: 1050px) {
+        .admin-product-statistics {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .admin-product-filter {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 650px) {
+        .admin-product-page {
+            padding: 110px 12px 45px;
+        }
+
+        .admin-product-statistics,
+        .admin-product-filter {
+            grid-template-columns: 1fr;
+        }
+
+        .admin-product-heading {
+            font-size: 30px;
+        }
+    }
+
+    .admin-product-heading-area {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 28px;
+    }
+
+        .admin-product-heading-area
+        .admin-product-description {
+            margin-bottom: 0;
+        }
+
+    .admin-product-add-button {
+        min-height: 46px;
+        padding: 0 18px;
+        border: 1px solid #278453;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: #ffffff;
+        background: #278453;
+        font-weight: 800;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: 0.2s ease;
+    }
+
+        .admin-product-add-button:hover {
+            color: #ffffff;
+            background: #17653b;
+            border-color: #17653b;
+        }
+
+    @@media (max-width: 650px) {
+        .admin-product-heading-area {
+            flex-direction: column;
+        }
+
+        .admin-product-add-button {
+            width: 100%;
+        }
+    }
+</style>
+
+<section class="admin-product-page">
+
+    <div class="admin-product-container">
+
+        <div class="admin-product-heading-area">
+
+            <div>
+
+                <h1 class="admin-product-heading">
+                    Quản lý sản phẩm
+                </h1>
+
+                <p class="admin-product-description">
+                    Theo dõi sản phẩm, tồn kho và trạng thái kinh doanh.
+                </p>
+
+            </div>
+
+            <a asp-controller="QuanLySanPham"
+               asp-action="Them"
+               class="admin-product-add-button">
+
+                <i class="bi bi-plus-circle"></i>
+
+                Thêm sản phẩm
+
+            </a>
+
+        </div>
+
+        @if (TempData["ThanhCong"] != null)
+        {
+            <div class="alert alert-success
+                alert-dismissible fade show"
+                 role="alert">
+
+                <i class="bi bi-check-circle-fill me-2"></i>
+
+                @TempData["ThanhCong"]
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Đóng">
+                </button>
+
+            </div>
+        }
+
+        @if (TempData["Loi"] != null)
+        {
+            <div class="alert alert-danger
+                alert-dismissible fade show"
+                 role="alert">
+
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+
+                @TempData["Loi"]
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Đóng">
+                </button>
+
+            </div>
+        }
+
+        <div class="admin-product-statistics">
+
+            <div class="admin-product-statistic">
+
+                <div class="admin-product-statistic-label">
+                    Tất cả sản phẩm
+                </div>
+
+                <div class="admin-product-statistic-value">
+                    @Model.TongTatCaSanPham
+                </div>
+
+            </div>
+
+            <div class="admin-product-statistic">
+
+                <div class="admin-product-statistic-label">
+                    Đang bán
+                </div>
+
+                <div class="admin-product-statistic-value">
+                    @Model.TongSanPhamDangBan
+                </div>
+
+            </div>
+
+            <div class="admin-product-statistic">
+
+                <div class="admin-product-statistic-label">
+                    Ngừng bán
+                </div>
+
+                <div class="admin-product-statistic-value">
+                    @Model.TongSanPhamNgungBan
+                </div>
+
+            </div>
+
+            <div class="admin-product-statistic">
+
+                <div class="admin-product-statistic-label">
+                    Hết hàng
+                </div>
+
+                <div class="admin-product-statistic-value">
+                    @Model.TongSanPhamHetHang
+                </div>
+
+            </div>
+
+        </div>
+
+        <form asp-controller="QuanLySanPham"
+              asp-action="Index"
+              method="get"
+              class="admin-product-filter">
+
+            <input type="text"
+                   name="tuKhoa"
+                   value="@Model.TuKhoa"
+                   placeholder="Tìm theo tên sản phẩm..." />
+
+            <select name="danhMucID">
+
+                <option value="">
+                    Tất cả danh mục
+                </option>
+
+                @foreach (DanhMuc danhMuc in Model.DanhMucs)
+                {
+                    if (Model.DanhMucID == danhMuc.DanhMucID)
+                    {
+                        <option value="@danhMuc.DanhMucID"
+                                selected>
+                            @danhMuc.TenDanhMuc
+                        </option>
+                    }
+                    else
+                    {
+                        <option value="@danhMuc.DanhMucID">
+                            @danhMuc.TenDanhMuc
+                        </option>
+                    }
+                }
+
+            </select>
+
+            <select name="trangThai">
+
+                @if (string.IsNullOrWhiteSpace(Model.TrangThai))
+                {
+                    <option value="" selected>
+                        Tất cả trạng thái
+                    </option>
+                }
+                else
+                {
+                    <option value="">
+                        Tất cả trạng thái
+                    </option>
+                }
+
+                @if (Model.TrangThai == "dang-ban")
+                {
+                    <option value="dang-ban" selected>
+                        Đang bán
+                    </option>
+                }
+                else
+                {
+                    <option value="dang-ban">
+                        Đang bán
+                    </option>
+                }
+
+                @if (Model.TrangThai == "ngung-ban")
+                {
+                    <option value="ngung-ban" selected>
+                        Ngừng bán
+                    </option>
+                }
+                else
+                {
+                    <option value="ngung-ban">
+                        Ngừng bán
+                    </option>
+                }
+
+            </select>
+
+            <button type="submit"
+                    class="admin-product-filter-button">
+
+                <i class="bi bi-search"></i>
+
+                Lọc
+
+            </button>
+
+            <a asp-controller="QuanLySanPham"
+               asp-action="Index"
+               class="admin-product-reset-button">
+
+                <i class="bi bi-arrow-counterclockwise"></i>
+
+                Đặt lại
+
+            </a>
+
+        </form>
+
+        <div class="admin-product-result">
+            Tìm thấy @Model.TongKetQua sản phẩm.
+        </div>
+
+        <div class="admin-product-card">
+
+            <div class="table-responsive">
+
+                <table class="admin-product-table">
+
+                    <thead>
+                        <tr>
+                            <th>Hình ảnh</th>
+                            <th>Sản phẩm</th>
+                            <th>Danh mục</th>
+                            <th>Giá bán</th>
+                            <th>Tồn kho</th>
+                            <th>Thứ tự</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @if (Model.SanPhams.Count == 0)
+                        {
+                            <tr>
+                                <td colspan="8"
+                                    class="admin-product-empty">
+
+                                    Không tìm thấy sản phẩm phù hợp.
+
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (SanPham sanPham in Model.SanPhams)
+                            {
+                                string hinhAnh =
+                                    string.IsNullOrWhiteSpace(
+                                        sanPham.HinhAnh)
+                                    ? "/images/products/san-pham-mac-dinh.png"
+                                    : $"/images/products/{sanPham.HinhAnh}";
+
+                                string tenDanhMuc =
+                                    Model.TenDanhMucTheoID.ContainsKey(
+                                        sanPham.DanhMucID)
+                                    ? Model.TenDanhMucTheoID[
+                                        sanPham.DanhMucID]
+                                    : "Chưa xác định";
+
+                                string lopTonKho =
+                                    sanPham.SoLuongTon <= 0
+                                    ? "empty"
+                                    : sanPham.SoLuongTon <= 5
+                                        ? "low"
+                                        : "normal";
+
+                                string thongBaoXacNhan =
+                                    sanPham.TrangThai
+                                    ? "Bạn có chắc muốn ngừng bán sản phẩm này?"
+                                    : "Bạn có chắc muốn mở bán lại sản phẩm này?";
+
+                                <tr>
+
+                                    <td>
+                                        <img src="@hinhAnh"
+                                             alt="@sanPham.TenSanPham"
+                                             class="admin-product-image"
+                                             onerror="this.onerror=null; this.src='/images/products/san-pham-mac-dinh.png';" />
+                                    </td>
+
+                                    <td>
+
+                                        <div class="admin-product-name">
+                                            @sanPham.TenSanPham
+                                        </div>
+
+                                        <div class="admin-product-code">
+                                            SP-@sanPham.SanPhamID.ToString("D4")
+                                        </div>
+
+                                    </td>
+
+                                    <td>
+                                        @tenDanhMuc
+                                    </td>
+
+                                    <td>
+
+                                        <div class="admin-product-price">
+                                            @sanPham.Gia.ToString("N0")đ
+                                        </div>
+
+                                        @if (sanPham.GiaGoc.HasValue &&
+                                             sanPham.GiaGoc.Value >
+                                             sanPham.Gia)
+                                        {
+                                            <div class="admin-product-old-price">
+                                                @sanPham.GiaGoc.Value.ToString("N0")đ
+                                            </div>
+                                        }
+
+                                    </td>
+
+                                    <td>
+
+                                        <span class="admin-product-stock
+                                            @lopTonKho">
+                                            @sanPham.SoLuongTon
+                                        </span>
+
+                                    </td>
+
+                                    <td>
+                                        @sanPham.ThuTuHienThi
+                                    </td>
+
+                                    <td>
+
+                                        @if (sanPham.TrangThai)
+                                        {
+                                            <span class="admin-product-badge active">
+                                                Đang bán
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="admin-product-badge inactive">
+                                                Ngừng bán
+                                            </span>
+                                        }
+
+                                    </td>
+
+                                    <td>
+
+                                        <form asp-controller="QuanLySanPham"
+                                              asp-action="CapNhatTrangThai"
+                                              method="post"
+                                              onsubmit="return confirm('@thongBaoXacNhan');">
+
+                                            <input type="hidden"
+                                                   name="id"
+                                                   value="@sanPham.SanPhamID" />
+
+                                            <input type="hidden"
+                                                   name="tuKhoa"
+                                                   value="@Model.TuKhoa" />
+
+                                            <input type="hidden"
+                                                   name="danhMucID"
+                                                   value="@Model.DanhMucID" />
+
+                                            @if (sanPham.TrangThai)
+                                            {
+                                                <button type="submit"
+                                                        name="thaoTac"
+                                                        value="ngung-ban"
+                                                        class="admin-product-status-button stop">
+
+                                                    Ngừng bán
+
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button type="submit"
+                                                        name="thaoTac"
+                                                        value="mo-ban"
+                                                        class="admin-product-status-button open">
+
+                                                    Mở bán
+
+                                                </button>
+                                            }
+
+                                        </form>
+
+                                    </td>
+
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        @if (Model.TongSoTrang > 1)
+        {
+            <nav class="admin-product-pagination"
+                 aria-label="Phân trang quản lý sản phẩm">
+
+                @for (int soTrang = 1;
+                      soTrang <= Model.TongSoTrang;
+                      soTrang++)
+                {
+                    <a asp-controller="QuanLySanPham"
+                       asp-action="Index"
+                       asp-route-tuKhoa="@Model.TuKhoa"
+                       asp-route-danhMucID="@Model.DanhMucID"
+                       asp-route-trangThai="@Model.TrangThai"
+                       asp-route-trang="@soTrang"
+                       class="admin-product-page-link
+                        @(soTrang == Model.TrangHienTai
+                           ? "current"
+                           : "")">
+
+                        @soTrang
+
+                    </a>
+                }
+
+            </nav>
+        }
+
+    </div>
+
+</section>

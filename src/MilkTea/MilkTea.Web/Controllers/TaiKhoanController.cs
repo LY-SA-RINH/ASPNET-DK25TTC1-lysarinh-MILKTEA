@@ -373,6 +373,135 @@ namespace MilkTea.Web.Controllers
             return View();
         }
 
+        // Trang thông tin cá nhân
+        [Authorize(Roles = "KhachHang")]
+        [HttpGet]
+        public async Task<IActionResult> ThongTinCaNhan()
+        {
+            NguoiDung? nguoiDung =
+                await _userManager.GetUserAsync(User);
+
+            if (nguoiDung == null)
+            {
+                return Challenge();
+            }
+
+            var model = new ThongTinCaNhanViewModel
+            {
+                Email = nguoiDung.Email ?? string.Empty,
+                HoTen = nguoiDung.HoTen,
+                SoDienThoai = nguoiDung.PhoneNumber
+                    ?? string.Empty,
+                DiaChi = nguoiDung.DiaChi
+                    ?? string.Empty
+            };
+
+            return View(model);
+        }
+
+        // Xử lý cập nhật thông tin cá nhân
+        [Authorize(Roles = "KhachHang")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ThongTinCaNhan(
+            ThongTinCaNhanViewModel model)
+        {
+            NguoiDung? nguoiDung =
+                await _userManager.GetUserAsync(User);
+
+            if (nguoiDung == null)
+            {
+                return Challenge();
+            }
+
+            // Email không được cập nhật từ biểu mẫu này.
+            model.Email = nguoiDung.Email ?? string.Empty;
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            nguoiDung.HoTen = model.HoTen.Trim();
+            nguoiDung.PhoneNumber =
+                model.SoDienThoai.Trim();
+            nguoiDung.DiaChi =
+                model.DiaChi.Trim();
+
+            IdentityResult ketQua =
+                await _userManager.UpdateAsync(nguoiDung);
+
+            if (!ketQua.Succeeded)
+            {
+                ThemLoiIdentityVaoModelState(ketQua);
+
+                return View(model);
+            }
+
+            // Làm mới thông tin phiên đăng nhập hiện tại.
+            await _signInManager.RefreshSignInAsync(
+                nguoiDung);
+
+            TempData["ThanhCong"] =
+                "Cập nhật thông tin cá nhân thành công.";
+
+            return RedirectToAction(
+                nameof(ThongTinCaNhan));
+        }
+
+        // Trang đổi mật khẩu khi đang đăng nhập
+        [Authorize(Roles = "KhachHang")]
+        [HttpGet]
+        public IActionResult DoiMatKhau()
+        {
+            return View(new DoiMatKhauViewModel());
+        }
+
+        // Xử lý đổi mật khẩu khi đang đăng nhập
+        [Authorize(Roles = "KhachHang")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DoiMatKhau(
+            DoiMatKhauViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            NguoiDung? nguoiDung =
+                await _userManager.GetUserAsync(User);
+
+            if (nguoiDung == null)
+            {
+                return Challenge();
+            }
+
+            IdentityResult ketQua =
+                await _userManager.ChangePasswordAsync(
+                    nguoiDung,
+                    model.MatKhauHienTai,
+                    model.MatKhauMoi);
+
+            if (!ketQua.Succeeded)
+            {
+                ThemLoiIdentityVaoModelState(ketQua);
+
+                return View(model);
+            }
+
+            // ChangePasswordAsync thay đổi SecurityStamp.
+            // Làm mới phiên để khách hàng vẫn tiếp tục đăng nhập.
+            await _signInManager.RefreshSignInAsync(
+                nguoiDung);
+
+            TempData["ThanhCong"] =
+                "Đổi mật khẩu thành công.";
+
+            return RedirectToAction(
+                nameof(DoiMatKhau));
+        }
+
         // Đăng xuất
         [Authorize]
         [HttpPost]
@@ -408,6 +537,9 @@ namespace MilkTea.Web.Controllers
                     "DuplicateUserName" =>
                         "Email này đã được sử dụng.",
 
+                    "PasswordMismatch" =>
+                        "Mật khẩu hiện tại không chính xác.",
+
                     "PasswordTooShort" =>
                         "Mật khẩu phải có ít nhất 6 ký tự.",
 
@@ -422,6 +554,9 @@ namespace MilkTea.Web.Controllers
 
                     "PasswordRequiresNonAlphanumeric" =>
                         "Mật khẩu phải có ít nhất một ký tự đặc biệt.",
+
+                    "PasswordRequiresUniqueChars" =>
+                        "Mật khẩu chưa có đủ số ký tự khác nhau.",
 
                     "InvalidToken" =>
                         "Liên kết đặt lại mật khẩu không hợp lệ " +

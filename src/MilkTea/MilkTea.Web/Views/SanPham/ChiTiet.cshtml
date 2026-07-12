@@ -47,8 +47,8 @@
 
         .product-detail-breadcrumb a {
             color: #9b4a00;
-            text-decoration: none;
             font-weight: 700;
+            text-decoration: none;
         }
 
             .product-detail-breadcrumb a:hover {
@@ -66,6 +66,10 @@
         box-shadow: 0 15px 40px rgba(87, 47, 17, 0.08);
     }
 
+        .product-detail-card.temporarily-unavailable {
+            border-color: #dccbc0;
+        }
+
     .product-detail-image-box {
         position: relative;
         min-height: 460px;
@@ -78,12 +82,23 @@
         overflow: hidden;
     }
 
+    .product-detail-card.temporarily-unavailable
+    .product-detail-image-box {
+        background: #f5f2ef;
+    }
+
     .product-detail-image {
         width: 100%;
         max-width: 410px;
         height: 410px;
-        object-fit: contain;
         display: block;
+        object-fit: contain;
+    }
+
+    .product-detail-card.temporarily-unavailable
+    .product-detail-image {
+        filter: grayscale(30%);
+        opacity: 0.85;
     }
 
     .product-detail-badge {
@@ -107,6 +122,10 @@
             background: #2c8b57;
         }
 
+        .product-detail-badge.unavailable {
+            background: #655b55;
+        }
+
     .product-detail-info {
         display: flex;
         flex-direction: column;
@@ -117,8 +136,8 @@
         margin: 0 0 15px;
         color: #4a1f08;
         font-size: 38px;
-        line-height: 1.2;
         font-weight: 800;
+        line-height: 1.2;
     }
 
     .product-detail-rating {
@@ -164,14 +183,30 @@
     .product-detail-meta {
         padding: 18px 20px;
         margin-bottom: 26px;
+        color: #654936;
         background: #fff8f0;
         border-radius: 14px;
-        color: #654936;
         line-height: 1.9;
     }
 
         .product-detail-meta strong {
             color: #4a1f08;
+        }
+
+    .product-detail-status {
+        font-weight: 800;
+    }
+
+        .product-detail-status.available {
+            color: #17653b;
+        }
+
+        .product-detail-status.out-of-stock {
+            color: #c12020;
+        }
+
+        .product-detail-status.unavailable {
+            color: #a13a2c;
         }
 
     .product-detail-actions {
@@ -188,8 +223,8 @@
         align-items: center;
         justify-content: center;
         gap: 9px;
-        text-decoration: none;
         font-weight: 800;
+        text-decoration: none;
         transition: 0.2s ease;
     }
 
@@ -269,10 +304,51 @@
         }
 
         .product-detail-cart-button:disabled {
+            color: #ffffff;
             background: #b9ada5;
             border-color: #b9ada5;
             cursor: not-allowed;
         }
+
+    .product-detail-unavailable {
+        width: 100%;
+        margin-top: 18px;
+        padding: 17px 19px;
+        border: 1px solid #e1cabe;
+        border-radius: 13px;
+        color: #89352b;
+        background: #fff4ef;
+        font-weight: 800;
+        line-height: 1.6;
+    }
+
+    .product-detail-unavailable-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 5px;
+        color: #7b2f26;
+        font-size: 16px;
+    }
+
+    .product-detail-unavailable-description {
+        margin: 0;
+        color: #765c50;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .product-detail-out-of-stock {
+        width: 100%;
+        margin-top: 18px;
+        padding: 16px 18px;
+        border: 1px solid #efcccc;
+        border-radius: 13px;
+        color: #952929;
+        background: #fff2f2;
+        font-weight: 800;
+        line-height: 1.6;
+    }
 
     @@media (max-width: 850px) {
         .product-detail-card {
@@ -333,6 +409,10 @@
         .product-detail-cart-button {
             width: 100%;
         }
+
+        .product-detail-button.back {
+            width: 100%;
+        }
     }
 </style>
 
@@ -343,16 +423,22 @@
         @if (TempData["ThanhCong"] != null)
         {
             <div class="product-detail-notice success">
-                <i class="bi bi-check-circle"></i>
+
+                <i class="bi bi-check-circle me-1"></i>
+
                 @TempData["ThanhCong"]
+
             </div>
         }
 
         @if (TempData["Loi"] != null)
         {
             <div class="product-detail-notice error">
-                <i class="bi bi-exclamation-circle"></i>
+
+                <i class="bi bi-exclamation-circle me-1"></i>
+
                 @TempData["Loi"]
+
             </div>
         }
 
@@ -370,25 +456,45 @@
                 Sản phẩm
             </a>
 
-            <span> / @Model.TenSanPham</span>
+            <span>
+                / @Model.TenSanPham
+            </span>
 
         </div>
 
-        <div class="product-detail-card">
+        <div class="product-detail-card
+            @(!Model.TrangThai
+                 ? "temporarily-unavailable"
+                 : "")">
 
             <div class="product-detail-image-box">
 
-                @if (Model.NhanSanPham == 1)
+                @if (!Model.TrangThai)
+                {
+                    <span class="product-detail-badge unavailable">
+
+                        <i class="bi bi-pause-circle"></i>
+
+                        TẠM NGƯNG BÁN
+
+                    </span>
+                }
+                else if (Model.NhanSanPham == 1)
                 {
                     <span class="product-detail-badge hot">
+
                         <i class="bi bi-fire"></i>
+
                         HOT
+
                     </span>
                 }
                 else if (Model.NhanSanPham == 2)
                 {
                     <span class="product-detail-badge new">
+
                         NEW
+
                     </span>
                 }
 
@@ -428,7 +534,8 @@
                     else
                     {
                         <span>
-                            Sản phẩm thơm ngon được phục vụ tại MilkTea House.
+                            Sản phẩm thơm ngon được phục vụ tại
+                            MilkTea House.
                         </span>
                     }
 
@@ -454,24 +561,36 @@
 
                     <div>
                         <strong>Mã sản phẩm:</strong>
+
                         SP-@Model.SanPhamID.ToString("D4")
                     </div>
 
                     <div>
                         <strong>Tình trạng:</strong>
 
-                        @if (Model.SoLuongTon > 0)
+                        @if (!Model.TrangThai)
                         {
-                            <span>Còn hàng</span>
+                            <span class="product-detail-status unavailable">
+                                Tạm ngưng bán
+                            </span>
+                        }
+                        else if (Model.SoLuongTon > 0)
+                        {
+                            <span class="product-detail-status available">
+                                Còn hàng
+                            </span>
                         }
                         else
                         {
-                            <span>Hết hàng</span>
+                            <span class="product-detail-status out-of-stock">
+                                Hết hàng
+                            </span>
                         }
                     </div>
 
                     <div>
                         <strong>Số lượng còn lại:</strong>
+
                         @Model.SoLuongTon
                     </div>
 
@@ -484,35 +603,70 @@
                        class="product-detail-button back">
 
                         <i class="bi bi-arrow-left"></i>
+
                         Quay lại sản phẩm
+
                     </a>
 
                 </div>
 
-                <form asp-controller="GioHang"
-                      asp-action="Them"
-                      method="post"
-                      class="product-detail-cart-form">
+                @if (!Model.TrangThai)
+                {
+                    <div class="product-detail-unavailable">
 
-                    <input type="hidden"
-                           name="id"
-                           value="@Model.SanPhamID" />
+                        <div class="product-detail-unavailable-title">
 
-                    <input type="hidden"
-                           name="returnUrl"
-                           value="@(Context.Request.Path + Context.Request.QueryString)" />
+                            <i class="bi bi-info-circle-fill"></i>
 
-                    <div class="product-detail-cart-row">
+                            Sản phẩm hiện đang tạm ngưng bán
 
-                        <div class="product-detail-quantity-group">
+                        </div>
 
-                            <label for="soLuong"
-                                   class="product-detail-quantity-label">
-                                Số lượng:
-                            </label>
+                        <p class="product-detail-unavailable-description">
+                            Bạn vẫn có thể xem thông tin sản phẩm,
+                            nhưng hiện chưa thể thêm vào giỏ hàng
+                            hoặc đặt mua.
+                        </p>
 
-                            @if (Model.SoLuongTon > 0)
-                            {
+                    </div>
+                }
+                else if (Model.SoLuongTon <= 0)
+                {
+                    <div class="product-detail-out-of-stock">
+
+                        <i class="bi bi-exclamation-circle-fill me-1"></i>
+
+                        Sản phẩm hiện đang hết hàng và chưa thể đặt mua.
+
+                    </div>
+                }
+                else
+                {
+                    <form asp-controller="GioHang"
+                          asp-action="Them"
+                          method="post"
+                          class="product-detail-cart-form">
+
+                        <input type="hidden"
+                               name="id"
+                               value="@Model.SanPhamID" />
+
+                        <input type="hidden"
+                               name="returnUrl"
+                               value="@(Context.Request.Path +
+                                                                       Context.Request.QueryString)" />
+
+                        <div class="product-detail-cart-row">
+
+                            <div class="product-detail-quantity-group">
+
+                                <label for="soLuong"
+                                       class="product-detail-quantity-label">
+
+                                    Số lượng:
+
+                                </label>
+
                                 <input type="number"
                                        id="soLuong"
                                        name="soLuong"
@@ -520,42 +674,22 @@
                                        min="1"
                                        max="@Model.SoLuongTon"
                                        class="product-detail-quantity-input" />
-                            }
-                            else
-                            {
-                                <input type="number"
-                                       id="soLuong"
-                                       name="soLuong"
-                                       value="0"
-                                       class="product-detail-quantity-input"
-                                       disabled />
-                            }
 
-                        </div>
+                            </div>
 
-                        @if (Model.SoLuongTon > 0)
-                        {
                             <button type="submit"
                                     class="product-detail-cart-button">
 
                                 <i class="bi bi-cart3"></i>
+
                                 Thêm vào giỏ
+
                             </button>
-                        }
-                        else
-                        {
-                            <button type="button"
-                                    class="product-detail-cart-button"
-                                    disabled>
 
-                                <i class="bi bi-cart-x"></i>
-                                Sản phẩm hết hàng
-                            </button>
-                        }
+                        </div>
 
-                    </div>
-
-                </form>
+                    </form>
+                }
 
             </div>
 

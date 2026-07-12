@@ -1,26 +1,36 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MilkTea.Web.Data;
 using MilkTea.Web.Models;
 using MilkTea.Web.TienIch;
+using System.Security.Claims;
 
 namespace MilkTea.Web.Controllers
 {
+    [Authorize(Roles = "KhachHang")]
     public class ThanhToanController : Controller
     {
         private const string KhoaGioHang = "GioHang";
         private const string KhoaDonHangVuaDat = "DonHangVuaDat";
 
         private readonly MilkTeaDbContext _context;
+        private readonly UserManager<NguoiDung> _userManager;
 
-        public ThanhToanController(MilkTeaDbContext context)
+        public ThanhToanController(
+    MilkTeaDbContext context,
+    UserManager<NguoiDung> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // Trang nhập thông tin nhận hàng
         [HttpGet]
-        public IActionResult Index()
+        // Trang nhập thông tin nhận hàng
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
             List<GioHangItem> gioHang = LayGioHang();
 
@@ -34,8 +44,21 @@ namespace MilkTea.Web.Controllers
                     "GioHang");
             }
 
+            NguoiDung? nguoiDung =
+                await _userManager.GetUserAsync(User);
+
+            if (nguoiDung == null)
+            {
+                return Challenge();
+            }
+
             var model = new ThanhToanViewModel
             {
+                HoTen = nguoiDung.HoTen,
+                SoDienThoai = nguoiDung.PhoneNumber
+                    ?? string.Empty,
+                DiaChi = nguoiDung.DiaChi
+                    ?? string.Empty,
                 GioHang = gioHang
             };
 
@@ -48,6 +71,14 @@ namespace MilkTea.Web.Controllers
         public async Task<IActionResult> DatHang(
             ThanhToanViewModel model)
         {
+            string? nguoiDungID = User.FindFirstValue(
+                ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrWhiteSpace(nguoiDungID))
+            {
+                return Challenge();
+            }
+
             List<GioHangItem> gioHang = LayGioHang();
 
             model.GioHang = gioHang;
@@ -72,7 +103,8 @@ namespace MilkTea.Web.Controllers
                 .ToList();
 
             List<SanPham> sanPhams = await _context.SanPhams
-                .Where(sp => danhSachSanPhamID.Contains(sp.SanPhamID))
+                .Where(sp =>
+                    danhSachSanPhamID.Contains(sp.SanPhamID))
                 .ToListAsync();
 
             foreach (GioHangItem item in gioHang)
@@ -113,6 +145,7 @@ namespace MilkTea.Web.Controllers
 
                 var donHang = new DonHang
                 {
+                    NguoiDungID = nguoiDungID,
                     HoTen = model.HoTen.Trim(),
                     SoDienThoai = model.SoDienThoai.Trim(),
                     DiaChi = model.DiaChi.Trim(),
@@ -187,6 +220,14 @@ namespace MilkTea.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ThanhCong(int id)
         {
+            string? nguoiDungID = User.FindFirstValue(
+                ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrWhiteSpace(nguoiDungID))
+            {
+                return Challenge();
+            }
+
             int? donHangVuaDat = HttpContext.Session
                 .GetInt32(KhoaDonHangVuaDat);
 
@@ -201,7 +242,8 @@ namespace MilkTea.Web.Controllers
             DonHang? donHang = await _context.DonHangs
                 .AsNoTracking()
                 .FirstOrDefaultAsync(dh =>
-                    dh.DonHangID == id);
+                    dh.DonHangID == id &&
+                    dh.NguoiDungID == nguoiDungID);
 
             if (donHang == null)
             {

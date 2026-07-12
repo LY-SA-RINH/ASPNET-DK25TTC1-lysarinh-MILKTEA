@@ -8,6 +8,11 @@ namespace MilkTea.Web.Models
         [Key]
         public int DonHangID { get; set; }
 
+        // Tài khoản khách hàng đã đặt đơn.
+        // Cho phép null để các đơn hàng cũ vẫn tồn tại bình thường.
+        [StringLength(450)]
+        public string? NguoiDungID { get; set; }
+
         [Required(ErrorMessage = "Vui lòng nhập họ tên người nhận.")]
         [StringLength(100)]
         public string HoTen { get; set; } = string.Empty;
@@ -37,6 +42,9 @@ namespace MilkTea.Web.Models
             = "Chờ xác nhận";
 
         public DateTime NgayDat { get; set; } = DateTime.Now;
+
+        // Tài khoản Identity liên kết với đơn hàng.
+        public NguoiDung? NguoiDung { get; set; }
 
         public ICollection<ChiTietDonHang> ChiTietDonHangs { get; set; }
             = new List<ChiTietDonHang>();

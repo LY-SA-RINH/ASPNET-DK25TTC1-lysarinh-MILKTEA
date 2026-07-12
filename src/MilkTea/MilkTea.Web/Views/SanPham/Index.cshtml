@@ -6,13 +6,18 @@
     int trangHienTai = ViewBag.TrangHienTai ?? 1;
     int tongSoTrang = ViewBag.TongSoTrang ?? 0;
     int tongSoSanPham = ViewBag.TongSoSanPham ?? 0;
+
+    int tongSanPhamDangBan =
+        ViewBag.TongSanPhamDangBan != null
+            ? (int)ViewBag.TongSanPhamDangBan
+            : Model.Count(sp => sp.TrangThai);
 }
 
 <style>
     .product-page {
+        min-height: 100vh;
         padding: 125px 20px 70px;
         background: #fffdfb;
-        min-height: 100vh;
     }
 
     .product-page-container {
@@ -21,17 +26,17 @@
     }
 
     .product-page-heading {
-        text-align: center;
         margin-bottom: 12px;
         color: #4a1f08;
         font-size: 38px;
         font-weight: 800;
+        text-align: center;
     }
 
     .product-page-description {
-        text-align: center;
-        color: #75655c;
         margin-bottom: 38px;
+        color: #75655c;
+        text-align: center;
     }
 
         .product-page-description strong {
@@ -47,8 +52,14 @@
         margin-top: 18px;
     }
 
+    .product-cart-form {
+        width: 100%;
+        margin: 0;
+    }
+
     .btn-product-detail,
-    .btn-product-cart {
+    .btn-product-cart,
+    .product-unavailable-message {
         width: 100%;
         min-width: 0;
         min-height: 42px;
@@ -86,6 +97,7 @@
         color: #ffffff;
         background: #d0001b;
         border: 1px solid #d0001b;
+        cursor: pointer;
     }
 
         .btn-product-cart:not(:disabled):hover {
@@ -99,9 +111,59 @@
         }
 
         .btn-product-detail i,
-        .btn-product-cart i {
+        .btn-product-cart i,
+        .product-unavailable-message i {
             flex-shrink: 0;
             font-size: 13px;
+        }
+
+    /* Sản phẩm tạm ngưng bán */
+    .product-card.temporarily-unavailable {
+        position: relative;
+        opacity: 0.85;
+    }
+
+        .product-card.temporarily-unavailable
+        .product-photo {
+            filter: grayscale(28%);
+        }
+
+    .product-badge.unavailable {
+        color: #ffffff;
+        background: #6d625c;
+    }
+
+    .product-unavailable-message {
+        color: #675b54;
+        background: #f3f0ee;
+        border: 1px solid #d4c7bd;
+        cursor: not-allowed;
+    }
+
+        .product-unavailable-message.out-of-stock {
+            color: #9f2c2c;
+            background: #fff0f0;
+            border-color: #efc2c2;
+        }
+
+    .product-unavailable-note {
+        min-height: 38px;
+        margin-top: 10px;
+        padding: 8px 10px;
+        border: 1px solid #ead3c8;
+        border-radius: 9px;
+        color: #a13a2c;
+        background: #fff6f2;
+        font-size: 13px;
+        font-weight: 800;
+        line-height: 1.4;
+        text-align: center;
+    }
+
+        .product-unavailable-note.out-of-stock {
+            color: #a42525;
+            background: #fff2f2;
+            border-color: #edcccc;
         }
 
     /* Phân trang */
@@ -194,10 +256,10 @@
         padding: 60px 20px;
         border: 1px dashed #dfbd9d;
         border-radius: 18px;
-        background: #fff8f0;
-        text-align: center;
         color: #75523a;
+        background: #fff8f0;
         font-size: 18px;
+        text-align: center;
     }
 
     @@media (max-width: 700px) {
@@ -206,7 +268,8 @@
         }
 
         .btn-product-detail,
-        .btn-product-cart {
+        .btn-product-cart,
+        .product-unavailable-message {
             font-size: 13px;
         }
     }
@@ -248,9 +311,11 @@
         </h1>
 
         <p class="product-page-description">
-            Hiện có
+            MilkTea House hiện có
             <strong>@tongSoSanPham</strong>
-            sản phẩm đang được bán tại MilkTea House.
+            sản phẩm, trong đó
+            <strong>@tongSanPhamDangBan</strong>
+            sản phẩm đang được bán.
         </p>
 
         @if (Model != null && Model.Count > 0)
@@ -259,15 +324,36 @@
 
                 @foreach (var item in Model)
                 {
-                    <div class="product-card">
+                    string hinhAnh =
+                        string.IsNullOrWhiteSpace(item.HinhAnh)
+                            ? "/images/products/san-pham-mac-dinh.png"
+                            : $"/images/products/{item.HinhAnh}";
+
+                    <div class="product-card
+                        @(!item.TrangThai
+                             ? "temporarily-unavailable"
+                             : "")">
 
                         <div class="product-image">
 
-                            @if (item.NhanSanPham == 1)
+                            @if (!item.TrangThai)
+                            {
+                                <span class="product-badge unavailable">
+
+                                    <i class="bi bi-pause-circle"></i>
+
+                                    TẠM NGƯNG BÁN
+
+                                </span>
+                            }
+                            else if (item.NhanSanPham == 1)
                             {
                                 <span class="product-badge hot">
+
                                     <i class="bi bi-fire"></i>
+
                                     HOT
+
                                 </span>
                             }
                             else if (item.NhanSanPham == 2)
@@ -277,7 +363,7 @@
                                 </span>
                             }
 
-                            <img src="/images/products/@item.HinhAnh"
+                            <img src="@hinhAnh"
                                  alt="@item.TenSanPham"
                                  class="product-photo"
                                  loading="lazy"
@@ -287,7 +373,9 @@
 
                         <div class="product-info">
 
-                            <h4>@item.TenSanPham</h4>
+                            <h4>
+                                @item.TenSanPham
+                            </h4>
 
                             <div class="product-rating">
 
@@ -327,36 +415,87 @@
                                    class="btn-product-detail">
 
                                     <i class="bi bi-eye"></i>
+
                                     Xem chi tiết
+
                                 </a>
 
-                                <form asp-controller="GioHang"
-                                      asp-action="Them"
-                                      method="post"
-                                      class="product-cart-form">
+                                @if (!item.TrangThai)
+                                {
+                                    <div class="product-unavailable-message">
 
-                                    <input type="hidden"
-                                           name="id"
-                                           value="@item.SanPhamID" />
+                                        <i class="bi bi-cart-x"></i>
 
-                                    <input type="hidden"
-                                           name="soLuong"
-                                           value="1" />
+                                        Chưa thể mua
 
-                                    <input type="hidden"
-                                           name="returnUrl"
-                                           value="@(Context.Request.Path + Context.Request.QueryString)" />
+                                    </div>
+                                }
+                                else if (item.SoLuongTon <= 0)
+                                {
+                                    <div class="product-unavailable-message
+                                        out-of-stock">
 
-                                    <button type="submit"
-                                            class="btn-product-cart">
+                                        <i class="bi bi-cart-x"></i>
 
-                                        <i class="bi bi-cart3"></i>
-                                        Thêm vào giỏ
-                                    </button>
+                                        Hết hàng
 
-                                </form>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <form asp-controller="GioHang"
+                                          asp-action="Them"
+                                          method="post"
+                                          class="product-cart-form">
+
+                                        <input type="hidden"
+                                               name="id"
+                                               value="@item.SanPhamID" />
+
+                                        <input type="hidden"
+                                               name="soLuong"
+                                               value="1" />
+
+                                        <input type="hidden"
+                                               name="returnUrl"
+                                               value="@(Context.Request.Path +
+                                                                                                       Context.Request.QueryString)" />
+
+                                        <button type="submit"
+                                                class="btn-product-cart">
+
+                                            <i class="bi bi-cart3"></i>
+
+                                            Thêm vào giỏ
+
+                                        </button>
+
+                                    </form>
+                                }
 
                             </div>
+
+                            @if (!item.TrangThai)
+                            {
+                                <div class="product-unavailable-note">
+
+                                    <i class="bi bi-info-circle me-1"></i>
+
+                                    Sản phẩm hiện đang tạm ngưng bán.
+
+                                </div>
+                            }
+                            else if (item.SoLuongTon <= 0)
+                            {
+                                <div class="product-unavailable-note
+                                    out-of-stock">
+
+                                    <i class="bi bi-exclamation-circle me-1"></i>
+
+                                    Sản phẩm hiện đang tạm hết hàng.
+
+                                </div>
+                            }
 
                         </div>
 
@@ -373,6 +512,7 @@
                     <ul class="phan-trang-danh-sach">
 
                         <li>
+
                             @if (trangHienTai > 1)
                             {
                                 <a asp-controller="SanPham"
@@ -381,26 +521,39 @@
                                    class="phan-trang-nut">
 
                                     <i class="bi bi-chevron-left"></i>
+
                                     Trang trước
+
                                 </a>
                             }
                             else
                             {
-                                <span class="phan-trang-nut phan-trang-vo-hieu">
+                                <span class="phan-trang-nut
+                                    phan-trang-vo-hieu">
+
                                     <i class="bi bi-chevron-left"></i>
+
                                     Trang trước
+
                                 </span>
                             }
+
                         </li>
 
-                        @for (int soTrang = 1; soTrang <= tongSoTrang; soTrang++)
+                        @for (int soTrang = 1;
+                              soTrang <= tongSoTrang;
+                              soTrang++)
                         {
                             <li>
+
                                 @if (soTrang == trangHienTai)
                                 {
-                                    <span class="phan-trang-so phan-trang-hien-tai"
+                                    <span class="phan-trang-so
+                                        phan-trang-hien-tai"
                                           aria-current="page">
+
                                         @soTrang
+
                                     </span>
                                 }
                                 else
@@ -409,13 +562,17 @@
                                        asp-action="Index"
                                        asp-route-trang="@soTrang"
                                        class="phan-trang-so">
+
                                         @soTrang
+
                                     </a>
                                 }
+
                             </li>
                         }
 
                         <li>
+
                             @if (trangHienTai < tongSoTrang)
                             {
                                 <a asp-controller="SanPham"
@@ -424,16 +581,23 @@
                                    class="phan-trang-nut">
 
                                     Trang sau
+
                                     <i class="bi bi-chevron-right"></i>
+
                                 </a>
                             }
                             else
                             {
-                                <span class="phan-trang-nut phan-trang-vo-hieu">
+                                <span class="phan-trang-nut
+                                    phan-trang-vo-hieu">
+
                                     Trang sau
+
                                     <i class="bi bi-chevron-right"></i>
+
                                 </span>
                             }
+
                         </li>
 
                     </ul>
@@ -444,7 +608,9 @@
         else
         {
             <div class="product-empty">
-                Hiện chưa có sản phẩm nào đang được bán.
+
+                Hiện chưa có sản phẩm nào trong hệ thống.
+
             </div>
         }
 
