@@ -1,0 +1,557 @@
+﻿@model MilkTea.Web.Models.DonHang
+
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng";
+
+    int tongSoLuong = Model.ChiTietDonHangs
+        .Sum(ct => ct.SoLuong);
+
+    string lopTrangThai = Model.TrangThai switch
+    {
+        "Chờ xác nhận" => "waiting",
+        "Đã xác nhận" => "confirmed",
+        "Đang giao" => "shipping",
+        "Hoàn thành" => "completed",
+        "Đã hủy" => "cancelled",
+        _ => "waiting"
+    };
+}
+
+<style>
+    .order-detail-page {
+        min-height: 100vh;
+        padding: 125px 20px 70px;
+        background: #fffdfb;
+    }
+
+    .order-detail-container {
+        max-width: 1120px;
+        margin: 0 auto;
+    }
+
+    .order-detail-back {
+        margin-bottom: 18px;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        color: #87410e;
+        text-decoration: none;
+        font-weight: 800;
+    }
+
+    .order-detail-heading {
+        margin-bottom: 26px;
+        color: #4a1f08;
+        font-size: 34px;
+        font-weight: 800;
+    }
+
+    .order-notice {
+        margin-bottom: 18px;
+        padding: 14px 18px;
+        border-radius: 12px;
+        font-weight: 700;
+    }
+
+        .order-notice.success {
+            color: #17653b;
+            background: #eaf8f0;
+            border: 1px solid #bce4cc;
+        }
+
+        .order-notice.error {
+            color: #9b1c1c;
+            background: #fff0f0;
+            border: 1px solid #f0c1c1;
+        }
+
+    .order-detail-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 330px;
+        gap: 25px;
+        align-items: start;
+    }
+
+    .order-detail-main,
+    .order-detail-side {
+        padding: 24px;
+        background: #ffffff;
+        border: 1px solid #ead7c5;
+        border-radius: 18px;
+        box-shadow: 0 9px 27px rgba(91, 47, 15, 0.06);
+    }
+
+    .order-section-title {
+        margin: 0 0 18px;
+        color: #4a1f08;
+        font-size: 22px;
+        font-weight: 800;
+    }
+
+    .order-customer-grid {
+        margin-bottom: 28px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .order-info-box {
+        padding: 14px;
+        border-radius: 11px;
+        background: #fff8ef;
+    }
+
+        .order-info-box.full {
+            grid-column: 1 / -1;
+        }
+
+    .order-info-label {
+        margin-bottom: 4px;
+        color: #8a7161;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .order-info-value {
+        color: #4a2e1d;
+        font-weight: 800;
+        line-height: 1.5;
+    }
+
+    .order-product-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .order-product-table th,
+        .order-product-table td {
+            padding: 13px 10px;
+            border-bottom: 1px solid #eee0d3;
+            text-align: left;
+        }
+
+        .order-product-table th {
+            color: #57321c;
+            background: #fff8ef;
+            font-size: 13px;
+        }
+
+    .order-money {
+        color: #a44200;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .order-status {
+        padding: 8px 12px;
+        border-radius: 999px;
+        display: inline-flex;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+        .order-status.waiting {
+            color: #865500;
+            background: #fff2c9;
+        }
+
+        .order-status.confirmed {
+            color: #135f8a;
+            background: #e1f3ff;
+        }
+
+        .order-status.shipping {
+            color: #6743a2;
+            background: #f0e9ff;
+        }
+
+        .order-status.completed {
+            color: #17653b;
+            background: #e3f7eb;
+        }
+
+        .order-status.cancelled {
+            color: #9b1c1c;
+            background: #ffe7e7;
+        }
+
+    .order-summary-row {
+        margin-bottom: 14px;
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        color: #6a5548;
+    }
+
+    .order-summary-total {
+        padding-top: 16px;
+        border-top: 1px solid #ddc2a8;
+        color: #4a1f08;
+        font-size: 18px;
+        font-weight: 800;
+    }
+
+        .order-summary-total strong {
+            color: #c8001b;
+            font-size: 23px;
+        }
+
+    .order-action-area {
+        margin-top: 23px;
+        padding-top: 20px;
+        border-top: 1px solid #e8d5c3;
+    }
+
+    .order-action-form {
+        margin-top: 10px;
+    }
+
+    .order-action-button {
+        width: 100%;
+        min-height: 44px;
+        border-radius: 10px;
+        color: #ffffff;
+        font-weight: 800;
+        cursor: pointer;
+    }
+
+        .order-action-button.confirm {
+            border: 1px solid #2770a0;
+            background: #2770a0;
+        }
+
+        .order-action-button.shipping {
+            border: 1px solid #714aa2;
+            background: #714aa2;
+        }
+
+        .order-action-button.complete {
+            border: 1px solid #278553;
+            background: #278553;
+        }
+
+        .order-action-button.cancel {
+            border: 1px solid #bb2c2c;
+            background: #bb2c2c;
+        }
+
+    .order-final-note {
+        margin-top: 18px;
+        padding: 14px;
+        border-radius: 11px;
+        color: #6b584c;
+        background: #f5f0ec;
+        line-height: 1.6;
+    }
+
+    @@media (max-width: 850px) {
+        .order-detail-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .order-detail-page {
+            padding: 110px 12px 45px;
+        }
+
+        .order-customer-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .order-info-box.full {
+            grid-column: auto;
+        }
+
+        .order-detail-heading {
+            font-size: 28px;
+        }
+
+        .order-detail-main,
+        .order-detail-side {
+            padding: 17px;
+        }
+
+        .order-product-table {
+            font-size: 13px;
+        }
+    }
+</style>
+
+<section class="order-detail-page">
+
+    <div class="order-detail-container">
+
+        <a asp-controller="QuanLyDonHang"
+           asp-action="Index"
+           class="order-detail-back">
+            <i class="bi bi-arrow-left"></i>
+            Quay lại danh sách đơn hàng
+        </a>
+
+        <h1 class="order-detail-heading">
+            Đơn hàng DH-@Model.DonHangID.ToString("D6")
+        </h1>
+
+        @if (TempData["ThanhCong"] != null)
+        {
+            <div class="order-notice success">
+                @TempData["ThanhCong"]
+            </div>
+        }
+
+        @if (TempData["Loi"] != null)
+        {
+            <div class="order-notice error">
+                @TempData["Loi"]
+            </div>
+        }
+
+        <div class="order-detail-layout">
+
+            <div class="order-detail-main">
+
+                <h2 class="order-section-title">
+                    Thông tin người nhận
+                </h2>
+
+                <div class="order-customer-grid">
+
+                    <div class="order-info-box">
+                        <div class="order-info-label">Họ tên</div>
+                        <div class="order-info-value">
+                            @Model.HoTen
+                        </div>
+                    </div>
+
+                    <div class="order-info-box">
+                        <div class="order-info-label">
+                            Số điện thoại
+                        </div>
+                        <div class="order-info-value">
+                            @Model.SoDienThoai
+                        </div>
+                    </div>
+
+                    <div class="order-info-box full">
+                        <div class="order-info-label">
+                            Địa chỉ giao hàng
+                        </div>
+                        <div class="order-info-value">
+                            @Model.DiaChi
+                        </div>
+                    </div>
+
+                    <div class="order-info-box full">
+                        <div class="order-info-label">Ghi chú</div>
+                        <div class="order-info-value">
+                            @(string.IsNullOrWhiteSpace(Model.GhiChu)
+                                ? "Không có ghi chú"
+                                : Model.GhiChu)
+                        </div>
+                    </div>
+
+                </div>
+
+                <h2 class="order-section-title">
+                    Sản phẩm trong đơn
+                </h2>
+
+                <table class="order-product-table">
+
+                    <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Đơn giá</th>
+                            <th>Số lượng</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var chiTiet in Model.ChiTietDonHangs)
+                        {
+                            <tr>
+                                <td>@chiTiet.TenSanPham</td>
+
+                                <td class="order-money">
+                                    @chiTiet.DonGia.ToString("N0")đ
+                                </td>
+
+                                <td>@chiTiet.SoLuong</td>
+
+                                <td class="order-money">
+                                    @chiTiet.ThanhTien.ToString("N0")đ
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <aside class="order-detail-side">
+
+                <h2 class="order-section-title">
+                    Tóm tắt đơn hàng
+                </h2>
+
+                <div class="order-summary-row">
+                    <span>Ngày đặt</span>
+                    <strong>
+                        @Model.NgayDat.ToString("dd/MM/yyyy HH:mm")
+                    </strong>
+                </div>
+
+                <div class="order-summary-row">
+                    <span>Thanh toán</span>
+                    <strong>@Model.PhuongThucThanhToan</strong>
+                </div>
+
+                <div class="order-summary-row">
+                    <span>Tổng số lượng</span>
+                    <strong>@tongSoLuong sản phẩm</strong>
+                </div>
+
+                <div class="order-summary-row">
+                    <span>Trạng thái</span>
+                    <span class="order-status @lopTrangThai">
+                        @Model.TrangThai
+                    </span>
+                </div>
+
+                <div class="order-summary-row order-summary-total">
+                    <span>Tổng tiền</span>
+                    <strong>@Model.TongTien.ToString("N0")đ</strong>
+                </div>
+
+                <div class="order-action-area">
+
+                    <h2 class="order-section-title">
+                        Cập nhật trạng thái
+                    </h2>
+
+                    @if (Model.TrangThai == "Chờ xác nhận")
+                    {
+                        <form asp-controller="QuanLyDonHang"
+                              asp-action="CapNhatTrangThai"
+                              method="post"
+                              class="order-action-form">
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@Model.DonHangID" />
+
+                            <input type="hidden"
+                                   name="trangThaiMoi"
+                                   value="Đã xác nhận" />
+
+                            <button type="submit"
+                                    class="order-action-button confirm">
+                                Xác nhận đơn hàng
+                            </button>
+                        </form>
+
+                        <form asp-controller="QuanLyDonHang"
+                              asp-action="CapNhatTrangThai"
+                              method="post"
+                              class="order-action-form"
+                              onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng này? Tồn kho sẽ được hoàn lại.');">
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@Model.DonHangID" />
+
+                            <input type="hidden"
+                                   name="trangThaiMoi"
+                                   value="Đã hủy" />
+
+                            <button type="submit"
+                                    class="order-action-button cancel">
+                                Hủy đơn hàng
+                            </button>
+                        </form>
+                    }
+                    else if (Model.TrangThai == "Đã xác nhận")
+                    {
+                        <form asp-controller="QuanLyDonHang"
+                              asp-action="CapNhatTrangThai"
+                              method="post"
+                              class="order-action-form">
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@Model.DonHangID" />
+
+                            <input type="hidden"
+                                   name="trangThaiMoi"
+                                   value="Đang giao" />
+
+                            <button type="submit"
+                                    class="order-action-button shipping">
+                                Chuyển sang đang giao
+                            </button>
+                        </form>
+
+                        <form asp-controller="QuanLyDonHang"
+                              asp-action="CapNhatTrangThai"
+                              method="post"
+                              class="order-action-form"
+                              onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng này? Tồn kho sẽ được hoàn lại.');">
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@Model.DonHangID" />
+
+                            <input type="hidden"
+                                   name="trangThaiMoi"
+                                   value="Đã hủy" />
+
+                            <button type="submit"
+                                    class="order-action-button cancel">
+                                Hủy đơn hàng
+                            </button>
+                        </form>
+                    }
+                    else if (Model.TrangThai == "Đang giao")
+                    {
+                        <form asp-controller="QuanLyDonHang"
+                              asp-action="CapNhatTrangThai"
+                              method="post"
+                              class="order-action-form">
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@Model.DonHangID" />
+
+                            <input type="hidden"
+                                   name="trangThaiMoi"
+                                   value="Hoàn thành" />
+
+                            <button type="submit"
+                                    class="order-action-button complete">
+                                Xác nhận hoàn thành
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="order-final-note">
+                            Đơn hàng đã ở trạng thái cuối:
+                            <strong>@Model.TrangThai</strong>.
+                            Không thể cập nhật thêm.
+                        </div>
+                    }
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </div>
+
+</section>
