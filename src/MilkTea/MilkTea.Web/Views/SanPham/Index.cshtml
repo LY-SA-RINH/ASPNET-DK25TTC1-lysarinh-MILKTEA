@@ -34,53 +34,162 @@
         margin-bottom: 38px;
     }
 
-    .product-page-description strong {
-        color: #9a4c00;
-    }
+        .product-page-description strong {
+            color: #9a4c00;
+        }
 
-    .product-pagination {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    /* Hai nút trên card sản phẩm */
+    .product-card-actions {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         gap: 8px;
-        margin-top: 42px;
-        flex-wrap: wrap;
+        width: 100%;
+        margin-top: 18px;
     }
 
-    .product-pagination a,
-    .product-pagination span {
-        min-width: 42px;
-        height: 42px;
-        padding: 0 13px;
-        border: 1px solid #e8c9aa;
+    .btn-product-detail,
+    .btn-product-cart {
+        width: 100%;
+        min-width: 0;
+        min-height: 42px;
+        padding: 8px 5px;
         border-radius: 10px;
+        box-sizing: border-box;
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        gap: 5px;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 800;
+        line-height: 1.2;
+        text-align: center;
         text-decoration: none;
-        color: #6b3108;
-        background: #ffffff;
-        font-weight: 700;
+        white-space: nowrap;
+        overflow: hidden;
         transition: 0.2s ease;
     }
 
-    .product-pagination a:hover {
-        background: #fff0df;
-        border-color: #bd6a24;
-        color: #8c3f00;
+    .btn-product-detail {
+        color: #c9001b;
+        background: #ffffff;
+        border: 1px solid #d8001d;
     }
 
-    .product-pagination .active {
-        background: #9b4a00;
-        border-color: #9b4a00;
+        .btn-product-detail:hover {
+            color: #ffffff;
+            background: #b90019;
+            border-color: #b90019;
+        }
+
+    .btn-product-cart {
         color: #ffffff;
+        background: #d0001b;
+        border: 1px solid #d0001b;
     }
 
-    .product-pagination .disabled {
-        opacity: 0.45;
-        pointer-events: none;
+        .btn-product-cart:not(:disabled):hover {
+            background: #aa0016;
+            border-color: #aa0016;
+        }
+
+        .btn-product-cart:disabled {
+            opacity: 0.62;
+            cursor: not-allowed;
+        }
+
+        .btn-product-detail i,
+        .btn-product-cart i {
+            flex-shrink: 0;
+            font-size: 13px;
+        }
+
+    /* Phân trang */
+    .phan-trang-khu-vuc {
+        width: 100%;
+        margin-top: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
+    .phan-trang-danh-sach {
+        margin: 0;
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 7px;
+        list-style: none;
+        background: #fff8f0;
+        border: 1px solid #ecd5bf;
+        border-radius: 16px;
+        box-shadow: 0 8px 22px rgba(105, 55, 16, 0.08);
+    }
+
+        .phan-trang-danh-sach li {
+            display: flex;
+        }
+
+    .phan-trang-nut,
+    .phan-trang-so {
+        min-width: 42px;
+        height: 42px;
+        padding: 0 13px;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        color: #6b3108;
+        background: #ffffff;
+        font-size: 14px;
+        font-weight: 800;
+        line-height: 1;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .phan-trang-nut {
+        min-width: 108px;
+        border-color: #e2c1a1;
+    }
+
+    .phan-trang-so {
+        border-color: #ead5c1;
+    }
+
+        .phan-trang-nut:hover,
+        .phan-trang-so:hover {
+            color: #ffffff;
+            background: #a34e08;
+            border-color: #a34e08;
+            transform: translateY(-1px);
+        }
+
+    .phan-trang-hien-tai {
+        color: #ffffff;
+        background: #7f3600;
+        border-color: #7f3600;
+        box-shadow: 0 5px 12px rgba(127, 54, 0, 0.22);
+    }
+
+    .phan-trang-vo-hieu {
+        color: #b8a79b;
+        background: #f5eee8;
+        border-color: #eadfd6;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+
+    .phan-trang-nut i {
+        font-size: 12px;
+    }
+
+    /* Trường hợp không có sản phẩm */
     .product-empty {
         padding: 60px 20px;
         border: 1px dashed #dfbd9d;
@@ -89,6 +198,44 @@
         text-align: center;
         color: #75523a;
         font-size: 18px;
+    }
+
+    @@media (max-width: 700px) {
+        .product-card-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .btn-product-detail,
+        .btn-product-cart {
+            font-size: 13px;
+        }
+    }
+
+    @@media (max-width: 520px) {
+        .product-page {
+            padding: 110px 12px 50px;
+        }
+
+        .product-page-heading {
+            font-size: 30px;
+        }
+
+        .phan-trang-danh-sach {
+            width: 100%;
+            padding: 7px;
+            gap: 5px;
+        }
+
+        .phan-trang-nut {
+            min-width: 92px;
+            padding: 0 8px;
+        }
+
+        .phan-trang-nut,
+        .phan-trang-so {
+            height: 40px;
+            font-size: 13px;
+        }
     }
 </style>
 
@@ -101,7 +248,9 @@
         </h1>
 
         <p class="product-page-description">
-            Hiện có <strong>@tongSoSanPham</strong> sản phẩm đang được bán tại MilkTea House.
+            Hiện có
+            <strong>@tongSoSanPham</strong>
+            sản phẩm đang được bán tại MilkTea House.
         </p>
 
         @if (Model != null && Model.Count > 0)
@@ -128,7 +277,7 @@
                                 </span>
                             }
 
-                            <img src="@item.HinhAnh"
+                            <img src="/images/products/@item.HinhAnh"
                                  alt="@item.TenSanPham"
                                  class="product-photo"
                                  loading="lazy"
@@ -170,12 +319,27 @@
 
                             </div>
 
-                            <a href="#"
-                               class="btn-add-cart">
+                            <div class="product-card-actions">
 
-                                <i class="bi bi-cart3"></i>
-                                Thêm vào giỏ
-                            </a>
+                                <a asp-controller="SanPham"
+                                   asp-action="ChiTiet"
+                                   asp-route-id="@item.SanPhamID"
+                                   class="btn-product-detail">
+
+                                    <i class="bi bi-eye"></i>
+                                    Xem chi tiết
+                                </a>
+
+                                <button type="button"
+                                        class="btn-product-cart"
+                                        title="Chức năng giỏ hàng sẽ được xây dựng ở bước tiếp theo"
+                                        disabled>
+
+                                    <i class="bi bi-cart3"></i>
+                                    Thêm vào giỏ
+                                </button>
+
+                            </div>
 
                         </div>
 
@@ -186,45 +350,76 @@
 
             @if (tongSoTrang > 1)
             {
-                <nav class="product-pagination"
+                <nav class="phan-trang-khu-vuc"
                      aria-label="Phân trang sản phẩm">
 
-                    <a asp-controller="SanPham"
-                       asp-action="Index"
-                       asp-route-trang="@(trangHienTai - 1)"
-                       class="@(trangHienTai <= 1 ? "disabled" : "")">
+                    <ul class="phan-trang-danh-sach">
 
-                        <i class="bi bi-chevron-left"></i>
-                        Trước
-                    </a>
+                        <li>
+                            @if (trangHienTai > 1)
+                            {
+                                <a asp-controller="SanPham"
+                                   asp-action="Index"
+                                   asp-route-trang="@(trangHienTai - 1)"
+                                   class="phan-trang-nut">
 
-                    @for (int soTrang = 1; soTrang <= tongSoTrang; soTrang++)
-                    {
-                        if (soTrang == trangHienTai)
+                                    <i class="bi bi-chevron-left"></i>
+                                    Trang trước
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="phan-trang-nut phan-trang-vo-hieu">
+                                    <i class="bi bi-chevron-left"></i>
+                                    Trang trước
+                                </span>
+                            }
+                        </li>
+
+                        @for (int soTrang = 1; soTrang <= tongSoTrang; soTrang++)
                         {
-                            <span class="active">
-                                @soTrang
-                            </span>
+                            <li>
+                                @if (soTrang == trangHienTai)
+                                {
+                                    <span class="phan-trang-so phan-trang-hien-tai"
+                                          aria-current="page">
+                                        @soTrang
+                                    </span>
+                                }
+                                else
+                                {
+                                    <a asp-controller="SanPham"
+                                       asp-action="Index"
+                                       asp-route-trang="@soTrang"
+                                       class="phan-trang-so">
+                                        @soTrang
+                                    </a>
+                                }
+                            </li>
                         }
-                        else
-                        {
-                            <a asp-controller="SanPham"
-                               asp-action="Index"
-                               asp-route-trang="@soTrang">
 
-                                @soTrang
-                            </a>
-                        }
-                    }
+                        <li>
+                            @if (trangHienTai < tongSoTrang)
+                            {
+                                <a asp-controller="SanPham"
+                                   asp-action="Index"
+                                   asp-route-trang="@(trangHienTai + 1)"
+                                   class="phan-trang-nut">
 
-                    <a asp-controller="SanPham"
-                       asp-action="Index"
-                       asp-route-trang="@(trangHienTai + 1)"
-                       class="@(trangHienTai >= tongSoTrang ? "disabled" : "")">
+                                    Trang sau
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="phan-trang-nut phan-trang-vo-hieu">
+                                    Trang sau
+                                    <i class="bi bi-chevron-right"></i>
+                                </span>
+                            }
+                        </li>
 
-                        Sau
-                        <i class="bi bi-chevron-right"></i>
-                    </a>
+                    </ul>
 
                 </nav>
             }

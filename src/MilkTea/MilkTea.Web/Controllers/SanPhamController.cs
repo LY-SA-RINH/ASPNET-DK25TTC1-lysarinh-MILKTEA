@@ -15,6 +15,7 @@ namespace MilkTea.Web.Controllers
             _context = context;
         }
 
+        // Trang danh sách tất cả sản phẩm có phân trang
         public async Task<IActionResult> Index(int trang = 1)
         {
             if (trang < 1)
@@ -50,6 +51,28 @@ namespace MilkTea.Web.Controllers
             ViewBag.TongSoSanPham = tongSoSanPham;
 
             return View(sanPhams);
+        }
+
+        // Trang chi tiết một sản phẩm
+        public async Task<IActionResult> ChiTiet(int id)
+        {
+            if (id <= 0)
+            {
+                return NotFound();
+            }
+
+            var sanPham = await _context.SanPhams
+                .AsNoTracking()
+                .FirstOrDefaultAsync(sp =>
+                    sp.SanPhamID == id &&
+                    sp.TrangThai);
+
+            if (sanPham == null)
+            {
+                return NotFound();
+            }
+
+            return View(sanPham);
         }
 
         // Trang kiểm tra database mà website đang kết nối thật sự

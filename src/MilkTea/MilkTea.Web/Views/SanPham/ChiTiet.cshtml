@@ -1,0 +1,400 @@
+﻿@model MilkTea.Web.Models.SanPham
+
+@{
+    ViewData["Title"] = Model.TenSanPham;
+
+    string hinhAnh = string.IsNullOrWhiteSpace(Model.HinhAnh)
+        ? "/images/products/san-pham-mac-dinh.png"
+        : $"/images/products/{Model.HinhAnh}";
+}
+
+<style>
+    .product-detail-page {
+        min-height: 100vh;
+        padding: 125px 20px 70px;
+        background: #fffdfb;
+    }
+
+    .product-detail-container {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .product-detail-breadcrumb {
+        margin-bottom: 22px;
+        color: #806d61;
+        font-size: 15px;
+    }
+
+        .product-detail-breadcrumb a {
+            color: #9b4a00;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+            .product-detail-breadcrumb a:hover {
+                text-decoration: underline;
+            }
+
+    .product-detail-card {
+        display: grid;
+        grid-template-columns: minmax(320px, 1fr) minmax(360px, 1fr);
+        gap: 48px;
+        padding: 38px;
+        background: #ffffff;
+        border: 1px solid #f0dfd1;
+        border-radius: 24px;
+        box-shadow: 0 15px 40px rgba(87, 47, 17, 0.08);
+    }
+
+    .product-detail-image-box {
+        position: relative;
+        min-height: 460px;
+        padding: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff7ed;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .product-detail-image {
+        width: 100%;
+        max-width: 410px;
+        height: 410px;
+        object-fit: contain;
+        display: block;
+    }
+
+    .product-detail-badge {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 2;
+        padding: 9px 14px;
+        border-radius: 999px;
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+    }
+
+        .product-detail-badge.hot {
+            background: #e83422;
+        }
+
+        .product-detail-badge.new {
+            background: #2c8b57;
+        }
+
+    .product-detail-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .product-detail-name {
+        margin: 0 0 15px;
+        color: #4a1f08;
+        font-size: 38px;
+        line-height: 1.2;
+        font-weight: 800;
+    }
+
+    .product-detail-rating {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-bottom: 22px;
+        color: #f5a623;
+    }
+
+        .product-detail-rating span {
+            margin-left: 8px;
+            color: #79685d;
+            font-weight: 700;
+        }
+
+    .product-detail-description {
+        margin-bottom: 24px;
+        color: #6f6057;
+        font-size: 17px;
+        line-height: 1.75;
+    }
+
+    .product-detail-price {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 24px;
+    }
+
+    .product-detail-old-price {
+        color: #a69a92;
+        font-size: 19px;
+        text-decoration: line-through;
+    }
+
+    .product-detail-new-price {
+        color: #a54e00;
+        font-size: 32px;
+        font-weight: 800;
+    }
+
+    .product-detail-meta {
+        padding: 18px 20px;
+        margin-bottom: 26px;
+        background: #fff8f0;
+        border-radius: 14px;
+        color: #654936;
+        line-height: 1.9;
+    }
+
+        .product-detail-meta strong {
+            color: #4a1f08;
+        }
+
+    .product-detail-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .product-detail-button {
+        min-height: 48px;
+        padding: 0 22px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        text-decoration: none;
+        font-weight: 800;
+        transition: 0.2s ease;
+    }
+
+        .product-detail-button.back {
+            color: #754018;
+            background: #ffffff;
+            border: 1px solid #d8b793;
+        }
+
+            .product-detail-button.back:hover {
+                color: #552600;
+                background: #fff4e8;
+            }
+
+        .product-detail-button.cart {
+            color: #ffffff;
+            background: #9b4a00;
+            border: 1px solid #9b4a00;
+            cursor: not-allowed;
+            opacity: 0.72;
+        }
+
+    .product-detail-note {
+        margin-top: 13px;
+        color: #94857c;
+        font-size: 13px;
+    }
+
+    @@media (max-width: 850px) {
+        .product-detail-card {
+            grid-template-columns: 1fr;
+            gap: 30px;
+            padding: 24px;
+        }
+
+        .product-detail-image-box {
+            min-height: 360px;
+        }
+
+        .product-detail-image {
+            height: 330px;
+        }
+
+        .product-detail-name {
+            font-size: 31px;
+        }
+    }
+
+    @@media (max-width: 520px) {
+        .product-detail-page {
+            padding: 110px 14px 45px;
+        }
+
+        .product-detail-card {
+            padding: 16px;
+            border-radius: 18px;
+        }
+
+        .product-detail-image-box {
+            min-height: 300px;
+            padding: 18px;
+        }
+
+        .product-detail-image {
+            height: 270px;
+        }
+
+        .product-detail-name {
+            font-size: 27px;
+        }
+
+        .product-detail-new-price {
+            font-size: 27px;
+        }
+    }
+</style>
+
+<section class="product-detail-page">
+
+    <div class="product-detail-container">
+
+        <div class="product-detail-breadcrumb">
+            <a asp-controller="Home"
+               asp-action="Index">
+                Trang chủ
+            </a>
+
+            <span> / </span>
+
+            <a asp-controller="SanPham"
+               asp-action="Index">
+                Sản phẩm
+            </a>
+
+            <span> / @Model.TenSanPham</span>
+        </div>
+
+        <div class="product-detail-card">
+
+            <div class="product-detail-image-box">
+
+                @if (Model.NhanSanPham == 1)
+                {
+                    <span class="product-detail-badge hot">
+                        <i class="bi bi-fire"></i>
+                        HOT
+                    </span>
+                }
+                else if (Model.NhanSanPham == 2)
+                {
+                    <span class="product-detail-badge new">
+                        NEW
+                    </span>
+                }
+
+                <img src="@hinhAnh"
+                     alt="@Model.TenSanPham"
+                     class="product-detail-image"
+                     onerror="this.onerror=null; this.src='/images/products/san-pham-mac-dinh.png';" />
+
+            </div>
+
+            <div class="product-detail-info">
+
+                <h1 class="product-detail-name">
+                    @Model.TenSanPham
+                </h1>
+
+                <div class="product-detail-rating">
+
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+
+                    <span>
+                        @Model.DanhGia.ToString("0.00") / 5
+                    </span>
+
+                </div>
+
+                <div class="product-detail-description">
+                    @if (!string.IsNullOrWhiteSpace(Model.MoTa))
+                    {
+                        @Model.MoTa
+                    }
+                    else
+                    {
+                        <span>Sản phẩm thơm ngon được phục vụ tại MilkTea House.</span>
+                    }
+                </div>
+
+                <div class="product-detail-price">
+
+                    @if (Model.GiaGoc.HasValue &&
+                         Model.GiaGoc.Value > Model.Gia)
+                    {
+                        <span class="product-detail-old-price">
+                            @Model.GiaGoc.Value.ToString("N0")đ
+                        </span>
+                    }
+
+                    <span class="product-detail-new-price">
+                        @Model.Gia.ToString("N0")đ
+                    </span>
+
+                </div>
+
+                <div class="product-detail-meta">
+
+                    <div>
+                        <strong>Mã sản phẩm:</strong>
+                        SP-@Model.SanPhamID.ToString("D4")
+                    </div>
+
+                    <div>
+                        <strong>Tình trạng:</strong>
+
+                        @if (Model.SoLuongTon > 0)
+                        {
+                            <span>Còn hàng</span>
+                        }
+                        else
+                        {
+                            <span>Hết hàng</span>
+                        }
+                    </div>
+
+                    <div>
+                        <strong>Số lượng còn lại:</strong>
+                        @Model.SoLuongTon
+                    </div>
+
+                </div>
+
+                <div class="product-detail-actions">
+
+                    <a asp-controller="SanPham"
+                       asp-action="Index"
+                       class="product-detail-button back">
+
+                        <i class="bi bi-arrow-left"></i>
+                        Quay lại sản phẩm
+                    </a>
+
+                    <button type="button"
+                            class="product-detail-button cart"
+                            disabled>
+
+                        <i class="bi bi-cart3"></i>
+                        Thêm vào giỏ
+                    </button>
+
+                </div>
+
+                <div class="product-detail-note">
+                    Chức năng giỏ hàng sẽ được xây dựng ở bước tiếp theo.
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
