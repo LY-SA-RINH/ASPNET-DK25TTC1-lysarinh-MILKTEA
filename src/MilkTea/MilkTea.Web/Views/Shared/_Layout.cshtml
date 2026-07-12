@@ -1,4 +1,26 @@
-﻿<!DOCTYPE html>
+﻿@using System.Text.Json
+@using Microsoft.AspNetCore.Http
+@using MilkTea.Web.Models
+
+@{
+    string? duLieuGioHang =
+        Context.Session.GetString("GioHang");
+
+    var gioHang = string.IsNullOrWhiteSpace(duLieuGioHang)
+        ? new System.Collections.Generic.List<GioHangItem>()
+        : JsonSerializer.Deserialize<
+            System.Collections.Generic.List<GioHangItem>
+          >(duLieuGioHang)
+          ?? new System.Collections.Generic.List<GioHangItem>();
+
+    int tongSoLuongTrongGio = 0;
+
+    foreach (var item in gioHang)
+    {
+        tongSoLuongTrongGio += item.SoLuong;
+    }
+}
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="utf-8" />
@@ -38,8 +60,20 @@
             <div class="header-icons">
                 <a href="#" title="Tìm kiếm"><i class="bi bi-search"></i></a>
                 <a href="#" title="Tài khoản"><i class="bi bi-person"></i></a>
-                <a href="#" class="cart-icon" title="Giỏ hàng">
+                <a asp-controller="GioHang"
+                   asp-action="Index"
+                   class="cart-icon"
+                   title="Giỏ hàng">
+
                     <i class="bi bi-cart3"></i>
+
+                    @if (tongSoLuongTrongGio > 0)
+                    {
+                        <span class="cart-count">
+                            @tongSoLuongTrongGio
+                        </span>
+                    }
+
                 </a>
             </div>
 

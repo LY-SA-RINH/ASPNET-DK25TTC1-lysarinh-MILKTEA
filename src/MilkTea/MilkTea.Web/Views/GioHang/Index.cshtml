@@ -1,0 +1,522 @@
+﻿@model List<MilkTea.Web.Models.GioHangItem>
+
+@{
+    ViewData["Title"] = "Giỏ hàng";
+
+    int tongSoLuong = ViewBag.TongSoLuong ?? 0;
+    decimal tongTien = ViewBag.TongTien ?? 0m;
+}
+
+<style>
+    .cart-page {
+        min-height: 100vh;
+        padding: 125px 20px 70px;
+        background: #fffdfb;
+    }
+
+    .cart-container {
+        max-width: 1180px;
+        margin: 0 auto;
+    }
+
+    .cart-heading {
+        margin: 0 0 10px;
+        color: #4a1f08;
+        font-size: 38px;
+        font-weight: 800;
+        text-align: center;
+    }
+
+    .cart-description {
+        margin-bottom: 34px;
+        color: #75655c;
+        text-align: center;
+    }
+
+    .cart-notice {
+        margin-bottom: 20px;
+        padding: 14px 18px;
+        border-radius: 12px;
+        font-weight: 700;
+    }
+
+        .cart-notice.success {
+            color: #17653b;
+            background: #eaf8f0;
+            border: 1px solid #bce4cc;
+        }
+
+        .cart-notice.error {
+            color: #9b1c1c;
+            background: #fff0f0;
+            border: 1px solid #f0c1c1;
+        }
+
+    .cart-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 330px;
+        gap: 26px;
+        align-items: start;
+    }
+
+    .cart-items {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .cart-item {
+        display: grid;
+        grid-template-columns: 105px minmax(0, 1fr) auto auto;
+        gap: 18px;
+        align-items: center;
+        padding: 18px;
+        background: #ffffff;
+        border: 1px solid #ecd9c8;
+        border-radius: 18px;
+        box-shadow: 0 8px 24px rgba(94, 50, 17, 0.06);
+    }
+
+    .cart-item-image-box {
+        width: 105px;
+        height: 105px;
+        padding: 8px;
+        background: #fff5e9;
+        border-radius: 14px;
+    }
+
+    .cart-item-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .cart-item-name {
+        margin: 0 0 8px;
+        color: #4a1f08;
+        font-size: 20px;
+        font-weight: 800;
+    }
+
+    .cart-item-price {
+        color: #c8001b;
+        font-size: 18px;
+        font-weight: 800;
+    }
+
+    .cart-item-stock {
+        margin-top: 5px;
+        color: #8a796e;
+        font-size: 13px;
+    }
+
+    .cart-quantity {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+    }
+
+        .cart-quantity form {
+            margin: 0;
+        }
+
+    .cart-quantity-button {
+        width: 36px;
+        height: 36px;
+        border: 1px solid #deb995;
+        border-radius: 9px;
+        color: #753608;
+        background: #fff9f3;
+        font-size: 18px;
+        font-weight: 800;
+        cursor: pointer;
+    }
+
+        .cart-quantity-button:hover {
+            color: #ffffff;
+            background: #9b4a00;
+            border-color: #9b4a00;
+        }
+
+    .cart-quantity-number {
+        min-width: 34px;
+        color: #4a1f08;
+        font-size: 17px;
+        font-weight: 800;
+        text-align: center;
+    }
+
+    .cart-item-total {
+        min-width: 120px;
+        color: #9b3f00;
+        font-size: 19px;
+        font-weight: 800;
+        text-align: right;
+    }
+
+    .cart-remove-form {
+        grid-column: 2 / -1;
+        margin: -5px 0 0;
+        text-align: right;
+    }
+
+    .cart-remove-button {
+        padding: 0;
+        border: 0;
+        color: #b72727;
+        background: transparent;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+        .cart-remove-button:hover {
+            text-decoration: underline;
+        }
+
+    .cart-summary {
+        position: sticky;
+        top: 105px;
+        padding: 24px;
+        background: #fff8ef;
+        border: 1px solid #e7ccb0;
+        border-radius: 18px;
+        box-shadow: 0 10px 28px rgba(94, 50, 17, 0.07);
+    }
+
+        .cart-summary h2 {
+            margin: 0 0 20px;
+            color: #4a1f08;
+            font-size: 24px;
+            font-weight: 800;
+        }
+
+    .cart-summary-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 15px;
+        color: #6d584a;
+    }
+
+    .cart-summary-total {
+        padding-top: 16px;
+        border-top: 1px solid #dec3a9;
+        color: #4a1f08;
+        font-size: 19px;
+        font-weight: 800;
+    }
+
+        .cart-summary-total strong {
+            color: #c8001b;
+            font-size: 24px;
+        }
+
+    .cart-checkout-button,
+    .cart-continue-button {
+        width: 100%;
+        min-height: 46px;
+        margin-top: 12px;
+        border-radius: 11px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-decoration: none;
+        font-weight: 800;
+    }
+
+    .cart-checkout-button {
+        border: 1px solid #9b4a00;
+        color: #ffffff;
+        background: #9b4a00;
+        cursor: not-allowed;
+        opacity: 0.65;
+    }
+
+    .cart-continue-button {
+        border: 1px solid #d5ad87;
+        color: #74370b;
+        background: #ffffff;
+    }
+
+    .cart-clear-form {
+        margin-top: 15px;
+        text-align: center;
+    }
+
+    .cart-clear-button {
+        padding: 0;
+        border: 0;
+        color: #a42a2a;
+        background: transparent;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .cart-empty {
+        padding: 70px 20px;
+        border: 1px dashed #ddb995;
+        border-radius: 20px;
+        background: #fff8f0;
+        text-align: center;
+    }
+
+        .cart-empty i {
+            color: #b46b2e;
+            font-size: 58px;
+        }
+
+        .cart-empty h2 {
+            margin: 18px 0 10px;
+            color: #4a1f08;
+        }
+
+        .cart-empty p {
+            margin-bottom: 24px;
+            color: #806d61;
+        }
+
+        .cart-empty a {
+            min-height: 46px;
+            padding: 0 22px;
+            border-radius: 11px;
+            display: inline-flex;
+            align-items: center;
+            color: #ffffff;
+            background: #9b4a00;
+            text-decoration: none;
+            font-weight: 800;
+        }
+
+    @@media (max-width: 900px) {
+        .cart-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .cart-summary {
+            position: static;
+        }
+    }
+
+    @@media (max-width: 650px) {
+        .cart-page {
+            padding: 110px 12px 45px;
+        }
+
+        .cart-heading {
+            font-size: 30px;
+        }
+
+        .cart-item {
+            grid-template-columns: 82px minmax(0, 1fr);
+            gap: 13px;
+        }
+
+        .cart-item-image-box {
+            width: 82px;
+            height: 82px;
+        }
+
+        .cart-quantity,
+        .cart-item-total {
+            grid-column: 2;
+        }
+
+        .cart-item-total {
+            text-align: left;
+        }
+
+        .cart-remove-form {
+            grid-column: 2;
+            text-align: left;
+        }
+    }
+</style>
+
+<section class="cart-page">
+
+    <div class="cart-container">
+
+        <h1 class="cart-heading">
+            Giỏ hàng của bạn
+        </h1>
+
+        <p class="cart-description">
+            Kiểm tra sản phẩm và số lượng trước khi đặt hàng.
+        </p>
+
+        @if (TempData["ThanhCong"] != null)
+        {
+            <div class="cart-notice success">
+                @TempData["ThanhCong"]
+            </div>
+        }
+
+        @if (TempData["Loi"] != null)
+        {
+            <div class="cart-notice error">
+                @TempData["Loi"]
+            </div>
+        }
+
+        @if (Model.Count > 0)
+        {
+            <div class="cart-layout">
+
+                <div class="cart-items">
+
+                    @foreach (var item in Model)
+                    {
+                        <article class="cart-item">
+
+                            <div class="cart-item-image-box">
+                                <img src="/images/products/@item.HinhAnh"
+                                     alt="@item.TenSanPham"
+                                     class="cart-item-image"
+                                     onerror="this.onerror=null; this.src='/images/products/san-pham-mac-dinh.png';" />
+                            </div>
+
+                            <div>
+                                <h2 class="cart-item-name">
+                                    @item.TenSanPham
+                                </h2>
+
+                                <div class="cart-item-price">
+                                    @item.Gia.ToString("N0")đ
+                                </div>
+
+                                <div class="cart-item-stock">
+                                    Tồn kho: @item.SoLuongTon
+                                </div>
+                            </div>
+
+                            <div class="cart-quantity">
+
+                                <form asp-controller="GioHang"
+                                      asp-action="Giam"
+                                      method="post">
+
+                                    <input type="hidden"
+                                           name="id"
+                                           value="@item.SanPhamID" />
+
+                                    <button type="submit"
+                                            class="cart-quantity-button"
+                                            title="Giảm số lượng">
+                                        −
+                                    </button>
+                                </form>
+
+                                <span class="cart-quantity-number">
+                                    @item.SoLuong
+                                </span>
+
+                                <form asp-controller="GioHang"
+                                      asp-action="Tang"
+                                      method="post">
+
+                                    <input type="hidden"
+                                           name="id"
+                                           value="@item.SanPhamID" />
+
+                                    <button type="submit"
+                                            class="cart-quantity-button"
+                                            title="Tăng số lượng">
+                                        +
+                                    </button>
+                                </form>
+
+                            </div>
+
+                            <div class="cart-item-total">
+                                @item.ThanhTien.ToString("N0")đ
+                            </div>
+
+                            <form asp-controller="GioHang"
+                                  asp-action="Xoa"
+                                  method="post"
+                                  class="cart-remove-form">
+
+                                <input type="hidden"
+                                       name="id"
+                                       value="@item.SanPhamID" />
+
+                                <button type="submit"
+                                        class="cart-remove-button">
+                                    <i class="bi bi-trash3"></i>
+                                    Xóa sản phẩm
+                                </button>
+                            </form>
+
+                        </article>
+                    }
+
+                </div>
+
+                <aside class="cart-summary">
+
+                    <h2>Tóm tắt đơn hàng</h2>
+
+                    <div class="cart-summary-row">
+                        <span>Tổng số lượng</span>
+                        <strong>@tongSoLuong sản phẩm</strong>
+                    </div>
+
+                    <div class="cart-summary-row cart-summary-total">
+                        <span>Tổng tiền</span>
+                        <strong>@tongTien.ToString("N0")đ</strong>
+                    </div>
+
+                    <button type="button"
+                            class="cart-checkout-button"
+                            disabled>
+                        <i class="bi bi-credit-card"></i>
+                        Tiến hành đặt hàng
+                    </button>
+
+                    <a asp-controller="SanPham"
+                       asp-action="Index"
+                       class="cart-continue-button">
+                        <i class="bi bi-arrow-left"></i>
+                        Tiếp tục mua hàng
+                    </a>
+
+                    <form asp-controller="GioHang"
+                          asp-action="XoaTatCa"
+                          method="post"
+                          class="cart-clear-form"
+                          onsubmit="return confirm('Bạn có chắc muốn xóa toàn bộ giỏ hàng?');">
+
+                        <button type="submit"
+                                class="cart-clear-button">
+                            Xóa toàn bộ giỏ hàng
+                        </button>
+                    </form>
+
+                </aside>
+
+            </div>
+        }
+        else
+        {
+            <div class="cart-empty">
+
+                <i class="bi bi-cart-x"></i>
+
+                <h2>Giỏ hàng đang trống</h2>
+
+                <p>
+                    Hãy chọn những sản phẩm yêu thích tại MilkTea House.
+                </p>
+
+                <a asp-controller="SanPham"
+                   asp-action="Index">
+                    Xem sản phẩm
+                </a>
+
+            </div>
+        }
+
+    </div>
+
+</section>
