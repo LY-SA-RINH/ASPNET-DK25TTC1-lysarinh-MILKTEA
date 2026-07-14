@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Globalization;
+using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MilkTea.Web.Data;
@@ -37,7 +40,10 @@ namespace MilkTea.Web.Controllers
             _moiTruong = moiTruong;
         }
 
-        // Danh sách quản lý sản phẩm
+        // =====================================================
+        // DANH SÁCH QUẢN LÝ SẢN PHẨM
+        // =====================================================
+
         [HttpGet]
         public async Task<IActionResult> Index(
             string? tuKhoa,
@@ -174,7 +180,10 @@ namespace MilkTea.Web.Controllers
             return View(model);
         }
 
-        // Trang thêm sản phẩm
+        // =====================================================
+        // THÊM SẢN PHẨM
+        // =====================================================
+
         [HttpGet]
         public async Task<IActionResult> Them()
         {
@@ -199,7 +208,6 @@ namespace MilkTea.Web.Controllers
             return View(model);
         }
 
-        // Xử lý thêm sản phẩm
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Them(
@@ -241,48 +249,14 @@ namespace MilkTea.Web.Controllers
                     "Tên sản phẩm này đã tồn tại.");
             }
 
-            if (model.GiaGoc.HasValue &&
-                model.GiaGoc.Value > 0 &&
-                model.GiaGoc.Value <= model.Gia)
-            {
-                ModelState.AddModelError(
-                    nameof(model.GiaGoc),
-                    "Giá gốc phải lớn hơn giá bán hoặc để trống.");
-            }
+            KiemTraGiaGoc(
+                model.Gia,
+                model.GiaGoc,
+                nameof(model.GiaGoc));
 
-            if (model.HinhAnhTaiLen != null &&
-                model.HinhAnhTaiLen.Length > 0)
-            {
-                string duoiTep =
-                    Path.GetExtension(
-                        model.HinhAnhTaiLen.FileName);
-
-                if (!DuoiTepHinhAnhHopLe.Contains(duoiTep))
-                {
-                    ModelState.AddModelError(
-                        nameof(model.HinhAnhTaiLen),
-                        "Chỉ chấp nhận hình ảnh JPG, JPEG, PNG hoặc WEBP.");
-                }
-
-                if (model.HinhAnhTaiLen.Length >
-                    KichThuocHinhAnhToiDa)
-                {
-                    ModelState.AddModelError(
-                        nameof(model.HinhAnhTaiLen),
-                        "Hình ảnh không được vượt quá 5 MB.");
-                }
-
-                if (string.IsNullOrWhiteSpace(
-                        model.HinhAnhTaiLen.ContentType) ||
-                    !model.HinhAnhTaiLen.ContentType.StartsWith(
-                        "image/",
-                        StringComparison.OrdinalIgnoreCase))
-                {
-                    ModelState.AddModelError(
-                        nameof(model.HinhAnhTaiLen),
-                        "Tệp được chọn không phải là hình ảnh hợp lệ.");
-                }
-            }
+            KiemTraHinhAnhTaiLen(
+                model.HinhAnhTaiLen,
+                nameof(model.HinhAnhTaiLen));
 
             if (!ModelState.IsValid)
             {
@@ -291,43 +265,24 @@ namespace MilkTea.Web.Controllers
                 return View(model);
             }
 
-            string? tenTepHinhAnh = null;
-            string? duongDanHinhAnhDaLuu = null;
+            string? tenTepHinhAnhMoi = null;
+            string? duongDanHinhAnhMoi = null;
 
             try
             {
                 if (model.HinhAnhTaiLen != null &&
                     model.HinhAnhTaiLen.Length > 0)
                 {
-                    string duoiTep =
-                        Path.GetExtension(
-                            model.HinhAnhTaiLen.FileName)
-                        .ToLowerInvariant();
+                    var ketQuaLuuHinhAnh =
+                        await LuuHinhAnhMoi(
+                            model.HinhAnhTaiLen,
+                            model.TenSanPham);
 
-                    tenTepHinhAnh =
-                        $"san-pham-{Guid.NewGuid():N}{duoiTep}";
+                    tenTepHinhAnhMoi =
+                        ketQuaLuuHinhAnh.TenTep;
 
-                    string thuMucHinhAnh =
-                        Path.Combine(
-                            _moiTruong.WebRootPath,
-                            "images",
-                            "products");
-
-                    Directory.CreateDirectory(
-                        thuMucHinhAnh);
-
-                    duongDanHinhAnhDaLuu =
-                        Path.Combine(
-                            thuMucHinhAnh,
-                            tenTepHinhAnh);
-
-                    await using FileStream tepMoi =
-                        new FileStream(
-                            duongDanHinhAnhDaLuu,
-                            FileMode.CreateNew);
-
-                    await model.HinhAnhTaiLen
-                        .CopyToAsync(tepMoi);
+                    duongDanHinhAnhMoi =
+                        ketQuaLuuHinhAnh.DuongDanDayDu;
                 }
 
                 var sanPham = new SanPham
@@ -343,10 +298,9 @@ namespace MilkTea.Web.Controllers
                             ? model.GiaGoc
                             : null,
 
-                    HinhAnh = tenTepHinhAnh,
+                    HinhAnh = tenTepHinhAnhMoi,
 
-                    // Chưa có chức năng khách hàng đánh giá,
-                    // sản phẩm mới tạm mặc định 5 sao.
+                    // Chưa có chức năng khách hàng đánh giá.
                     DanhGia = 5.00m,
 
                     SoLuongTon = model.SoLuongTon,
@@ -368,14 +322,8 @@ namespace MilkTea.Web.Controllers
             }
             catch
             {
-                if (!string.IsNullOrWhiteSpace(
-                        duongDanHinhAnhDaLuu) &&
-                    System.IO.File.Exists(
-                        duongDanHinhAnhDaLuu))
-                {
-                    System.IO.File.Delete(
-                        duongDanHinhAnhDaLuu);
-                }
+                XoaTepHinhAnhMoiNeuCo(
+                    duongDanHinhAnhMoi);
 
                 ModelState.AddModelError(
                     string.Empty,
@@ -387,7 +335,232 @@ namespace MilkTea.Web.Controllers
             }
         }
 
-        // Ngừng bán hoặc mở bán lại sản phẩm
+        // =====================================================
+        // SỬA SẢN PHẨM
+        // =====================================================
+
+        [HttpGet]
+        public async Task<IActionResult> Sua(int id)
+        {
+            if (id <= 0)
+            {
+                return NotFound();
+            }
+
+            SanPham? sanPham =
+                await _context.SanPhams
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(sp =>
+                        sp.SanPhamID == id);
+
+            if (sanPham == null)
+            {
+                return NotFound();
+            }
+
+            var model = new SuaSanPhamViewModel
+            {
+                SanPhamID = sanPham.SanPhamID,
+                DanhMucID = sanPham.DanhMucID,
+                TenSanPham = sanPham.TenSanPham,
+                MoTa = sanPham.MoTa,
+                Gia = sanPham.Gia,
+                GiaGoc = sanPham.GiaGoc,
+                SoLuongTon = sanPham.SoLuongTon,
+                NhanSanPham = sanPham.NhanSanPham,
+                ThuTuHienThi = sanPham.ThuTuHienThi,
+                TrangThai = sanPham.TrangThai,
+                HinhAnhHienTai = sanPham.HinhAnh
+            };
+
+            await NapDanhMucVaoModel(model);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Sua(
+            SuaSanPhamViewModel model)
+        {
+            if (model.SanPhamID <= 0)
+            {
+                return NotFound();
+            }
+
+            SanPham? sanPham =
+                await _context.SanPhams
+                    .FirstOrDefaultAsync(sp =>
+                        sp.SanPhamID == model.SanPhamID);
+
+            if (sanPham == null)
+            {
+                return NotFound();
+            }
+
+            string? hinhAnhCu =
+                sanPham.HinhAnh;
+
+            model.TenSanPham =
+                model.TenSanPham?.Trim()
+                ?? string.Empty;
+
+            model.MoTa =
+                string.IsNullOrWhiteSpace(model.MoTa)
+                    ? null
+                    : model.MoTa.Trim();
+
+            bool danhMucHopLe =
+                await _context.DanhMucs
+                    .AsNoTracking()
+                    .AnyAsync(dm =>
+                        dm.DanhMucID == model.DanhMucID &&
+                        (
+                            dm.TrangThai ||
+                            dm.DanhMucID ==
+                            sanPham.DanhMucID
+                        ));
+
+            if (!danhMucHopLe)
+            {
+                ModelState.AddModelError(
+                    nameof(model.DanhMucID),
+                    "Danh mục không tồn tại hoặc đang tạm ngưng.");
+            }
+
+            bool tenSanPhamDaTonTai =
+                await _context.SanPhams
+                    .AsNoTracking()
+                    .AnyAsync(sp =>
+                        sp.SanPhamID != model.SanPhamID &&
+                        sp.TenSanPham == model.TenSanPham);
+
+            if (tenSanPhamDaTonTai)
+            {
+                ModelState.AddModelError(
+                    nameof(model.TenSanPham),
+                    "Tên sản phẩm này đã được sử dụng.");
+            }
+
+            KiemTraGiaGoc(
+                model.Gia,
+                model.GiaGoc,
+                nameof(model.GiaGoc));
+
+            KiemTraHinhAnhTaiLen(
+                model.HinhAnhTaiLen,
+                nameof(model.HinhAnhTaiLen));
+
+            if (!ModelState.IsValid)
+            {
+                model.HinhAnhHienTai =
+                    hinhAnhCu;
+
+                await NapDanhMucVaoModel(model);
+
+                return View(model);
+            }
+
+            string? tenTepHinhAnhMoi = null;
+            string? duongDanHinhAnhMoi = null;
+
+            try
+            {
+                if (model.HinhAnhTaiLen != null &&
+                    model.HinhAnhTaiLen.Length > 0)
+                {
+                    var ketQuaLuuHinhAnh =
+                        await LuuHinhAnhMoi(
+                            model.HinhAnhTaiLen,
+                            model.TenSanPham);
+
+                    tenTepHinhAnhMoi =
+                        ketQuaLuuHinhAnh.TenTep;
+
+                    duongDanHinhAnhMoi =
+                        ketQuaLuuHinhAnh.DuongDanDayDu;
+                }
+
+                sanPham.DanhMucID =
+                    model.DanhMucID;
+
+                sanPham.TenSanPham =
+                    model.TenSanPham;
+
+                sanPham.MoTa =
+                    model.MoTa;
+
+                sanPham.Gia =
+                    model.Gia;
+
+                sanPham.GiaGoc =
+                    model.GiaGoc.HasValue &&
+                    model.GiaGoc.Value > 0
+                        ? model.GiaGoc
+                        : null;
+
+                sanPham.SoLuongTon =
+                    model.SoLuongTon;
+
+                sanPham.NhanSanPham =
+                    model.NhanSanPham;
+
+                sanPham.ThuTuHienThi =
+                    model.ThuTuHienThi;
+
+                sanPham.TrangThai =
+                    model.TrangThai;
+
+                // Chỉ thay hình khi Quản trị viên chọn hình mới.
+                if (!string.IsNullOrWhiteSpace(
+                        tenTepHinhAnhMoi))
+                {
+                    sanPham.HinhAnh =
+                        tenTepHinhAnhMoi;
+                }
+
+                await _context.SaveChangesAsync();
+
+                // Chỉ xóa hình cũ sau khi dữ liệu mới
+                // đã được cập nhật thành công.
+                if (!string.IsNullOrWhiteSpace(
+                        tenTepHinhAnhMoi))
+                {
+                    await XoaHinhAnhCuNeuKhongConSuDung(
+                        hinhAnhCu,
+                        sanPham.SanPhamID);
+                }
+
+                TempData["ThanhCong"] =
+                    $"Đã cập nhật sản phẩm “{sanPham.TenSanPham}” thành công.";
+
+                return RedirectToAction(
+                    nameof(Index));
+            }
+            catch
+            {
+                // Nếu cập nhật database thất bại,
+                // xóa hình mới vừa được tải lên.
+                XoaTepHinhAnhMoiNeuCo(
+                    duongDanHinhAnhMoi);
+
+                model.HinhAnhHienTai =
+                    hinhAnhCu;
+
+                ModelState.AddModelError(
+                    string.Empty,
+                    "Không thể cập nhật sản phẩm. Vui lòng thử lại.");
+
+                await NapDanhMucVaoModel(model);
+
+                return View(model);
+            }
+        }
+
+        // =====================================================
+        // MỞ BÁN HOẶC TẠM NGƯNG BÁN
+        // =====================================================
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CapNhatTrangThai(
@@ -430,7 +603,8 @@ namespace MilkTea.Web.Controllers
                     nameof(Index));
             }
 
-            sanPham.TrangThai = trangThaiMoi;
+            sanPham.TrangThai =
+                trangThaiMoi;
 
             await _context.SaveChangesAsync();
 
@@ -455,7 +629,353 @@ namespace MilkTea.Web.Controllers
                 });
         }
 
-        // Nạp danh mục đang hoạt động vào biểu mẫu
+        // =====================================================
+        // KIỂM TRA GIÁ GỐC
+        // =====================================================
+
+        private void KiemTraGiaGoc(
+            decimal gia,
+            decimal? giaGoc,
+            string tenThuocTinh)
+        {
+            if (giaGoc.HasValue &&
+                giaGoc.Value > 0 &&
+                giaGoc.Value <= gia)
+            {
+                ModelState.AddModelError(
+                    tenThuocTinh,
+                    "Giá gốc phải lớn hơn giá bán hoặc để trống.");
+            }
+        }
+
+        // =====================================================
+        // KIỂM TRA HÌNH ẢNH
+        // =====================================================
+
+        private void KiemTraHinhAnhTaiLen(
+            IFormFile? hinhAnhTaiLen,
+            string tenThuocTinh)
+        {
+            if (hinhAnhTaiLen == null ||
+                hinhAnhTaiLen.Length <= 0)
+            {
+                return;
+            }
+
+            string duoiTep =
+                Path.GetExtension(
+                    hinhAnhTaiLen.FileName);
+
+            if (!DuoiTepHinhAnhHopLe.Contains(
+                    duoiTep))
+            {
+                ModelState.AddModelError(
+                    tenThuocTinh,
+                    "Chỉ chấp nhận hình ảnh JPG, JPEG, PNG hoặc WEBP.");
+            }
+
+            if (hinhAnhTaiLen.Length >
+                KichThuocHinhAnhToiDa)
+            {
+                ModelState.AddModelError(
+                    tenThuocTinh,
+                    "Hình ảnh không được vượt quá 5 MB.");
+            }
+
+            if (string.IsNullOrWhiteSpace(
+                    hinhAnhTaiLen.ContentType) ||
+                !hinhAnhTaiLen.ContentType.StartsWith(
+                    "image/",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                ModelState.AddModelError(
+                    tenThuocTinh,
+                    "Tệp được chọn không phải là hình ảnh hợp lệ.");
+            }
+        }
+
+        // =====================================================
+        // LƯU HÌNH ẢNH VỚI TÊN DỄ NHẬN BIẾT
+        // =====================================================
+
+        private async Task<(
+            string TenTep,
+            string DuongDanDayDu)> LuuHinhAnhMoi(
+                IFormFile hinhAnhTaiLen,
+                string tenSanPham)
+        {
+            string duoiTep =
+                Path.GetExtension(
+                    hinhAnhTaiLen.FileName)
+                .ToLowerInvariant();
+
+            string tenSanPhamKhongDau =
+                ChuyenTenThanhSlug(
+                    tenSanPham);
+
+            if (string.IsNullOrWhiteSpace(
+                    tenSanPhamKhongDau))
+            {
+                tenSanPhamKhongDau =
+                    "san-pham";
+            }
+
+            // Giới hạn độ dài để tên tệp không quá dài.
+            if (tenSanPhamKhongDau.Length > 80)
+            {
+                tenSanPhamKhongDau =
+                    tenSanPhamKhongDau[..80]
+                        .TrimEnd('-');
+            }
+
+            string thoiGian =
+                DateTime.Now.ToString(
+                    "yyyyMMdd-HHmmss");
+
+            string maChongTrung =
+                Guid.NewGuid()
+                    .ToString("N")[..6];
+
+            string tenTep =
+                $"{tenSanPhamKhongDau}-{thoiGian}-{maChongTrung}{duoiTep}";
+
+            string thuMucHinhAnh =
+                Path.Combine(
+                    _moiTruong.WebRootPath,
+                    "images",
+                    "products");
+
+            Directory.CreateDirectory(
+                thuMucHinhAnh);
+
+            string duongDanDayDu =
+                Path.Combine(
+                    thuMucHinhAnh,
+                    tenTep);
+
+            await using FileStream tepMoi =
+                new FileStream(
+                    duongDanDayDu,
+                    FileMode.CreateNew);
+
+            await hinhAnhTaiLen.CopyToAsync(
+                tepMoi);
+
+            return (
+                tenTep,
+                duongDanDayDu);
+        }
+
+        // =====================================================
+        // CHUYỂN TÊN SẢN PHẨM THÀNH TÊN TỆP KHÔNG DẤU
+        // =====================================================
+
+        private string ChuyenTenThanhSlug(
+            string noiDung)
+        {
+            if (string.IsNullOrWhiteSpace(
+                    noiDung))
+            {
+                return string.Empty;
+            }
+
+            string noiDungChuanHoa =
+                noiDung.Trim()
+                    .Normalize(
+                        NormalizationForm.FormD);
+
+            var ketQua =
+                new StringBuilder();
+
+            bool kyTuTruocLaDauGach =
+                false;
+
+            foreach (char kyTu in noiDungChuanHoa)
+            {
+                UnicodeCategory loaiKyTu =
+                    CharUnicodeInfo.GetUnicodeCategory(
+                        kyTu);
+
+                // Bỏ dấu tiếng Việt.
+                if (loaiKyTu ==
+                    UnicodeCategory.NonSpacingMark)
+                {
+                    continue;
+                }
+
+                char kyTuThuong =
+                    char.ToLowerInvariant(
+                        kyTu);
+
+                // Chữ đ không bị tách khi Normalize,
+                // nên cần chuyển riêng thành d.
+                if (kyTuThuong == 'đ')
+                {
+                    kyTuThuong = 'd';
+                }
+
+                if (char.IsLetterOrDigit(
+                        kyTuThuong))
+                {
+                    ketQua.Append(
+                        kyTuThuong);
+
+                    kyTuTruocLaDauGach =
+                        false;
+                }
+                else if (!kyTuTruocLaDauGach)
+                {
+                    ketQua.Append('-');
+
+                    kyTuTruocLaDauGach =
+                        true;
+                }
+            }
+
+            return ketQua
+                .ToString()
+                .Trim('-');
+        }
+
+        // =====================================================
+        // XÓA HÌNH MỚI NẾU LƯU DATABASE THẤT BẠI
+        // =====================================================
+
+        private void XoaTepHinhAnhMoiNeuCo(
+            string? duongDanHinhAnh)
+        {
+            if (string.IsNullOrWhiteSpace(
+                    duongDanHinhAnh))
+            {
+                return;
+            }
+
+            try
+            {
+                if (System.IO.File.Exists(
+                        duongDanHinhAnh))
+                {
+                    System.IO.File.Delete(
+                        duongDanHinhAnh);
+                }
+            }
+            catch
+            {
+                // Không làm gián đoạn luồng xử lý
+                // nếu không thể xóa tệp vừa tải lên.
+            }
+        }
+
+        // =====================================================
+        // XÓA HÌNH CŨ NẾU KHÔNG CÒN ĐƯỢC SỬ DỤNG
+        // =====================================================
+
+        private async Task XoaHinhAnhCuNeuKhongConSuDung(
+            string? hinhAnhCu,
+            int sanPhamID)
+        {
+            if (string.IsNullOrWhiteSpace(
+                    hinhAnhCu))
+            {
+                return;
+            }
+
+            string hinhAnhDaChuanHoa =
+                hinhAnhCu.Replace(
+                    '\\',
+                    '/');
+
+            string tenTepHinhAnhCu =
+                Path.GetFileName(
+                    hinhAnhDaChuanHoa);
+
+            if (string.IsNullOrWhiteSpace(
+                    tenTepHinhAnhCu))
+            {
+                return;
+            }
+
+            // Không xóa hình mặc định dùng chung.
+            string[] cacHinhMacDinh =
+            {
+                "san-pham-mac-dinh.png",
+                "san-pham-mac-dinh.jpg",
+                "default-product.png",
+                "no-image.png"
+            };
+
+            bool laHinhMacDinh =
+                cacHinhMacDinh.Any(tenHinh =>
+                    string.Equals(
+                        tenHinh,
+                        tenTepHinhAnhCu,
+                        StringComparison.OrdinalIgnoreCase));
+
+            if (laHinhMacDinh)
+            {
+                return;
+            }
+
+            List<string> cacHinhAnhKhac =
+                await _context.SanPhams
+                    .AsNoTracking()
+                    .Where(sp =>
+                        sp.SanPhamID != sanPhamID &&
+                        sp.HinhAnh != null)
+                    .Select(sp =>
+                        sp.HinhAnh!)
+                    .ToListAsync();
+
+            bool dangDuocSanPhamKhacSuDung =
+                cacHinhAnhKhac.Any(hinhAnh =>
+                {
+                    string hinhAnhKhacDaChuanHoa =
+                        hinhAnh.Replace(
+                            '\\',
+                            '/');
+
+                    string tenTepKhac =
+                        Path.GetFileName(
+                            hinhAnhKhacDaChuanHoa);
+
+                    return string.Equals(
+                        tenTepKhac,
+                        tenTepHinhAnhCu,
+                        StringComparison.OrdinalIgnoreCase);
+                });
+
+            if (dangDuocSanPhamKhacSuDung)
+            {
+                return;
+            }
+
+            string duongDanHinhAnhCu =
+                Path.Combine(
+                    _moiTruong.WebRootPath,
+                    "images",
+                    "products",
+                    tenTepHinhAnhCu);
+
+            try
+            {
+                if (System.IO.File.Exists(
+                        duongDanHinhAnhCu))
+                {
+                    System.IO.File.Delete(
+                        duongDanHinhAnhCu);
+                }
+            }
+            catch
+            {
+                // Dữ liệu sản phẩm đã cập nhật thành công.
+                // Không báo lỗi chỉ vì không xóa được hình cũ.
+            }
+        }
+
+        // =====================================================
+        // NẠP DANH MỤC CHO TRANG THÊM
+        // =====================================================
+
         private async Task NapDanhMucVaoModel(
             ThemSanPhamViewModel model)
         {
@@ -464,6 +984,25 @@ namespace MilkTea.Web.Controllers
                     .AsNoTracking()
                     .Where(dm =>
                         dm.TrangThai)
+                    .OrderBy(dm =>
+                        dm.TenDanhMuc)
+                    .ToListAsync();
+        }
+
+        // =====================================================
+        // NẠP DANH MỤC CHO TRANG SỬA
+        // =====================================================
+
+        private async Task NapDanhMucVaoModel(
+            SuaSanPhamViewModel model)
+        {
+            model.DanhMucs =
+                await _context.DanhMucs
+                    .AsNoTracking()
+                    .Where(dm =>
+                        dm.TrangThai ||
+                        dm.DanhMucID ==
+                        model.DanhMucID)
                     .OrderBy(dm =>
                         dm.TenDanhMuc)
                     .ToListAsync();

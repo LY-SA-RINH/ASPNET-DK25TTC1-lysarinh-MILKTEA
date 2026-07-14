@@ -317,10 +317,11 @@
                         </label>
 
                         <input asp-for="Gia"
+                               asp-format="{0:0}"
                                type="number"
                                min="1000"
-                               step="1000"
-                               placeholder="Ví dụ: 29000" />
+                               step="1"
+                               placeholder="Ví dụ: 32000" />
 
                         <span asp-validation-for="Gia"
                               class="add-product-error">
@@ -335,9 +336,10 @@
                         </label>
 
                         <input asp-for="GiaGoc"
+                               asp-format="{0:0}"
                                type="number"
                                min="0"
-                               step="1000"
+                               step="1"
                                placeholder="Để trống nếu không giảm giá" />
 
                         <span asp-validation-for="GiaGoc"

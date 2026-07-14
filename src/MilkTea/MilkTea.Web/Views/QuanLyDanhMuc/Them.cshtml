@@ -1,0 +1,336 @@
+﻿@model MilkTea.Web.Models.ThemDanhMucViewModel
+
+@{
+    ViewData["Title"] = "Thêm danh mục";
+}
+
+<style>
+    .add-category-page {
+        min-height: 100vh;
+        padding: 125px 20px 70px;
+        background: #fffdfb;
+    }
+
+    .add-category-container {
+        max-width: 820px;
+        margin: 0 auto;
+    }
+
+    .add-category-heading {
+        margin: 0 0 8px;
+        color: #4a1f08;
+        font-size: 36px;
+        font-weight: 800;
+    }
+
+    .add-category-description {
+        margin: 0 0 28px;
+        color: #75655c;
+    }
+
+    .add-category-card {
+        padding: 30px;
+        border: 1px solid #ecd7c4;
+        border-radius: 20px;
+        background: #ffffff;
+        box-shadow: 0 10px 30px rgba(91, 47, 15, 0.08);
+    }
+
+    .add-category-validation {
+        margin-bottom: 20px;
+        padding: 12px 15px;
+        border-radius: 10px;
+        color: #a72020;
+        background: #fff1f1;
+        font-weight: 700;
+    }
+
+        .add-category-validation:empty {
+            display: none;
+        }
+
+    .add-category-field {
+        margin-bottom: 20px;
+    }
+
+        .add-category-field > label {
+            display: block;
+            margin-bottom: 7px;
+            color: #57331e;
+            font-weight: 800;
+        }
+
+    .add-category-required {
+        color: #be2020;
+    }
+
+    .add-category-field input,
+    .add-category-field textarea {
+        width: 100%;
+        min-height: 48px;
+        padding: 10px 13px;
+        border: 1px solid #d9bfa7;
+        border-radius: 11px;
+        box-sizing: border-box;
+        color: #3f2a1e;
+        background: #ffffff;
+        font-family: inherit;
+        outline: none;
+    }
+
+    .add-category-field textarea {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+        .add-category-field input:focus,
+        .add-category-field textarea:focus {
+            border-color: #9b4a00;
+            box-shadow: 0 0 0 3px rgba(155, 74, 0, 0.12);
+        }
+
+    .add-category-error {
+        display: block;
+        margin-top: 5px;
+        color: #be2020;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .add-category-help {
+        display: block;
+        margin-top: 6px;
+        color: #806f65;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .add-category-status {
+        min-height: 52px;
+        padding: 12px 14px;
+        border: 1px solid #d9bfa7;
+        border-radius: 11px;
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        background: #fffaf5;
+    }
+
+        .add-category-status input {
+            width: 19px;
+            height: 19px;
+            min-height: auto;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .add-category-status label {
+            margin: 0;
+            color: #57331e;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+    .add-category-note {
+        margin-top: 10px;
+        padding: 11px 13px;
+        border-radius: 10px;
+        color: #755233;
+        background: #fff1df;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .add-category-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 28px;
+    }
+
+    .add-category-submit,
+    .add-category-back {
+        min-height: 50px;
+        padding: 0 22px;
+        border-radius: 11px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 800;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+    .add-category-submit {
+        flex: 1;
+        border: 1px solid #278453;
+        color: #ffffff;
+        background: #278453;
+        cursor: pointer;
+    }
+
+        .add-category-submit:hover {
+            background: #17653b;
+            border-color: #17653b;
+        }
+
+    .add-category-back {
+        border: 1px solid #d0aa87;
+        color: #754018;
+        background: #ffffff;
+    }
+
+        .add-category-back:hover {
+            color: #ffffff;
+            background: #8a4a18;
+            border-color: #8a4a18;
+        }
+
+    @@media (max-width: 650px) {
+        .add-category-page {
+            padding: 110px 12px 45px;
+        }
+
+        .add-category-heading {
+            font-size: 30px;
+        }
+
+        .add-category-card {
+            padding: 20px;
+        }
+
+        .add-category-actions {
+            flex-direction: column;
+        }
+
+        .add-category-submit,
+        .add-category-back {
+            width: 100%;
+        }
+    }
+</style>
+
+<section class="add-category-page">
+
+    <div class="add-category-container">
+
+        <h1 class="add-category-heading">
+            Thêm danh mục mới
+        </h1>
+
+        <p class="add-category-description">
+            Tạo nhóm sản phẩm mới cho MilkTea House.
+        </p>
+
+        <div class="add-category-card">
+
+            <form asp-controller="QuanLyDanhMuc"
+                  asp-action="Them"
+                  method="post">
+
+                <div asp-validation-summary="ModelOnly"
+                     class="add-category-validation">
+                </div>
+
+                <div class="add-category-field">
+
+                    <label asp-for="TenDanhMuc">
+                        Tên danh mục
+                        <span class="add-category-required">*</span>
+                    </label>
+
+                    <input asp-for="TenDanhMuc"
+                           placeholder="Ví dụ: Trà sữa, Trà trái cây..." />
+
+                    <span asp-validation-for="TenDanhMuc"
+                          class="add-category-error">
+                    </span>
+
+                    <small class="add-category-help">
+                        Tên danh mục phải khác với các danh mục đã có.
+                    </small>
+
+                </div>
+
+                <div class="add-category-field">
+
+                    <label asp-for="MoTa">
+                        Mô tả danh mục
+                    </label>
+
+                    <textarea asp-for="MoTa"
+                              placeholder="Nhập mô tả ngắn cho danh mục sản phẩm"></textarea>
+
+                    <span asp-validation-for="MoTa"
+                          class="add-category-error">
+                    </span>
+
+                    <small class="add-category-help">
+                        Mô tả không được vượt quá 1.000 ký tự.
+                    </small>
+
+                </div>
+
+                <div class="add-category-field">
+
+                    <label>
+                        Trạng thái danh mục
+                    </label>
+
+                    <div class="add-category-status">
+
+                        <input asp-for="TrangThai"
+                               type="checkbox" />
+
+                        <label asp-for="TrangThai">
+                            Kích hoạt danh mục ngay sau khi thêm
+                        </label>
+
+                    </div>
+
+                    <div class="add-category-note">
+
+                        <i class="bi bi-info-circle me-1"></i>
+
+                        Danh mục đang hoạt động sẽ xuất hiện trong
+                        danh sách lựa chọn khi Quản trị viên thêm
+                        hoặc sửa sản phẩm.
+
+                    </div>
+
+                </div>
+
+                <div class="add-category-actions">
+
+                    <button type="submit"
+                            class="add-category-submit">
+
+                        <i class="bi bi-plus-circle"></i>
+
+                        Thêm danh mục
+
+                    </button>
+
+                    <a asp-controller="QuanLyDanhMuc"
+                       asp-action="Index"
+                       class="add-category-back">
+
+                        <i class="bi bi-arrow-left"></i>
+
+                        Quay lại
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

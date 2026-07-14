@@ -233,6 +233,38 @@
             color: #17653b;
         }
 
+    .admin-product-actions {
+        min-width: 225px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .admin-product-edit-button {
+        min-width: 92px;
+        min-height: 38px;
+        padding: 6px 12px;
+        border: 1px solid #c08035;
+        border-radius: 9px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        color: #85500f;
+        background: #fffaf2;
+        font-size: 13px;
+        font-weight: 800;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: 0.2s ease;
+    }
+
+        .admin-product-edit-button:hover {
+            color: #ffffff;
+            background: #a96518;
+            border-color: #a96518;
+        }
     .admin-product-status-button {
         min-width: 102px;
         min-height: 38px;
@@ -733,47 +765,67 @@
 
                                     <td>
 
-                                        <form asp-controller="QuanLySanPham"
-                                              asp-action="CapNhatTrangThai"
-                                              method="post"
-                                              onsubmit="return confirm('@thongBaoXacNhan');">
+                                        <div class="admin-product-actions">
 
-                                            <input type="hidden"
-                                                   name="id"
-                                                   value="@sanPham.SanPhamID" />
+                                            <a asp-controller="QuanLySanPham"
+                                               asp-action="Sua"
+                                               asp-route-id="@sanPham.SanPhamID"
+                                               class="admin-product-edit-button"
+                                               title="Sửa thông tin sản phẩm">
 
-                                            <input type="hidden"
-                                                   name="tuKhoa"
-                                                   value="@Model.TuKhoa" />
+                                                <i class="bi bi-pencil-square"></i>
 
-                                            <input type="hidden"
-                                                   name="danhMucID"
-                                                   value="@Model.DanhMucID" />
+                                                Sửa
 
-                                            @if (sanPham.TrangThai)
-                                            {
-                                                <button type="submit"
-                                                        name="thaoTac"
-                                                        value="ngung-ban"
-                                                        class="admin-product-status-button stop">
+                                            </a>
 
-                                                    Ngừng bán
+                                            <form asp-controller="QuanLySanPham"
+                                                  asp-action="CapNhatTrangThai"
+                                                  method="post"
+                                                  onsubmit="return confirm('@thongBaoXacNhan');">
 
-                                                </button>
-                                            }
-                                            else
-                                            {
-                                                <button type="submit"
-                                                        name="thaoTac"
-                                                        value="mo-ban"
-                                                        class="admin-product-status-button open">
+                                                <input type="hidden"
+                                                       name="id"
+                                                       value="@sanPham.SanPhamID" />
 
-                                                    Mở bán
+                                                <input type="hidden"
+                                                       name="tuKhoa"
+                                                       value="@Model.TuKhoa" />
 
-                                                </button>
-                                            }
+                                                <input type="hidden"
+                                                       name="danhMucID"
+                                                       value="@Model.DanhMucID" />
 
-                                        </form>
+                                                @if (sanPham.TrangThai)
+                                                {
+                                                    <button type="submit"
+                                                            name="thaoTac"
+                                                            value="ngung-ban"
+                                                            class="admin-product-status-button stop">
+
+                                                        <i class="bi bi-pause-circle"></i>
+
+                                                        Ngừng bán
+
+                                                    </button>
+                                                }
+                                                else
+                                                {
+                                                    <button type="submit"
+                                                            name="thaoTac"
+                                                            value="mo-ban"
+                                                            class="admin-product-status-button open">
+
+                                                        <i class="bi bi-play-circle"></i>
+
+                                                        Mở bán
+
+                                                    </button>
+                                                }
+
+                                            </form>
+
+                                        </div>
 
                                     </td>
 
