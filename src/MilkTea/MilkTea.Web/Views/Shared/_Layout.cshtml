@@ -48,7 +48,8 @@
         controllerHienTai == "QuanLyTongQuan" ||
         controllerHienTai == "QuanLySanPham" ||
         controllerHienTai == "QuanLyDanhMuc" ||
-        controllerHienTai == "QuanLyDonHang";
+        controllerHienTai == "QuanLyDonHang" ||
+        controllerHienTai == "BaoCaoDoanhThu";
 
     string lopTrangChu =
         controllerHienTai == "Home" &&
@@ -83,6 +84,11 @@
 
     string lopQuanLyDonHang =
         controllerHienTai == "QuanLyDonHang"
+            ? "active"
+            : string.Empty;
+
+    string lopBaoCaoDoanhThu =
+        controllerHienTai == "BaoCaoDoanhThu"
             ? "active"
             : string.Empty;
 }
@@ -310,13 +316,6 @@
 
                                 <li>
 
-                                    <hr class="dropdown-divider
-                                    admin-dropdown-divider" />
-
-                                </li>
-
-                                <li>
-
                                     <a asp-controller="QuanLyDonHang"
                                        asp-action="Index"
                                        class="dropdown-item
@@ -331,6 +330,35 @@
 
                                         <span>
                                             Quản lý đơn hàng
+                                        </span>
+
+                                    </a>
+
+                                </li>
+
+                                <li>
+
+                                    <hr class="dropdown-divider
+                                    admin-dropdown-divider" />
+
+                                </li>
+
+                                <li>
+
+                                    <a asp-controller="BaoCaoDoanhThu"
+                                       asp-action="Index"
+                                       class="dropdown-item
+                                        admin-dropdown-item
+                                        @lopBaoCaoDoanhThu">
+
+                                        <span class="admin-dropdown-icon">
+
+                                            <i class="bi bi-bar-chart-line"></i>
+
+                                        </span>
+
+                                        <span>
+                                            Báo cáo doanh thu
                                         </span>
 
                                     </a>

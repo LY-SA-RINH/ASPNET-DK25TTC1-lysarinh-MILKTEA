@@ -190,6 +190,30 @@
         opacity: 0.85;
     }
 
+    .admin-dashboard-revenue-link {
+        margin-top: 14px;
+        min-height: 40px;
+        padding: 0 15px;
+        border: 1px solid rgba(255, 255, 255, 0.7);
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.12);
+        font-size: 13px;
+        font-weight: 850;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+        .admin-dashboard-revenue-link:hover {
+            color: #6f3107;
+            background: #ffffff;
+            border-color: #ffffff;
+        }
+
     .admin-dashboard-revenue-icon {
         width: 72px;
         height: 72px;
@@ -435,7 +459,7 @@
     .admin-dashboard-quick-links {
         margin-top: 20px;
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 15px;
     }
 
@@ -467,7 +491,8 @@
         }
 
     @@media (max-width: 1050px) {
-        .admin-dashboard-statistics {
+        .admin-dashboard-statistics,
+        .admin-dashboard-quick-links {
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
@@ -580,6 +605,18 @@
 
                 <span>
                     Quản lý đơn hàng
+                </span>
+
+            </a>
+
+            <a asp-controller="BaoCaoDoanhThu"
+               asp-action="Index"
+               class="admin-dashboard-quick-link">
+
+                <i class="bi bi-bar-chart-line"></i>
+
+                <span>
+                    Báo cáo doanh thu
                 </span>
 
             </a>
@@ -857,6 +894,16 @@
                 <div class="admin-dashboard-revenue-note">
                     Không bao gồm đơn đang xử lý hoặc đã hủy
                 </div>
+
+                <a asp-controller="BaoCaoDoanhThu"
+                   asp-action="Index"
+                   class="admin-dashboard-revenue-link">
+
+                    <i class="bi bi-bar-chart-line"></i>
+
+                    Xem báo cáo doanh thu chi tiết
+
+                </a>
 
             </div>
 
