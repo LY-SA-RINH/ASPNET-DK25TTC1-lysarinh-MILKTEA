@@ -12,6 +12,7 @@
 		<Folder Include="wwwroot\images\banners\" />
 		<Folder Include="wwwroot\images\logo\" />
 		<Folder Include="wwwroot\images\icons\" />
+		<Folder Include="wwwroot\images\hero\" />
 		<Folder Include="wwwroot\images\products\" />
 	</ItemGroup>
 

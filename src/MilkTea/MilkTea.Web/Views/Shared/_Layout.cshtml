@@ -1,4 +1,5 @@
 ﻿@using System.Text.Json
+@using System.Collections.Generic
 @using Microsoft.AspNetCore.Http
 @using MilkTea.Web.Models
 
@@ -6,31 +7,94 @@
     string? duLieuGioHang =
         Context.Session.GetString("GioHang");
 
-    var gioHang = string.IsNullOrWhiteSpace(duLieuGioHang)
-        ? new System.Collections.Generic.List<GioHangItem>()
-        : JsonSerializer.Deserialize<
-            System.Collections.Generic.List<GioHangItem>
-          >(duLieuGioHang)
-          ?? new System.Collections.Generic.List<GioHangItem>();
+    List<GioHangItem> gioHang =
+        string.IsNullOrWhiteSpace(duLieuGioHang)
+            ? new List<GioHangItem>()
+            : JsonSerializer.Deserialize<List<GioHangItem>>(
+                duLieuGioHang)
+              ?? new List<GioHangItem>();
 
     int tongSoLuongTrongGio = 0;
 
-    foreach (var item in gioHang)
+    foreach (GioHangItem item in gioHang)
     {
         tongSoLuongTrongGio += item.SoLuong;
     }
+
+    string? controllerHienTai =
+        ViewContext.RouteData.Values["controller"]?
+            .ToString();
+
+    string? actionHienTai =
+        ViewContext.RouteData.Values["action"]?
+            .ToString();
+
+    bool daDangNhap =
+        User.Identity?.IsAuthenticated == true;
+
+    bool laKhachHang =
+        daDangNhap &&
+        User.IsInRole("KhachHang");
+
+    bool laNhanVien =
+        daDangNhap &&
+        User.IsInRole("NhanVien");
+
+    bool laQuanTriVien =
+        daDangNhap &&
+        User.IsInRole("QuanTriVien");
+
+    bool dangOTrangQuanTri =
+        controllerHienTai == "QuanLySanPham" ||
+        controllerHienTai == "QuanLyDanhMuc" ||
+        controllerHienTai == "QuanLyDonHang";
+
+    string lopTrangChu =
+        controllerHienTai == "Home" &&
+        actionHienTai == "Index"
+            ? "active"
+            : string.Empty;
+
+    string lopSanPham =
+        controllerHienTai == "SanPham"
+            ? "active"
+            : string.Empty;
+
+    string lopNutQuanTri =
+        dangOTrangQuanTri
+            ? "active"
+            : string.Empty;
+
+    string lopQuanLySanPham =
+        controllerHienTai == "QuanLySanPham"
+            ? "active"
+            : string.Empty;
+
+    string lopQuanLyDanhMuc =
+        controllerHienTai == "QuanLyDanhMuc"
+            ? "active"
+            : string.Empty;
+
+    string lopQuanLyDonHang =
+        controllerHienTai == "QuanLyDonHang"
+            ? "active"
+            : string.Empty;
 }
 
 <!DOCTYPE html>
+
 <html lang="vi">
 
 <head>
+
     <meta charset="utf-8" />
 
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0" />
 
-    <title>@ViewData["Title"] - MilkTea House</title>
+    <title>
+        @ViewData["Title"] - MilkTea House
+    </title>
 
     <link rel="stylesheet"
           href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
@@ -53,6 +117,7 @@
     <link rel="stylesheet"
           href="~/css/product.css"
           asp-append-version="true" />
+
 </head>
 
 <body>
@@ -75,15 +140,20 @@
 
             <nav class="main-menu">
 
-                <a class="active"
+                <a class="@lopTrangChu"
                    asp-controller="Home"
                    asp-action="Index">
+
                     Trang chủ
+
                 </a>
 
-                <a asp-controller="SanPham"
+                <a class="@lopSanPham"
+                   asp-controller="SanPham"
                    asp-action="Index">
+
                     Sản phẩm
+
                 </a>
 
                 <a href="#">
@@ -96,40 +166,36 @@
 
                 <a asp-controller="Home"
                    asp-action="Privacy">
+
                     Liên hệ
+
                 </a>
 
             </nav>
 
             <div class="header-icons">
 
-                <a href="#"
-                   title="Tìm kiếm">
-
-                    <i class="bi bi-search"></i>
-
-                </a>
-
-                @if (User.Identity?.IsAuthenticated == true)
+                @if (!daDangNhap || laKhachHang)
                 {
-                    @if (User.IsInRole("KhachHang"))
+                    <a href="#"
+                       class="header-simple-icon"
+                       title="Tìm kiếm">
+
+                        <i class="bi bi-search"></i>
+
+                    </a>
+                }
+
+                @if (daDangNhap)
+                {
+                    @if (laKhachHang)
                     {
                         <a asp-controller="DonHangCuaToi"
                            asp-action="Index"
-                           title="Đơn hàng của tôi"
-                           style="display: inline-flex;
-                            align-items: center;
-                            gap: 5px;
-                            width: auto;
-                            color: #6f3814;
-                            font-size: 13px;
-                            font-weight: 700;
-                            text-decoration: none;
-                            white-space: nowrap;">
+                           class="customer-order-link"
+                           title="Đơn hàng của tôi">
 
-                            <i class="bi bi-bag-check"
-                               style="font-size: 18px;">
-                            </i>
+                            <i class="bi bi-bag-check"></i>
 
                             <span>
                                 Đơn hàng của tôi
@@ -137,78 +203,166 @@
 
                         </a>
                     }
-                    @if (User.IsInRole("QuanTriVien"))
+
+                    @if (laQuanTriVien)
                     {
-                        <a asp-controller="QuanLySanPham"
-                           asp-action="Index"
-                           title="Quản lý sản phẩm">
+                        <div class="dropdown admin-menu-dropdown">
 
-                            <i class="bi bi-box-seam"></i>
+                            <button type="button"
+                                    class="admin-menu-button @lopNutQuanTri"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                    title="Các chức năng quản trị">
 
-                        </a>
+                                <i class="bi bi-grid-1x2-fill"></i>
+
+                                <span>
+                                    Quản trị
+                                </span>
+
+                                <i class="bi bi-chevron-down
+                                    admin-menu-chevron">
+                                </i>
+
+                            </button>
+
+                            <ul class="dropdown-menu
+                                dropdown-menu-end
+                                admin-dropdown-menu">
+
+                                <li>
+
+                                    <a asp-controller="QuanLySanPham"
+                                       asp-action="Index"
+                                       class="dropdown-item
+                                        admin-dropdown-item
+                                        @lopQuanLySanPham">
+
+                                        <span class="admin-dropdown-icon">
+
+                                            <i class="bi bi-box-seam"></i>
+
+                                        </span>
+
+                                        <span>
+                                            Quản lý sản phẩm
+                                        </span>
+
+                                    </a>
+
+                                </li>
+
+                                <li>
+
+                                    <a asp-controller="QuanLyDanhMuc"
+                                       asp-action="Index"
+                                       class="dropdown-item
+                                        admin-dropdown-item
+                                        @lopQuanLyDanhMuc">
+
+                                        <span class="admin-dropdown-icon">
+
+                                            <i class="bi bi-tags"></i>
+
+                                        </span>
+
+                                        <span>
+                                            Quản lý danh mục
+                                        </span>
+
+                                    </a>
+
+                                </li>
+
+                                <li>
+
+                                    <hr class="dropdown-divider
+                                    admin-dropdown-divider" />
+
+                                </li>
+
+                                <li>
+
+                                    <a asp-controller="QuanLyDonHang"
+                                       asp-action="Index"
+                                       class="dropdown-item
+                                        admin-dropdown-item
+                                        @lopQuanLyDonHang">
+
+                                        <span class="admin-dropdown-icon">
+
+                                            <i class="bi bi-clipboard-check"></i>
+
+                                        </span>
+
+                                        <span>
+                                            Quản lý đơn hàng
+                                        </span>
+
+                                    </a>
+
+                                </li>
+
+                            </ul>
+
+                        </div>
                     }
-                    @if (User.IsInRole("NhanVien") ||
-                         User.IsInRole("QuanTriVien"))
+                    else if (laNhanVien)
                     {
                         <a asp-controller="QuanLyDonHang"
                            asp-action="Index"
+                           class="staff-order-link
+                            @lopQuanLyDonHang"
                            title="Quản lý đơn hàng">
 
                             <i class="bi bi-clipboard-check"></i>
 
+                            <span>
+                                Đơn hàng
+                            </span>
+
                         </a>
                     }
 
-                    @if (User.IsInRole("KhachHang"))
+                    @if (laKhachHang)
                     {
                         <a asp-controller="TaiKhoan"
                            asp-action="ThongTinCaNhan"
-                           title="Thông tin cá nhân"
-                           style="display: inline-block;
-                            max-width: 145px;
-                            overflow: hidden;
-                            color: #6f3814;
-                            font-size: 13px;
-                            font-weight: 700;
-                            text-decoration: none;
-                            text-overflow: ellipsis;
-                            white-space: nowrap;">
+                           class="header-user-chip"
+                           title="@User.Identity?.Name">
 
-                            @User.Identity.Name
+                            <i class="bi bi-person-circle"></i>
+
+                            <span class="header-user-name">
+                                @User.Identity?.Name
+                            </span>
 
                         </a>
                     }
                     else
                     {
-                        <span title="@User.Identity.Name"
-                              style="max-width: 145px;
-                            overflow: hidden;
-                            color: #6f3814;
-                            font-size: 13px;
-                            font-weight: 700;
-                            text-overflow: ellipsis;
-                            white-space: nowrap;">
+                        <div class="header-user-chip"
+                             title="@User.Identity?.Name">
 
-                            @User.Identity.Name
+                            <i class="bi bi-person-circle"></i>
 
-                        </span>
+                            <span class="header-user-name">
+                                @User.Identity?.Name
+                            </span>
+
+                        </div>
                     }
 
                     <form asp-controller="TaiKhoan"
                           asp-action="DangXuat"
                           method="post"
-                          style="margin: 0;">
+                          class="header-logout-form">
 
                         @Html.AntiForgeryToken()
 
                         <button type="submit"
-                                title="Đăng xuất"
-                                style="padding: 0;
-                            border: 0;
-                            color: #6f3814;
-                            background: transparent;
-                            font-size: 20px;
-                            cursor: pointer;">
+                                class="header-logout-button"
+                                title="Đăng xuất">
 
                             <i class="bi bi-box-arrow-right"></i>
 
@@ -243,21 +397,24 @@
                     </div>
                 }
 
-                <a asp-controller="GioHang"
-                   asp-action="Index"
-                   class="cart-icon"
-                   title="Giỏ hàng">
+                @if (!daDangNhap || laKhachHang)
+                {
+                    <a asp-controller="GioHang"
+                       asp-action="Index"
+                       class="cart-icon"
+                       title="Giỏ hàng">
 
-                    <i class="bi bi-cart3"></i>
+                        <i class="bi bi-cart3"></i>
 
-                    @if (tongSoLuongTrongGio > 0)
-                    {
-                        <span class="cart-count">
-                            @tongSoLuongTrongGio
-                        </span>
-                    }
+                        @if (tongSoLuongTrongGio > 0)
+                        {
+                            <span class="cart-count">
+                                @tongSoLuongTrongGio
+                            </span>
+                        }
 
-                </a>
+                    </a>
+                }
 
             </div>
 
