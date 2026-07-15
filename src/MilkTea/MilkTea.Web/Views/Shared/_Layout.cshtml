@@ -45,6 +45,7 @@
         User.IsInRole("QuanTriVien");
 
     bool dangOTrangQuanTri =
+        controllerHienTai == "QuanLyTongQuan" ||
         controllerHienTai == "QuanLySanPham" ||
         controllerHienTai == "QuanLyDanhMuc" ||
         controllerHienTai == "QuanLyDonHang";
@@ -62,6 +63,11 @@
 
     string lopNutQuanTri =
         dangOTrangQuanTri
+            ? "active"
+            : string.Empty;
+
+    string lopQuanLyTongQuan =
+        controllerHienTai == "QuanLyTongQuan"
             ? "active"
             : string.Empty;
 
@@ -220,8 +226,7 @@
                                     Quản trị
                                 </span>
 
-                                <i class="bi bi-chevron-down
-                                    admin-menu-chevron">
+                                <i class="bi bi-chevron-down admin-menu-chevron">
                                 </i>
 
                             </button>
@@ -229,6 +234,35 @@
                             <ul class="dropdown-menu
                                 dropdown-menu-end
                                 admin-dropdown-menu">
+
+                                <li>
+
+                                    <a asp-controller="QuanLyTongQuan"
+                                       asp-action="Index"
+                                       class="dropdown-item
+                                        admin-dropdown-item
+                                        @lopQuanLyTongQuan">
+
+                                        <span class="admin-dropdown-icon">
+
+                                            <i class="bi bi-speedometer2"></i>
+
+                                        </span>
+
+                                        <span>
+                                            Tổng quan quản trị
+                                        </span>
+
+                                    </a>
+
+                                </li>
+
+                                <li>
+
+                                    <hr class="dropdown-divider
+                                    admin-dropdown-divider" />
+
+                                </li>
 
                                 <li>
 
@@ -357,8 +391,6 @@
                           asp-action="DangXuat"
                           method="post"
                           class="header-logout-form">
-
-                        @Html.AntiForgeryToken()
 
                         <button type="submit"
                                 class="header-logout-button"

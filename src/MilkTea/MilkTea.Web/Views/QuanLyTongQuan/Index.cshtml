@@ -1,0 +1,1080 @@
+﻿@model MilkTea.Web.Models.TongQuanQuanTriViewModel
+
+@{
+    ViewData["Title"] = "Tổng quan quản trị";
+}
+
+<style>
+    .admin-dashboard-page {
+        min-height: 100vh;
+        padding: 125px 20px 70px;
+        background: #fffdfb;
+    }
+
+    .admin-dashboard-container {
+        max-width: 1280px;
+        margin: 0 auto;
+    }
+
+    .admin-dashboard-header {
+        margin-bottom: 28px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .admin-dashboard-title {
+        margin: 0 0 7px;
+        color: #4a1f08;
+        font-size: 36px;
+        font-weight: 850;
+    }
+
+    .admin-dashboard-description {
+        margin: 0;
+        color: #7a685d;
+        line-height: 1.6;
+    }
+
+    .admin-dashboard-date {
+        padding: 10px 15px;
+        border: 1px solid #ead4c1;
+        border-radius: 11px;
+        color: #754018;
+        background: #fff8f1;
+        font-weight: 750;
+        white-space: nowrap;
+    }
+
+    .admin-dashboard-section-title {
+        margin: 34px 0 16px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #542708;
+        font-size: 23px;
+        font-weight: 850;
+    }
+
+        .admin-dashboard-section-title i {
+            color: #a65312;
+        }
+
+    .admin-dashboard-statistics {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .admin-dashboard-statistic {
+        min-height: 145px;
+        padding: 21px;
+        border: 1px solid #ead7c6;
+        border-radius: 18px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background: #ffffff;
+        box-shadow: 0 8px 24px rgba(78, 39, 12, 0.07);
+    }
+
+    .admin-dashboard-statistic-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .admin-dashboard-statistic-label {
+        color: #745846;
+        font-size: 14px;
+        font-weight: 750;
+    }
+
+    .admin-dashboard-statistic-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 13px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #8e4309;
+        background: #fff1df;
+        font-size: 22px;
+    }
+
+    .admin-dashboard-statistic-value {
+        margin-top: 12px;
+        color: #4a1f08;
+        font-size: 32px;
+        font-weight: 900;
+        line-height: 1;
+    }
+
+    .admin-dashboard-statistic-note {
+        margin-top: 9px;
+        color: #927d70;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .admin-dashboard-statistic.success {
+        border-color: #cfe9d8;
+    }
+
+        .admin-dashboard-statistic.success
+        .admin-dashboard-statistic-icon {
+            color: #17683d;
+            background: #e8f7ee;
+        }
+
+    .admin-dashboard-statistic.warning {
+        border-color: #f0d8ad;
+    }
+
+        .admin-dashboard-statistic.warning
+        .admin-dashboard-statistic-icon {
+            color: #a05b00;
+            background: #fff3d9;
+        }
+
+    .admin-dashboard-statistic.danger {
+        border-color: #efcccc;
+    }
+
+        .admin-dashboard-statistic.danger
+        .admin-dashboard-statistic-icon {
+            color: #a52a2a;
+            background: #fdeaea;
+        }
+
+    .admin-dashboard-statistic.info {
+        border-color: #cbdff0;
+    }
+
+        .admin-dashboard-statistic.info
+        .admin-dashboard-statistic-icon {
+            color: #1b608d;
+            background: #eaf5fc;
+        }
+
+    .admin-dashboard-revenue {
+        margin-top: 16px;
+        padding: 24px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        color: #ffffff;
+        background: linear-gradient( 135deg, #6f3107, #a95311);
+        box-shadow: 0 12px 28px rgba(96, 42, 7, 0.2);
+    }
+
+    .admin-dashboard-revenue-label {
+        margin-bottom: 6px;
+        font-size: 15px;
+        font-weight: 750;
+        opacity: 0.9;
+    }
+
+    .admin-dashboard-revenue-value {
+        font-size: 35px;
+        font-weight: 900;
+    }
+
+    .admin-dashboard-revenue-note {
+        margin-top: 6px;
+        font-size: 13px;
+        opacity: 0.85;
+    }
+
+    .admin-dashboard-revenue-icon {
+        width: 72px;
+        height: 72px;
+        border-radius: 20px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.16);
+        font-size: 34px;
+    }
+
+    .admin-dashboard-main-grid {
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.65fr) minmax(320px, 0.85fr);
+        gap: 20px;
+        align-items: start;
+    }
+
+    .admin-dashboard-panel {
+        border: 1px solid #ead7c6;
+        border-radius: 18px;
+        background: #ffffff;
+        box-shadow: 0 8px 24px rgba(78, 39, 12, 0.07);
+        overflow: hidden;
+    }
+
+    .admin-dashboard-panel-header {
+        padding: 19px 21px;
+        border-bottom: 1px solid #efdfd1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        background: #fffaf5;
+    }
+
+    .admin-dashboard-panel-title {
+        margin: 0;
+        color: #542708;
+        font-size: 19px;
+        font-weight: 850;
+    }
+
+    .admin-dashboard-panel-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #904400;
+        font-size: 13px;
+        font-weight: 800;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+        .admin-dashboard-panel-link:hover {
+            color: #5f2b00;
+        }
+
+    .admin-dashboard-table-wrap {
+        overflow-x: auto;
+    }
+
+    .admin-dashboard-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .admin-dashboard-table th,
+        .admin-dashboard-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #f0e3d8;
+            color: #5c4435;
+            font-size: 13px;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .admin-dashboard-table th {
+            color: #67442c;
+            background: #fffdfb;
+            font-weight: 850;
+            white-space: nowrap;
+        }
+
+        .admin-dashboard-table tbody tr:hover {
+            background: #fffaf5;
+        }
+
+    .admin-dashboard-order-code {
+        color: #6e3207;
+        font-weight: 850;
+        white-space: nowrap;
+    }
+
+    .admin-dashboard-order-name {
+        color: #4e2e1b;
+        font-weight: 750;
+    }
+
+    .admin-dashboard-money {
+        color: #9a4808;
+        font-weight: 850;
+        white-space: nowrap;
+    }
+
+    .admin-dashboard-status {
+        padding: 6px 9px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 850;
+        white-space: nowrap;
+    }
+
+        .admin-dashboard-status.waiting {
+            color: #955700;
+            background: #fff0cf;
+        }
+
+        .admin-dashboard-status.confirmed {
+            color: #24618a;
+            background: #e8f4fc;
+        }
+
+        .admin-dashboard-status.shipping {
+            color: #6545a0;
+            background: #f0eafd;
+        }
+
+        .admin-dashboard-status.completed {
+            color: #17653b;
+            background: #e6f6ec;
+        }
+
+        .admin-dashboard-status.cancelled {
+            color: #9a2929;
+            background: #fde9e9;
+        }
+
+        .admin-dashboard-status.other {
+            color: #6d625b;
+            background: #f1eeeb;
+        }
+
+    .admin-dashboard-detail-link {
+        width: 35px;
+        height: 35px;
+        border: 1px solid #d7b89d;
+        border-radius: 9px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #7c3b08;
+        background: #ffffff;
+        text-decoration: none;
+    }
+
+        .admin-dashboard-detail-link:hover {
+            color: #ffffff;
+            background: #914300;
+            border-color: #914300;
+        }
+
+    .admin-dashboard-low-stock-list {
+        padding: 4px 18px 14px;
+    }
+
+    .admin-dashboard-low-stock-item {
+        padding: 15px 3px;
+        border-bottom: 1px solid #f0e3d8;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+    }
+
+        .admin-dashboard-low-stock-item:last-child {
+            border-bottom: 0;
+        }
+
+    .admin-dashboard-low-stock-name {
+        color: #4e2e1b;
+        font-size: 14px;
+        font-weight: 800;
+    }
+
+    .admin-dashboard-low-stock-code {
+        margin-top: 4px;
+        color: #927e70;
+        font-size: 11px;
+    }
+
+    .admin-dashboard-low-stock-right {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+    }
+
+    .admin-dashboard-stock-number {
+        min-width: 35px;
+        padding: 6px 9px;
+        border-radius: 9px;
+        color: #9a4f00;
+        background: #fff0d8;
+        font-size: 13px;
+        font-weight: 900;
+        text-align: center;
+    }
+
+    .admin-dashboard-edit-link {
+        width: 34px;
+        height: 34px;
+        border: 1px solid #d7b89d;
+        border-radius: 9px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #7c3b08;
+        text-decoration: none;
+    }
+
+        .admin-dashboard-edit-link:hover {
+            color: #ffffff;
+            background: #914300;
+        }
+
+    .admin-dashboard-empty {
+        padding: 45px 20px;
+        color: #8c7566;
+        text-align: center;
+    }
+
+        .admin-dashboard-empty i {
+            margin-bottom: 10px;
+            display: block;
+            color: #c19a7b;
+            font-size: 34px;
+        }
+
+    .admin-dashboard-quick-links {
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 15px;
+    }
+
+    .admin-dashboard-quick-link {
+        min-height: 82px;
+        padding: 16px;
+        border: 1px solid #e5cdb8;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        color: #633313;
+        background: #ffffff;
+        text-decoration: none;
+        font-weight: 850;
+        box-shadow: 0 6px 18px rgba(78, 39, 12, 0.05);
+        transition: 0.2s ease;
+    }
+
+        .admin-dashboard-quick-link:hover {
+            color: #ffffff;
+            background: #8d4108;
+            border-color: #8d4108;
+            transform: translateY(-2px);
+        }
+
+        .admin-dashboard-quick-link i {
+            font-size: 25px;
+        }
+
+    @@media (max-width: 1050px) {
+        .admin-dashboard-statistics {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .admin-dashboard-main-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 700px) {
+        .admin-dashboard-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .admin-dashboard-statistics,
+        .admin-dashboard-quick-links {
+            grid-template-columns: 1fr;
+        }
+
+        .admin-dashboard-revenue {
+            align-items: flex-start;
+        }
+
+        .admin-dashboard-revenue-value {
+            font-size: 29px;
+        }
+
+        .admin-dashboard-revenue-icon {
+            width: 58px;
+            height: 58px;
+            font-size: 27px;
+        }
+    }
+
+    @@media (max-width: 520px) {
+        .admin-dashboard-page {
+            padding: 110px 12px 45px;
+        }
+
+        .admin-dashboard-title {
+            font-size: 30px;
+        }
+
+        .admin-dashboard-revenue {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<section class="admin-dashboard-page">
+
+    <div class="admin-dashboard-container">
+
+        <div class="admin-dashboard-header">
+
+            <div>
+
+                <h1 class="admin-dashboard-title">
+                    Tổng quan quản trị
+                </h1>
+
+                <p class="admin-dashboard-description">
+                    Theo dõi nhanh tình hình sản phẩm, đơn hàng và doanh thu
+                    của MilkTea House.
+                </p>
+
+            </div>
+
+            <div class="admin-dashboard-date">
+
+                <i class="bi bi-calendar3"></i>
+
+                @DateTime.Now.ToString("dd/MM/yyyy")
+
+            </div>
+
+        </div>
+
+        <div class="admin-dashboard-quick-links">
+
+            <a asp-controller="QuanLySanPham"
+               asp-action="Index"
+               class="admin-dashboard-quick-link">
+
+                <i class="bi bi-box-seam"></i>
+
+                <span>
+                    Quản lý sản phẩm
+                </span>
+
+            </a>
+
+            <a asp-controller="QuanLyDanhMuc"
+               asp-action="Index"
+               class="admin-dashboard-quick-link">
+
+                <i class="bi bi-tags"></i>
+
+                <span>
+                    Quản lý danh mục
+                </span>
+
+            </a>
+
+            <a asp-controller="QuanLyDonHang"
+               asp-action="Index"
+               class="admin-dashboard-quick-link">
+
+                <i class="bi bi-clipboard-check"></i>
+
+                <span>
+                    Quản lý đơn hàng
+                </span>
+
+            </a>
+
+        </div>
+
+        <h2 class="admin-dashboard-section-title">
+
+            <i class="bi bi-cup-straw"></i>
+
+            Thống kê sản phẩm
+
+        </h2>
+
+        <div class="admin-dashboard-statistics">
+
+            <div class="admin-dashboard-statistic">
+
+                <div class="admin-dashboard-statistic-top">
+
+                    <div class="admin-dashboard-statistic-label">
+                        Tổng sản phẩm
+                    </div>
+
+                    <div class="admin-dashboard-statistic-icon">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+
+                </div>
+
+                <div>
+
+                    <div class="admin-dashboard-statistic-value">
+                        @Model.TongSanPham
+                    </div>
+
+                    <div class="admin-dashboard-statistic-note">
+                        Tất cả sản phẩm trong hệ thống
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="admin-dashboard-statistic success">
+
+                <div class="admin-dashboard-statistic-top">
+
+                    <div class="admin-dashboard-statistic-label">
+                        Đang mở bán
+                    </div>
+
+                    <div class="admin-dashboard-statistic-icon">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+
+                </div>
+
+                <div>
+
+                    <div class="admin-dashboard-statistic-value">
+                        @Model.TongSanPhamDangBan
+                    </div>
+
+                    <div class="admin-dashboard-statistic-note">
+                        Sản phẩm đang hiển thị cho khách hàng
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="admin-dashboard-statistic danger">
+
+                <div class="admin-dashboard-statistic-top">
+
+                    <div class="admin-dashboard-statistic-label">
+                        Ngừng bán
+                    </div>
+
+                    <div class="admin-dashboard-statistic-icon">
+                        <i class="bi bi-pause-circle"></i>
+                    </div>
+
+                </div>
+
+                <div>
+
+                    <div class="admin-dashboard-statistic-value">
+                        @Model.TongSanPhamNgungBan
+                    </div>
+
+                    <div class="admin-dashboard-statistic-note">
+                        Sản phẩm đang tạm ngưng kinh doanh
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="admin-dashboard-statistic warning">
+
+                <div class="admin-dashboard-statistic-top">
+
+                    <div class="admin-dashboard-statistic-label">
+                        Hết hàng
+                    </div>
+
+                    <div class="admin-dashboard-statistic-icon">
+                        <i class="bi bi-exclamation-triangle"></i>
+                    </div>
+
+                </div>
+
+                <div>
+
+                    <div class="admin-dashboard-statistic-value">
+                        @Model.TongSanPhamHetHang
+                    </div>
+
+                    <div class="admin-dashboard-statistic-note">
+                        Sản phẩm có tồn kho bằng 0
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <h2 class="admin-dashboard-section-title">
+
+            <i class="bi bi-receipt"></i>
+
+            Thống kê đơn hàng
+
+        </h2>
+
+        <div class="admin-dashboard-statistics">
+
+            <div class="admin-dashboard-statistic">
+
+                <div class="admin-dashboard-statistic-top">
+
+                    <div class="admin-dashboard-statistic-label">
+                        Tổng đơn hàng
+                    </div>
+
+                    <div class="admin-dashboard-statistic-icon">
+                        <i class="bi bi-receipt-cutoff"></i>
+                    </div>
+
+                </div>
+
+                <div class="admin-dashboard-statistic-value">
+                    @Model.TongDonHang
+                </div>
+
+            </div>
+
+            <div class="admin-dashboard-statistic warning">
+
+                <div class="admin-dashboard-statistic-top">
+
+                    <div class="admin-dashboard-statistic-label">
+                        Chờ xác nhận
+                    </div>
+
+                    <div class="admin-dashboard-statistic-icon">
+                        <i class="bi bi-hourglass-split"></i>
+                    </div>
+
+                </div>
+
+                <div class="admin-dashboard-statistic-value">
+                    @Model.TongDonHangChoXacNhan
+                </div>
+
+            </div>
+
+            <div class="admin-dashboard-statistic info">
+
+                <div class="admin-dashboard-statistic-top">
+
+                    <div class="admin-dashboard-statistic-label">
+                        Đã xác nhận
+                    </div>
+
+                    <div class="admin-dashboard-statistic-icon">
+                        <i class="bi bi-clipboard-check"></i>
+                    </div>
+
+                </div>
+
+                <div class="admin-dashboard-statistic-value">
+                    @Model.TongDonHangDaXacNhan
+                </div>
+
+            </div>
+
+            <div class="admin-dashboard-statistic info">
+
+                <div class="admin-dashboard-statistic-top">
+
+                    <div class="admin-dashboard-statistic-label">
+                        Đang giao
+                    </div>
+
+                    <div class="admin-dashboard-statistic-icon">
+                        <i class="bi bi-truck"></i>
+                    </div>
+
+                </div>
+
+                <div class="admin-dashboard-statistic-value">
+                    @Model.TongDonHangDangGiao
+                </div>
+
+            </div>
+
+            <div class="admin-dashboard-statistic success">
+
+                <div class="admin-dashboard-statistic-top">
+
+                    <div class="admin-dashboard-statistic-label">
+                        Hoàn thành
+                    </div>
+
+                    <div class="admin-dashboard-statistic-icon">
+                        <i class="bi bi-check2-circle"></i>
+                    </div>
+
+                </div>
+
+                <div class="admin-dashboard-statistic-value">
+                    @Model.TongDonHangHoanThanh
+                </div>
+
+            </div>
+
+            <div class="admin-dashboard-statistic danger">
+
+                <div class="admin-dashboard-statistic-top">
+
+                    <div class="admin-dashboard-statistic-label">
+                        Đã hủy
+                    </div>
+
+                    <div class="admin-dashboard-statistic-icon">
+                        <i class="bi bi-x-circle"></i>
+                    </div>
+
+                </div>
+
+                <div class="admin-dashboard-statistic-value">
+                    @Model.TongDonHangDaHuy
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="admin-dashboard-revenue">
+
+            <div>
+
+                <div class="admin-dashboard-revenue-label">
+                    Doanh thu từ đơn hàng hoàn thành
+                </div>
+
+                <div class="admin-dashboard-revenue-value">
+                    @Model.DoanhThuDonHoanThanh.ToString("N0")đ
+                </div>
+
+                <div class="admin-dashboard-revenue-note">
+                    Không bao gồm đơn đang xử lý hoặc đã hủy
+                </div>
+
+            </div>
+
+            <div class="admin-dashboard-revenue-icon">
+                <i class="bi bi-cash-coin"></i>
+            </div>
+
+        </div>
+
+        <div class="admin-dashboard-main-grid">
+
+            <div class="admin-dashboard-panel">
+
+                <div class="admin-dashboard-panel-header">
+
+                    <h3 class="admin-dashboard-panel-title">
+                        Đơn hàng mới nhất
+                    </h3>
+
+                    <a asp-controller="QuanLyDonHang"
+                       asp-action="Index"
+                       class="admin-dashboard-panel-link">
+
+                        Xem tất cả
+
+                        <i class="bi bi-arrow-right"></i>
+
+                    </a>
+
+                </div>
+
+                @if (Model.DonHangMoiNhat.Count > 0)
+                {
+                    <div class="admin-dashboard-table-wrap">
+
+                        <table class="admin-dashboard-table">
+
+                            <thead>
+
+                                <tr>
+                                    <th>Mã đơn</th>
+                                    <th>Khách hàng</th>
+                                    <th>Ngày đặt</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Trạng thái</th>
+                                    <th></th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                @foreach (var donHang in Model.DonHangMoiNhat)
+                                {
+                                    string lopTrangThai =
+                                        donHang.TrangThai switch
+                                        {
+                                            "Chờ xác nhận" => "waiting",
+                                            "Đã xác nhận" => "confirmed",
+                                            "Đang giao" => "shipping",
+                                            "Hoàn thành" => "completed",
+                                            "Đã hủy" => "cancelled",
+                                            _ => "other"
+                                        };
+
+                                    <tr>
+
+                                        <td>
+                                            <span class="admin-dashboard-order-code">
+                                                DH-@donHang.DonHangID.ToString("D4")
+                                            </span>
+                                        </td>
+
+                                        <td>
+
+                                            <div class="admin-dashboard-order-name">
+                                                @donHang.HoTen
+                                            </div>
+
+                                            <small>
+                                                @donHang.SoDienThoai
+                                            </small>
+
+                                        </td>
+
+                                        <td>
+                                            @donHang.NgayDat.ToString("dd/MM/yyyy HH:mm")
+                                        </td>
+
+                                        <td>
+                                            <span class="admin-dashboard-money">
+                                                @donHang.TongTien.ToString("N0")đ
+                                            </span>
+                                        </td>
+
+                                        <td>
+
+                                            <span class="admin-dashboard-status @lopTrangThai">
+                                                @donHang.TrangThai
+                                            </span>
+
+                                        </td>
+
+                                        <td>
+
+                                            <a asp-controller="QuanLyDonHang"
+                                               asp-action="ChiTiet"
+                                               asp-route-id="@donHang.DonHangID"
+                                               class="admin-dashboard-detail-link"
+                                               title="Xem chi tiết đơn hàng">
+
+                                                <i class="bi bi-eye"></i>
+
+                                            </a>
+
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="admin-dashboard-empty">
+
+                        <i class="bi bi-inbox"></i>
+
+                        Chưa có đơn hàng trong hệ thống.
+
+                    </div>
+                }
+
+            </div>
+
+            <div class="admin-dashboard-panel">
+
+                <div class="admin-dashboard-panel-header">
+
+                    <h3 class="admin-dashboard-panel-title">
+                        Sản phẩm sắp hết hàng
+                    </h3>
+
+                    <a asp-controller="QuanLySanPham"
+                       asp-action="Index"
+                       class="admin-dashboard-panel-link">
+
+                        Quản lý kho
+
+                        <i class="bi bi-arrow-right"></i>
+
+                    </a>
+
+                </div>
+
+                @if (Model.SanPhamSapHetHang.Count > 0)
+                {
+                    <div class="admin-dashboard-low-stock-list">
+
+                        @foreach (var sanPham in Model.SanPhamSapHetHang)
+                        {
+                            <div class="admin-dashboard-low-stock-item">
+
+                                <div>
+
+                                    <div class="admin-dashboard-low-stock-name">
+                                        @sanPham.TenSanPham
+                                    </div>
+
+                                    <div class="admin-dashboard-low-stock-code">
+                                        SP-@sanPham.SanPhamID.ToString("D4")
+                                    </div>
+
+                                </div>
+
+                                <div class="admin-dashboard-low-stock-right">
+
+                                    <span class="admin-dashboard-stock-number"
+                                          title="Số lượng tồn">
+                                        @sanPham.SoLuongTon
+                                    </span>
+
+                                    <a asp-controller="QuanLySanPham"
+                                       asp-action="Sua"
+                                       asp-route-id="@sanPham.SanPhamID"
+                                       class="admin-dashboard-edit-link"
+                                       title="Cập nhật sản phẩm">
+
+                                        <i class="bi bi-pencil-square"></i>
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+                }
+                else
+                {
+                    <div class="admin-dashboard-empty">
+
+                        <i class="bi bi-check-circle"></i>
+
+                        Không có sản phẩm nào sắp hết hàng.
+
+                    </div>
+                }
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
