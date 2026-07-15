@@ -1,0 +1,855 @@
+﻿@model MilkTea.Web.Models.BaoCaoDoanhThuViewModel
+
+@{
+    ViewData["Title"] = "Báo cáo doanh thu";
+}
+
+<style>
+    .revenue-report-page {
+        min-height: 100vh;
+        padding: 125px 20px 70px;
+        background: #fffdfb;
+    }
+
+    .revenue-report-container {
+        max-width: 1280px;
+        margin: 0 auto;
+    }
+
+    .revenue-report-header {
+        margin-bottom: 26px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .revenue-report-title {
+        margin: 0 0 7px;
+        color: #4a1f08;
+        font-size: 36px;
+        font-weight: 850;
+    }
+
+    .revenue-report-description {
+        margin: 0;
+        color: #7a685d;
+        line-height: 1.6;
+    }
+
+    .revenue-report-back {
+        min-height: 44px;
+        padding: 0 16px;
+        border: 1px solid #d8b99f;
+        border-radius: 11px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: #754018;
+        background: #ffffff;
+        font-weight: 800;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: 0.2s ease;
+    }
+
+        .revenue-report-back:hover {
+            color: #ffffff;
+            background: #8c4109;
+            border-color: #8c4109;
+        }
+
+    .revenue-filter-card {
+        padding: 22px;
+        border: 1px solid #ead5c3;
+        border-radius: 18px;
+        background: #ffffff;
+        box-shadow: 0 8px 24px rgba(78, 39, 12, 0.07);
+    }
+
+    .revenue-filter-title {
+        margin: 0 0 17px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: #542708;
+        font-size: 19px;
+        font-weight: 850;
+    }
+
+        .revenue-filter-title i {
+            color: #9c4a0b;
+        }
+
+    .revenue-filter-validation {
+        margin-bottom: 16px;
+        padding: 12px 14px;
+        border: 1px solid #efc4c4;
+        border-radius: 10px;
+        color: #9b2929;
+        background: #fff0f0;
+        font-size: 14px;
+    }
+
+        .revenue-filter-validation:empty {
+            display: none;
+        }
+
+        .revenue-filter-validation ul {
+            margin: 0;
+            padding-left: 19px;
+        }
+
+    .revenue-filter-form {
+        display: grid;
+        grid-template-columns: minmax(190px, 1fr) minmax(190px, 1fr) auto auto;
+        gap: 15px;
+        align-items: end;
+    }
+
+    .revenue-filter-field label {
+        margin-bottom: 7px;
+        display: block;
+        color: #67442c;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .revenue-filter-field input {
+        width: 100%;
+        height: 48px;
+        padding: 0 13px;
+        border: 1px solid #d9c1ad;
+        border-radius: 10px;
+        color: #4e3424;
+        background: #fffdfb;
+        outline: none;
+        transition: 0.2s ease;
+    }
+
+        .revenue-filter-field input:focus {
+            border-color: #a65312;
+            box-shadow: 0 0 0 3px rgba(166, 83, 18, 0.12);
+        }
+
+    .revenue-filter-button,
+    .revenue-reset-button {
+        min-height: 48px;
+        padding: 0 19px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 850;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: 0.2s ease;
+    }
+
+    .revenue-filter-button {
+        border: 1px solid #914300;
+        color: #ffffff;
+        background: #914300;
+        cursor: pointer;
+    }
+
+        .revenue-filter-button:hover {
+            background: #6f3000;
+            border-color: #6f3000;
+        }
+
+    .revenue-reset-button {
+        border: 1px solid #d8b99f;
+        color: #754018;
+        background: #ffffff;
+    }
+
+        .revenue-reset-button:hover {
+            color: #ffffff;
+            background: #8c4109;
+            border-color: #8c4109;
+        }
+
+    .revenue-period-note {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #f0e1d5;
+        color: #816b5d;
+        font-size: 13px;
+    }
+
+        .revenue-period-note strong {
+            color: #6a3108;
+        }
+
+    .revenue-statistics {
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .revenue-statistic-card {
+        min-height: 150px;
+        padding: 21px;
+        border: 1px solid #ead7c6;
+        border-radius: 18px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background: #ffffff;
+        box-shadow: 0 8px 24px rgba(78, 39, 12, 0.07);
+    }
+
+    .revenue-statistic-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .revenue-statistic-label {
+        color: #745846;
+        font-size: 14px;
+        font-weight: 750;
+    }
+
+    .revenue-statistic-icon {
+        width: 47px;
+        height: 47px;
+        border-radius: 13px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #8e4309;
+        background: #fff1df;
+        font-size: 22px;
+    }
+
+    .revenue-statistic-value {
+        margin-top: 14px;
+        color: #4a1f08;
+        font-size: 30px;
+        font-weight: 900;
+        line-height: 1.15;
+        word-break: break-word;
+    }
+
+    .revenue-statistic-note {
+        margin-top: 8px;
+        color: #927d70;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .revenue-statistic-card.success {
+        border-color: #cce6d5;
+    }
+
+        .revenue-statistic-card.success
+        .revenue-statistic-icon {
+            color: #17653b;
+            background: #e7f6ed;
+        }
+
+    .revenue-statistic-card.info {
+        border-color: #c9dfef;
+    }
+
+        .revenue-statistic-card.info
+        .revenue-statistic-icon {
+            color: #24618a;
+            background: #eaf5fc;
+        }
+
+    .revenue-statistic-card.warning {
+        border-color: #eed7ab;
+    }
+
+        .revenue-statistic-card.warning
+        .revenue-statistic-icon {
+            color: #9a5700;
+            background: #fff2d6;
+        }
+
+    .revenue-detail-panel {
+        margin-top: 20px;
+        border: 1px solid #ead7c6;
+        border-radius: 18px;
+        background: #ffffff;
+        box-shadow: 0 8px 24px rgba(78, 39, 12, 0.07);
+        overflow: hidden;
+    }
+
+    .revenue-detail-header {
+        padding: 19px 21px;
+        border-bottom: 1px solid #efdfd1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        background: #fffaf5;
+    }
+
+    .revenue-detail-title {
+        margin: 0;
+        color: #542708;
+        font-size: 20px;
+        font-weight: 850;
+    }
+
+    .revenue-detail-count {
+        padding: 6px 10px;
+        border-radius: 999px;
+        color: #764018;
+        background: #f6e6d8;
+        font-size: 12px;
+        font-weight: 850;
+        white-space: nowrap;
+    }
+
+    .revenue-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .revenue-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .revenue-table th,
+        .revenue-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #f0e3d8;
+            color: #5c4435;
+            font-size: 13px;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .revenue-table th {
+            color: #67442c;
+            background: #fffdfb;
+            font-weight: 850;
+            white-space: nowrap;
+        }
+
+        .revenue-table tbody tr:hover {
+            background: #fffaf5;
+        }
+
+    .revenue-order-code {
+        color: #6e3207;
+        font-weight: 900;
+        white-space: nowrap;
+    }
+
+    .revenue-customer-name {
+        color: #4e2e1b;
+        font-weight: 800;
+    }
+
+    .revenue-customer-phone {
+        margin-top: 3px;
+        color: #907b6d;
+        font-size: 11px;
+    }
+
+    .revenue-payment-method {
+        max-width: 170px;
+        color: #756052;
+        line-height: 1.45;
+    }
+
+    .revenue-money {
+        color: #964707;
+        font-weight: 900;
+        white-space: nowrap;
+    }
+
+    .revenue-completed-status {
+        padding: 6px 9px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: #17653b;
+        background: #e6f6ec;
+        font-size: 11px;
+        font-weight: 850;
+        white-space: nowrap;
+    }
+
+    .revenue-detail-link {
+        width: 36px;
+        height: 36px;
+        border: 1px solid #d7b89d;
+        border-radius: 9px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #7c3b08;
+        background: #ffffff;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+        .revenue-detail-link:hover {
+            color: #ffffff;
+            background: #914300;
+            border-color: #914300;
+        }
+
+    .revenue-empty {
+        padding: 60px 20px;
+        color: #8c7566;
+        text-align: center;
+    }
+
+        .revenue-empty i {
+            margin-bottom: 12px;
+            display: block;
+            color: #c19a7b;
+            font-size: 42px;
+        }
+
+    .revenue-empty-title {
+        margin-bottom: 6px;
+        color: #66452f;
+        font-size: 18px;
+        font-weight: 850;
+    }
+
+    .revenue-empty-description {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    @@media (max-width: 1050px) {
+        .revenue-filter-form {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .revenue-statistics {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 700px) {
+        .revenue-report-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .revenue-filter-form,
+        .revenue-statistics {
+            grid-template-columns: 1fr;
+        }
+
+        .revenue-filter-button,
+        .revenue-reset-button {
+            width: 100%;
+        }
+    }
+
+    @@media (max-width: 520px) {
+        .revenue-report-page {
+            padding: 110px 12px 45px;
+        }
+
+        .revenue-report-title {
+            font-size: 30px;
+        }
+
+        .revenue-filter-card {
+            padding: 18px;
+        }
+
+        .revenue-statistic-value {
+            font-size: 27px;
+        }
+    }
+</style>
+
+<section class="revenue-report-page">
+
+    <div class="revenue-report-container">
+
+        <div class="revenue-report-header">
+
+            <div>
+
+                <h1 class="revenue-report-title">
+                    Báo cáo doanh thu chi tiết
+                </h1>
+
+                <p class="revenue-report-description">
+                    Thống kê doanh thu từ những đơn hàng đã hoàn thành
+                    trong khoảng thời gian được lựa chọn.
+                </p>
+
+            </div>
+
+            <a asp-controller="QuanLyTongQuan"
+               asp-action="Index"
+               class="revenue-report-back">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Tổng quan quản trị
+
+            </a>
+
+        </div>
+
+        <div class="revenue-filter-card">
+
+            <h2 class="revenue-filter-title">
+
+                <i class="bi bi-funnel"></i>
+
+                Lọc thời gian báo cáo
+
+            </h2>
+
+            <div asp-validation-summary="ModelOnly"
+                 class="revenue-filter-validation">
+            </div>
+
+            <form asp-controller="BaoCaoDoanhThu"
+                  asp-action="Index"
+                  method="get"
+                  class="revenue-filter-form">
+
+                <div class="revenue-filter-field">
+
+                    <label asp-for="TuNgay">
+                        Từ ngày
+                    </label>
+
+                    <input asp-for="TuNgay"
+                           asp-format="{0:yyyy-MM-dd}"
+                           type="date" />
+
+                </div>
+
+                <div class="revenue-filter-field">
+
+                    <label asp-for="DenNgay">
+                        Đến ngày
+                    </label>
+
+                    <input asp-for="DenNgay"
+                           asp-format="{0:yyyy-MM-dd}"
+                           type="date" />
+
+                </div>
+
+                <button type="submit"
+                        class="revenue-filter-button">
+
+                    <i class="bi bi-search"></i>
+
+                    Xem báo cáo
+
+                </button>
+
+                <a asp-controller="BaoCaoDoanhThu"
+                   asp-action="Index"
+                   class="revenue-reset-button">
+
+                    <i class="bi bi-arrow-counterclockwise"></i>
+
+                    Mặc định
+
+                </a>
+
+            </form>
+
+            <div class="revenue-period-note">
+
+                Khoảng thời gian đang xem:
+
+                <strong>
+                    @Model.TuNgay.ToString("dd/MM/yyyy")
+                    đến
+                    @Model.DenNgay.ToString("dd/MM/yyyy")
+                </strong>
+
+            </div>
+
+        </div>
+
+        <div class="revenue-statistics">
+
+            <div class="revenue-statistic-card">
+
+                <div class="revenue-statistic-top">
+
+                    <div class="revenue-statistic-label">
+                        Đơn hàng hoàn thành
+                    </div>
+
+                    <div class="revenue-statistic-icon">
+
+                        <i class="bi bi-receipt"></i>
+
+                    </div>
+
+                </div>
+
+                <div>
+
+                    <div class="revenue-statistic-value">
+                        @Model.TongDonHangHoanThanh
+                    </div>
+
+                    <div class="revenue-statistic-note">
+                        Số đơn hoàn tất trong khoảng ngày
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="revenue-statistic-card success">
+
+                <div class="revenue-statistic-top">
+
+                    <div class="revenue-statistic-label">
+                        Tổng doanh thu
+                    </div>
+
+                    <div class="revenue-statistic-icon">
+
+                        <i class="bi bi-cash-coin"></i>
+
+                    </div>
+
+                </div>
+
+                <div>
+
+                    <div class="revenue-statistic-value">
+                        @Model.TongDoanhThu.ToString("N0")đ
+                    </div>
+
+                    <div class="revenue-statistic-note">
+                        Chỉ tính đơn có trạng thái Hoàn thành
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="revenue-statistic-card info">
+
+                <div class="revenue-statistic-top">
+
+                    <div class="revenue-statistic-label">
+                        Giá trị trung bình
+                    </div>
+
+                    <div class="revenue-statistic-icon">
+
+                        <i class="bi bi-calculator"></i>
+
+                    </div>
+
+                </div>
+
+                <div>
+
+                    <div class="revenue-statistic-value">
+                        @Model.GiaTriDonTrungBinh.ToString("N0")đ
+                    </div>
+
+                    <div class="revenue-statistic-note">
+                        Doanh thu trung bình mỗi đơn hoàn thành
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="revenue-statistic-card warning">
+
+                <div class="revenue-statistic-top">
+
+                    <div class="revenue-statistic-label">
+                        Đơn có giá trị cao nhất
+                    </div>
+
+                    <div class="revenue-statistic-icon">
+
+                        <i class="bi bi-trophy"></i>
+
+                    </div>
+
+                </div>
+
+                <div>
+
+                    <div class="revenue-statistic-value">
+                        @Model.DonHangGiaTriCaoNhat.ToString("N0")đ
+                    </div>
+
+                    <div class="revenue-statistic-note">
+                        Giá trị lớn nhất trong danh sách báo cáo
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="revenue-detail-panel">
+
+            <div class="revenue-detail-header">
+
+                <h2 class="revenue-detail-title">
+                    Danh sách đơn hàng hoàn thành
+                </h2>
+
+                <span class="revenue-detail-count">
+                    @Model.TongDonHangHoanThanh đơn
+                </span>
+
+            </div>
+
+            @if (Model.DonHangs.Count > 0)
+            {
+                <div class="revenue-table-wrapper">
+
+                    <table class="revenue-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Mã đơn</th>
+
+                                <th>Khách hàng</th>
+
+                                <th>Ngày đặt</th>
+
+                                <th>Thanh toán</th>
+
+                                <th>Tổng tiền</th>
+
+                                <th>Trạng thái</th>
+
+                                <th></th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var donHang in Model.DonHangs)
+                            {
+                                <tr>
+
+                                    <td>
+
+                                        <span class="revenue-order-code">
+                                            DH-@donHang.DonHangID.ToString("D4")
+                                        </span>
+
+                                    </td>
+
+                                    <td>
+
+                                        <div class="revenue-customer-name">
+                                            @donHang.HoTen
+                                        </div>
+
+                                        <div class="revenue-customer-phone">
+                                            @donHang.SoDienThoai
+                                        </div>
+
+                                    </td>
+
+                                    <td>
+                                        @donHang.NgayDat.ToString("dd/MM/yyyy HH:mm")
+                                    </td>
+
+                                    <td>
+
+                                        <div class="revenue-payment-method">
+                                            @donHang.PhuongThucThanhToan
+                                        </div>
+
+                                    </td>
+
+                                    <td>
+
+                                        <span class="revenue-money">
+                                            @donHang.TongTien.ToString("N0")đ
+                                        </span>
+
+                                    </td>
+
+                                    <td>
+
+                                        <span class="revenue-completed-status">
+
+                                            <i class="bi bi-check-circle-fill"></i>
+
+                                            @donHang.TrangThai
+
+                                        </span>
+
+                                    </td>
+
+                                    <td>
+
+                                        <a asp-controller="QuanLyDonHang"
+                                           asp-action="ChiTiet"
+                                           asp-route-id="@donHang.DonHangID"
+                                           class="revenue-detail-link"
+                                           title="Xem chi tiết đơn hàng">
+
+                                            <i class="bi bi-eye"></i>
+
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+            else
+            {
+                <div class="revenue-empty">
+
+                    <i class="bi bi-bar-chart"></i>
+
+                    <div class="revenue-empty-title">
+                        Chưa có doanh thu trong khoảng thời gian này
+                    </div>
+
+                    <p class="revenue-empty-description">
+                        Không tìm thấy đơn hàng nào có trạng thái
+                        “Hoàn thành”. Hãy chọn khoảng ngày khác để kiểm tra.
+                    </p>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</section>
