@@ -1,0 +1,615 @@
+@model MilkTea.Web.Models.LienHeViewModel
+
+@{
+    ViewData["Title"] = "Liên hệ";
+}
+
+<style>
+    .contact-page {
+        min-height: 100vh;
+        padding: 125px 20px 70px;
+        background:
+            radial-gradient(
+                circle at top right,
+                rgba(239, 203, 166, 0.35),
+                transparent 34%),
+            #fffdfb;
+    }
+
+    .contact-container {
+        max-width: 1180px;
+        margin: 0 auto;
+    }
+
+    .contact-heading {
+        margin-bottom: 12px;
+        color: #4a1f08;
+        font-size: 38px;
+        font-weight: 850;
+        text-align: center;
+    }
+
+    .contact-description {
+        max-width: 700px;
+        margin: 0 auto 34px;
+        color: #77645a;
+        line-height: 1.7;
+        text-align: center;
+    }
+
+    .contact-success {
+        max-width: 860px;
+        margin: 0 auto 22px;
+        padding: 15px 17px;
+        border: 1px solid #bde1c8;
+        border-radius: 13px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        color: #17643a;
+        background: #eaf8ef;
+        font-weight: 750;
+        line-height: 1.55;
+    }
+
+    .contact-success i {
+        margin-top: 2px;
+        flex: 0 0 auto;
+        font-size: 19px;
+    }
+
+    .contact-layout {
+        display: grid;
+        grid-template-columns:
+            minmax(280px, 0.8fr)
+            minmax(0, 1.35fr);
+        gap: 24px;
+        align-items: stretch;
+    }
+
+    .contact-information,
+    .contact-form-card {
+        border: 1px solid #ead5c3;
+        border-radius: 22px;
+        background: #ffffff;
+        box-shadow: 0 12px 32px rgba(76, 38, 12, 0.08);
+    }
+
+    .contact-information {
+        padding: 28px;
+        color: #ffffff;
+        background:
+            linear-gradient(
+                145deg,
+                #7c3504,
+                #a75a1b);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .contact-information::after {
+        width: 210px;
+        height: 210px;
+        border-radius: 50%;
+        position: absolute;
+        right: -85px;
+        bottom: -95px;
+        content: "";
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .contact-information-title {
+        margin: 0 0 10px;
+        font-size: 25px;
+        font-weight: 850;
+    }
+
+    .contact-information-description {
+        margin: 0 0 28px;
+        color: rgba(255, 255, 255, 0.82);
+        line-height: 1.65;
+    }
+
+    .contact-information-list {
+        display: grid;
+        gap: 16px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .contact-information-item {
+        padding: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 14px;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .contact-information-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        flex: 0 0 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #7a3505;
+        background: #fff3e7;
+        font-size: 19px;
+    }
+
+    .contact-information-label {
+        margin-bottom: 3px;
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 12px;
+        font-weight: 750;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .contact-information-value {
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 800;
+        line-height: 1.45;
+    }
+
+    .contact-demo-note {
+        margin-top: 22px;
+        padding-top: 18px;
+        border-top: 1px solid rgba(255, 255, 255, 0.18);
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 12px;
+        line-height: 1.55;
+        position: relative;
+        z-index: 1;
+    }
+
+    .contact-form-card {
+        padding: 30px;
+    }
+
+    .contact-form-title {
+        margin: 0 0 8px;
+        color: #512607;
+        font-size: 25px;
+        font-weight: 850;
+    }
+
+    .contact-form-description {
+        margin: 0 0 23px;
+        color: #806c5f;
+        line-height: 1.6;
+    }
+
+    .contact-validation-summary {
+        margin-bottom: 18px;
+        padding: 13px 15px;
+        border: 1px solid #efcaca;
+        border-radius: 11px;
+        color: #962c2c;
+        background: #fff1f1;
+        font-size: 13px;
+        line-height: 1.55;
+    }
+
+    .contact-validation-summary:empty {
+        display: none;
+    }
+
+    .contact-grid {
+        display: grid;
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+        gap: 17px;
+    }
+
+    .contact-field {
+        min-width: 0;
+    }
+
+    .contact-field.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .contact-field label {
+        margin-bottom: 7px;
+        display: block;
+        color: #65442e;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .contact-required {
+        color: #c62a2a;
+    }
+
+    .contact-field input,
+    .contact-field textarea {
+        width: 100%;
+        border: 1px solid #dac2af;
+        border-radius: 11px;
+        box-sizing: border-box;
+        color: #4e3626;
+        background: #fffdfb;
+        font-family: inherit;
+        outline: none;
+        transition: 0.2s ease;
+    }
+
+    .contact-field input {
+        height: 49px;
+        padding: 0 14px;
+    }
+
+    .contact-field textarea {
+        min-height: 155px;
+        padding: 13px 14px;
+        resize: vertical;
+        line-height: 1.6;
+    }
+
+    .contact-field input:focus,
+    .contact-field textarea:focus {
+        border-color: #a24d0c;
+        box-shadow: 0 0 0 3px rgba(162, 77, 12, 0.12);
+    }
+
+    .contact-field-error {
+        min-height: 19px;
+        margin-top: 5px;
+        display: block;
+        color: #b52d2d;
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    .contact-form-footer {
+        margin-top: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+    .contact-privacy-note {
+        margin: 0;
+        color: #8b786c;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .contact-submit {
+        min-width: 170px;
+        min-height: 49px;
+        padding: 0 20px;
+        border: 1px solid #8d3f05;
+        border-radius: 11px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: #ffffff;
+        background: #8d3f05;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 850;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: 0.2s ease;
+    }
+
+    .contact-submit:hover {
+        background: #6d2e00;
+        border-color: #6d2e00;
+        transform: translateY(-1px);
+    }
+
+    @@media (max-width: 850px) {
+        .contact-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 620px) {
+        .contact-page {
+            padding: 110px 12px 50px;
+        }
+
+        .contact-heading {
+            font-size: 31px;
+        }
+
+        .contact-form-card,
+        .contact-information {
+            padding: 22px;
+        }
+
+        .contact-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .contact-form-footer {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .contact-submit {
+            width: 100%;
+        }
+    }
+</style>
+
+<section class="contact-page">
+
+    <div class="contact-container">
+
+        <h1 class="contact-heading">
+            Liên hệ MilkTea House
+        </h1>
+
+        <p class="contact-description">
+            Bạn cần hỗ trợ về sản phẩm, đơn hàng hoặc có góp ý
+            cho cửa hàng? Hãy gửi nội dung cho chúng tôi qua
+            biểu mẫu dưới đây.
+        </p>
+
+        @if (TempData["LienHeThanhCong"] != null)
+        {
+            <div class="contact-success">
+
+                <i class="bi bi-check-circle-fill"></i>
+
+                <span>
+                    @TempData["LienHeThanhCong"]
+                </span>
+
+            </div>
+        }
+
+        <div class="contact-layout">
+
+            <aside class="contact-information">
+
+                <h2 class="contact-information-title">
+                    Thông tin cửa hàng
+                </h2>
+
+                <p class="contact-information-description">
+                    MilkTea House luôn sẵn sàng tiếp nhận câu hỏi,
+                    góp ý và yêu cầu hỗ trợ của khách hàng.
+                </p>
+
+                <div class="contact-information-list">
+
+                    <div class="contact-information-item">
+
+                        <span class="contact-information-icon">
+                            <i class="bi bi-geo-alt"></i>
+                        </span>
+
+                        <div>
+
+                            <div class="contact-information-label">
+                                Địa chỉ
+                            </div>
+
+                            <div class="contact-information-value">
+                                Cần Thơ, Việt Nam
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="contact-information-item">
+
+                        <span class="contact-information-icon">
+                            <i class="bi bi-telephone"></i>
+                        </span>
+
+                        <div>
+
+                            <div class="contact-information-label">
+                                Điện thoại
+                            </div>
+
+                            <div class="contact-information-value">
+                                0900 000 000
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="contact-information-item">
+
+                        <span class="contact-information-icon">
+                            <i class="bi bi-envelope"></i>
+                        </span>
+
+                        <div>
+
+                            <div class="contact-information-label">
+                                Email
+                            </div>
+
+                            <div class="contact-information-value">
+                                lienhe@milkteahouse.vn
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="contact-information-item">
+
+                        <span class="contact-information-icon">
+                            <i class="bi bi-clock"></i>
+                        </span>
+
+                        <div>
+
+                            <div class="contact-information-label">
+                                Thời gian phục vụ
+                            </div>
+
+                            <div class="contact-information-value">
+                                08:00 – 22:00 mỗi ngày
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="contact-demo-note">
+                    Thông tin địa chỉ, điện thoại và email trên đây
+                    là dữ liệu minh họa phục vụ đồ án.
+                </div>
+
+            </aside>
+
+            <div class="contact-form-card">
+
+                <h2 class="contact-form-title">
+                    Gửi nội dung liên hệ
+                </h2>
+
+                <p class="contact-form-description">
+                    Các trường có dấu
+                    <span class="contact-required">*</span>
+                    là bắt buộc.
+                </p>
+
+                <form asp-controller="LienHe"
+                      asp-action="Index"
+                      method="post">
+
+                    <div asp-validation-summary="ModelOnly"
+                         class="contact-validation-summary">
+                    </div>
+
+                    <div class="contact-grid">
+
+                        <div class="contact-field">
+
+                            <label asp-for="HoTen">
+                                Họ và tên
+                                <span class="contact-required">*</span>
+                            </label>
+
+                            <input asp-for="HoTen"
+                                   autocomplete="name"
+                                   placeholder="Nhập họ và tên" />
+
+                            <span asp-validation-for="HoTen"
+                                  class="contact-field-error">
+                            </span>
+
+                        </div>
+
+                        <div class="contact-field">
+
+                            <label asp-for="SoDienThoai">
+                                Số điện thoại
+                            </label>
+
+                            <input asp-for="SoDienThoai"
+                                   autocomplete="tel"
+                                   placeholder="Ví dụ: 0912345678" />
+
+                            <span asp-validation-for="SoDienThoai"
+                                  class="contact-field-error">
+                            </span>
+
+                        </div>
+
+                        <div class="contact-field full-width">
+
+                            <label asp-for="Email">
+                                Email
+                                <span class="contact-required">*</span>
+                            </label>
+
+                            <input asp-for="Email"
+                                   autocomplete="email"
+                                   placeholder="Nhập địa chỉ email" />
+
+                            <span asp-validation-for="Email"
+                                  class="contact-field-error">
+                            </span>
+
+                        </div>
+
+                        <div class="contact-field full-width">
+
+                            <label asp-for="TieuDe">
+                                Tiêu đề
+                                <span class="contact-required">*</span>
+                            </label>
+
+                            <input asp-for="TieuDe"
+                                   maxlength="150"
+                                   placeholder="Bạn cần hỗ trợ vấn đề gì?" />
+
+                            <span asp-validation-for="TieuDe"
+                                  class="contact-field-error">
+                            </span>
+
+                        </div>
+
+                        <div class="contact-field full-width">
+
+                            <label asp-for="NoiDung">
+                                Nội dung
+                                <span class="contact-required">*</span>
+                            </label>
+
+                            <textarea asp-for="NoiDung"
+                                      maxlength="2000"
+                                      placeholder="Nhập nội dung cần hỗ trợ hoặc góp ý...">
+                            </textarea>
+
+                            <span asp-validation-for="NoiDung"
+                                  class="contact-field-error">
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="contact-form-footer">
+
+                        <p class="contact-privacy-note">
+                            Thông tin của bạn chỉ được sử dụng để
+                            phản hồi yêu cầu liên hệ.
+                        </p>
+
+                        <button type="submit"
+                                class="contact-submit">
+
+                            <i class="bi bi-send"></i>
+
+                            Gửi liên hệ
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

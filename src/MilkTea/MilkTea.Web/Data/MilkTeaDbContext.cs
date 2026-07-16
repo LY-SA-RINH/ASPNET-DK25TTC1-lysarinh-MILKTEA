@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MilkTea.Web.Models;
 
@@ -20,5 +20,7 @@ namespace MilkTea.Web.Data
         public DbSet<DonHang> DonHangs { get; set; }
 
         public DbSet<ChiTietDonHang> ChiTietDonHangs { get; set; }
+
+        public DbSet<LienHe> LienHes { get; set; }
     }
 }
