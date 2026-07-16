@@ -1,0 +1,1139 @@
+﻿@model MilkTea.Web.Models.QuanLyKhachHangViewModel
+
+@{
+    ViewData["Title"] = "Quản lý khách hàng";
+}
+
+<style>
+    .customer-management-page {
+        min-height: 100vh;
+        padding: 125px 20px 70px;
+        background: #fffdfb;
+    }
+
+    .customer-management-container {
+        max-width: 1280px;
+        margin: 0 auto;
+    }
+
+    .customer-management-header {
+        margin-bottom: 26px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .customer-management-title {
+        margin: 0 0 7px;
+        color: #4a1f08;
+        font-size: 36px;
+        font-weight: 850;
+    }
+
+    .customer-management-description {
+        margin: 0;
+        color: #7a685d;
+        line-height: 1.6;
+    }
+
+    .customer-management-back {
+        min-height: 44px;
+        padding: 0 16px;
+        border: 1px solid #d8b99f;
+        border-radius: 11px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: #754018;
+        background: #ffffff;
+        font-weight: 800;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: 0.2s ease;
+    }
+
+        .customer-management-back:hover {
+            color: #ffffff;
+            background: #8c4109;
+            border-color: #8c4109;
+        }
+
+    .customer-management-alert {
+        margin-bottom: 18px;
+        padding: 14px 16px;
+        border-radius: 11px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+        .customer-management-alert.success {
+            border: 1px solid #bfe2cb;
+            color: #17643a;
+            background: #e8f7ed;
+        }
+
+        .customer-management-alert.error {
+            border: 1px solid #efc7c7;
+            color: #982b2b;
+            background: #fff0f0;
+        }
+
+    .customer-management-statistics {
+        margin-bottom: 20px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .customer-management-statistic {
+        min-height: 135px;
+        padding: 21px;
+        border: 1px solid #ead7c6;
+        border-radius: 18px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background: #ffffff;
+        box-shadow: 0 8px 24px rgba(78, 39, 12, 0.07);
+    }
+
+    .customer-management-statistic-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .customer-management-statistic-label {
+        color: #745846;
+        font-size: 14px;
+        font-weight: 750;
+    }
+
+    .customer-management-statistic-icon {
+        width: 47px;
+        height: 47px;
+        border-radius: 13px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #8e4309;
+        background: #fff1df;
+        font-size: 22px;
+    }
+
+    .customer-management-statistic-value {
+        margin-top: 14px;
+        color: #4a1f08;
+        font-size: 32px;
+        font-weight: 900;
+        line-height: 1;
+    }
+
+    .customer-management-statistic.active {
+        border-color: #c9e6d3;
+    }
+
+        .customer-management-statistic.active
+        .customer-management-statistic-icon {
+            color: #17653b;
+            background: #e7f6ed;
+        }
+
+    .customer-management-statistic.locked {
+        border-color: #efcccc;
+    }
+
+        .customer-management-statistic.locked
+        .customer-management-statistic-icon {
+            color: #a32b2b;
+            background: #fdeaea;
+        }
+
+    .customer-management-filter-card {
+        margin-bottom: 20px;
+        padding: 21px;
+        border: 1px solid #ead5c3;
+        border-radius: 18px;
+        background: #ffffff;
+        box-shadow: 0 8px 24px rgba(78, 39, 12, 0.07);
+    }
+
+    .customer-management-filter-title {
+        margin: 0 0 16px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: #542708;
+        font-size: 19px;
+        font-weight: 850;
+    }
+
+        .customer-management-filter-title i {
+            color: #9c4a0b;
+        }
+
+    .customer-management-filter-form {
+        display: grid;
+        grid-template-columns: minmax(280px, 1.7fr) minmax(210px, 0.8fr) auto auto;
+        gap: 14px;
+        align-items: end;
+    }
+
+    .customer-management-field label {
+        margin-bottom: 7px;
+        display: block;
+        color: #67442c;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .customer-management-field input,
+    .customer-management-field select {
+        width: 100%;
+        height: 48px;
+        padding: 0 13px;
+        border: 1px solid #d9c1ad;
+        border-radius: 10px;
+        color: #4e3424;
+        background: #fffdfb;
+        outline: none;
+        transition: 0.2s ease;
+    }
+
+        .customer-management-field input:focus,
+        .customer-management-field select:focus {
+            border-color: #a65312;
+            box-shadow: 0 0 0 3px rgba(166, 83, 18, 0.12);
+        }
+
+    .customer-management-filter-button,
+    .customer-management-reset-button {
+        min-height: 48px;
+        padding: 0 19px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 850;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: 0.2s ease;
+    }
+
+    .customer-management-filter-button {
+        border: 1px solid #914300;
+        color: #ffffff;
+        background: #914300;
+        cursor: pointer;
+    }
+
+        .customer-management-filter-button:hover {
+            background: #6f3000;
+            border-color: #6f3000;
+        }
+
+    .customer-management-reset-button {
+        border: 1px solid #d8b99f;
+        color: #754018;
+        background: #ffffff;
+    }
+
+        .customer-management-reset-button:hover {
+            color: #ffffff;
+            background: #8c4109;
+            border-color: #8c4109;
+        }
+
+    .customer-management-panel {
+        border: 1px solid #ead7c6;
+        border-radius: 18px;
+        background: #ffffff;
+        box-shadow: 0 8px 24px rgba(78, 39, 12, 0.07);
+        overflow: hidden;
+    }
+
+    .customer-management-panel-header {
+        padding: 19px 21px;
+        border-bottom: 1px solid #efdfd1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        background: #fffaf5;
+    }
+
+    .customer-management-panel-title {
+        margin: 0;
+        color: #542708;
+        font-size: 20px;
+        font-weight: 850;
+    }
+
+    .customer-management-result-count {
+        padding: 6px 10px;
+        border-radius: 999px;
+        color: #764018;
+        background: #f6e6d8;
+        font-size: 12px;
+        font-weight: 850;
+        white-space: nowrap;
+    }
+
+    .customer-management-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .customer-management-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .customer-management-table th,
+        .customer-management-table td {
+            padding: 14px 15px;
+            border-bottom: 1px solid #f0e3d8;
+            color: #5c4435;
+            font-size: 13px;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .customer-management-table th {
+            color: #67442c;
+            background: #fffdfb;
+            font-weight: 850;
+            white-space: nowrap;
+        }
+
+        .customer-management-table tbody tr:hover {
+            background: #fffaf5;
+        }
+
+    .customer-management-user {
+        min-width: 185px;
+        display: flex;
+        align-items: center;
+        gap: 11px;
+    }
+
+    .customer-management-avatar {
+        width: 42px;
+        height: 42px;
+        flex: 0 0 42px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #8b4108;
+        background: #f8e8da;
+        font-size: 20px;
+    }
+
+    .customer-management-name {
+        color: #4e2e1b;
+        font-weight: 850;
+    }
+
+    .customer-management-code {
+        margin-top: 3px;
+        color: #978377;
+        font-size: 11px;
+    }
+
+    .customer-management-contact {
+        min-width: 190px;
+    }
+
+    .customer-management-email {
+        color: #5e402d;
+        font-weight: 750;
+    }
+
+    .customer-management-phone {
+        margin-top: 4px;
+        color: #8c786b;
+        font-size: 12px;
+    }
+
+    .customer-management-address {
+        min-width: 170px;
+        max-width: 230px;
+        color: #786256;
+        line-height: 1.5;
+    }
+
+    .customer-management-empty-text {
+        color: #a09086;
+        font-style: italic;
+    }
+
+    .customer-management-date {
+        min-width: 105px;
+        white-space: nowrap;
+    }
+
+    .customer-management-number {
+        color: #613514;
+        font-weight: 850;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    .customer-management-money {
+        color: #954607;
+        font-weight: 900;
+        white-space: nowrap;
+    }
+
+    .customer-management-status {
+        padding: 7px 10px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        font-size: 11px;
+        font-weight: 850;
+        white-space: nowrap;
+    }
+
+        .customer-management-status.active {
+            color: #17653b;
+            background: #e5f6eb;
+        }
+
+        .customer-management-status.locked {
+            color: #9b2929;
+            background: #fde9e9;
+        }
+
+    .customer-management-action-form {
+        margin: 0;
+    }
+
+    .customer-management-action-button {
+        min-width: 92px;
+        min-height: 38px;
+        padding: 6px 12px;
+        border-radius: 9px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 850;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: 0.2s ease;
+    }
+
+        .customer-management-action-button.lock {
+            border: 1px solid #d24a4a;
+            color: #a32626;
+            background: #ffffff;
+        }
+
+            .customer-management-action-button.lock:hover {
+                color: #ffffff;
+                background: #c73535;
+                border-color: #c73535;
+            }
+
+        .customer-management-action-button.unlock {
+            border: 1px solid #278453;
+            color: #17653b;
+            background: #ffffff;
+        }
+
+            .customer-management-action-button.unlock:hover {
+                color: #ffffff;
+                background: #278453;
+                border-color: #278453;
+            }
+
+    .customer-management-empty {
+        padding: 60px 20px;
+        color: #8c7566;
+        text-align: center;
+    }
+
+        .customer-management-empty i {
+            margin-bottom: 12px;
+            display: block;
+            color: #c19a7b;
+            font-size: 43px;
+        }
+
+    .customer-management-empty-title {
+        margin-bottom: 6px;
+        color: #66452f;
+        font-size: 18px;
+        font-weight: 850;
+    }
+
+    .customer-management-empty-description {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .customer-management-pagination {
+        margin-top: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        flex-wrap: wrap;
+    }
+
+    .customer-management-page-link {
+        min-width: 42px;
+        height: 42px;
+        padding: 0 12px;
+        border: 1px solid #dfc5ae;
+        border-radius: 9px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #744019;
+        background: #ffffff;
+        font-size: 13px;
+        font-weight: 850;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+        .customer-management-page-link:hover,
+        .customer-management-page-link.current {
+            color: #ffffff;
+            background: #8b4108;
+            border-color: #8b4108;
+        }
+
+        .customer-management-page-link.disabled {
+            color: #b6aaa2;
+            background: #f4f0ed;
+            border-color: #e8dfd8;
+            pointer-events: none;
+        }
+
+    @@media (max-width: 1050px) {
+        .customer-management-statistics {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .customer-management-filter-form {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 760px) {
+        .customer-management-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .customer-management-statistics {
+            grid-template-columns: 1fr;
+        }
+
+        .customer-management-filter-form {
+            grid-template-columns: 1fr;
+        }
+
+        .customer-management-filter-button,
+        .customer-management-reset-button {
+            width: 100%;
+        }
+    }
+
+    @@media (max-width: 520px) {
+        .customer-management-page {
+            padding: 110px 12px 45px;
+        }
+
+        .customer-management-title {
+            font-size: 30px;
+        }
+
+        .customer-management-filter-card {
+            padding: 18px;
+        }
+
+        .customer-management-panel-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+    }
+</style>
+
+<section class="customer-management-page">
+
+    <div class="customer-management-container">
+
+        <div class="customer-management-header">
+
+            <div>
+
+                <h1 class="customer-management-title">
+                    Quản lý khách hàng
+                </h1>
+
+                <p class="customer-management-description">
+                    Theo dõi tài khoản, lịch sử mua hàng và trạng thái
+                    hoạt động của khách hàng.
+                </p>
+
+            </div>
+
+            <a asp-controller="QuanLyTongQuan"
+               asp-action="Index"
+               class="customer-management-back">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Tổng quan quản trị
+
+            </a>
+
+        </div>
+
+        @if (TempData["ThanhCong"] != null)
+        {
+            <div class="customer-management-alert success">
+
+                <i class="bi bi-check-circle-fill"></i>
+
+                <span>
+                    @TempData["ThanhCong"]
+                </span>
+
+            </div>
+        }
+
+        @if (TempData["Loi"] != null)
+        {
+            <div class="customer-management-alert error">
+
+                <i class="bi bi-exclamation-triangle-fill"></i>
+
+                <span>
+                    @TempData["Loi"]
+                </span>
+
+            </div>
+        }
+
+        <div class="customer-management-statistics">
+
+            <div class="customer-management-statistic">
+
+                <div class="customer-management-statistic-top">
+
+                    <div class="customer-management-statistic-label">
+                        Tổng khách hàng
+                    </div>
+
+                    <div class="customer-management-statistic-icon">
+
+                        <i class="bi bi-people"></i>
+
+                    </div>
+
+                </div>
+
+                <div class="customer-management-statistic-value">
+                    @Model.TongKhachHang
+                </div>
+
+            </div>
+
+            <div class="customer-management-statistic active">
+
+                <div class="customer-management-statistic-top">
+
+                    <div class="customer-management-statistic-label">
+                        Đang hoạt động
+                    </div>
+
+                    <div class="customer-management-statistic-icon">
+
+                        <i class="bi bi-person-check"></i>
+
+                    </div>
+
+                </div>
+
+                <div class="customer-management-statistic-value">
+                    @Model.TongDangHoatDong
+                </div>
+
+            </div>
+
+            <div class="customer-management-statistic locked">
+
+                <div class="customer-management-statistic-top">
+
+                    <div class="customer-management-statistic-label">
+                        Đã khóa
+                    </div>
+
+                    <div class="customer-management-statistic-icon">
+
+                        <i class="bi bi-person-lock"></i>
+
+                    </div>
+
+                </div>
+
+                <div class="customer-management-statistic-value">
+                    @Model.TongDaKhoa
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="customer-management-filter-card">
+
+            <h2 class="customer-management-filter-title">
+
+                <i class="bi bi-funnel"></i>
+
+                Tìm kiếm và lọc khách hàng
+
+            </h2>
+
+            <form asp-controller="QuanLyKhachHang"
+                  asp-action="Index"
+                  method="get"
+                  class="customer-management-filter-form">
+
+                <div class="customer-management-field">
+
+                    <label for="tuKhoa">
+                        Từ khóa
+                    </label>
+
+                    <input type="text"
+                           id="tuKhoa"
+                           name="tuKhoa"
+                           value="@Model.TuKhoa"
+                           placeholder="Họ tên, email hoặc số điện thoại" />
+
+                </div>
+
+                <div class="customer-management-field">
+
+                    <label for="trangThai">
+                        Trạng thái tài khoản
+                    </label>
+
+                    <select id="trangThai"
+                            name="trangThai">
+
+                        @if (string.IsNullOrWhiteSpace(Model.TrangThai))
+                        {
+                            <option value="" selected>
+                                Tất cả trạng thái
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="">
+                                Tất cả trạng thái
+                            </option>
+                        }
+
+                        @if (Model.TrangThai == "dang-hoat-dong")
+                        {
+                            <option value="dang-hoat-dong"
+                                    selected>
+                                Đang hoạt động
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="dang-hoat-dong">
+                                Đang hoạt động
+                            </option>
+                        }
+
+                        @if (Model.TrangThai == "da-khoa")
+                        {
+                            <option value="da-khoa"
+                                    selected>
+                                Đã khóa
+                            </option>
+                        }
+                        else
+                        {
+                            <option value="da-khoa">
+                                Đã khóa
+                            </option>
+                        }
+
+                    </select>
+
+                </div>
+
+                <button type="submit"
+                        class="customer-management-filter-button">
+
+                    <i class="bi bi-search"></i>
+
+                    Tìm kiếm
+
+                </button>
+
+                <a asp-controller="QuanLyKhachHang"
+                   asp-action="Index"
+                   class="customer-management-reset-button">
+
+                    <i class="bi bi-arrow-counterclockwise"></i>
+
+                    Đặt lại
+
+                </a>
+
+            </form>
+
+        </div>
+
+        <div class="customer-management-panel">
+
+            <div class="customer-management-panel-header">
+
+                <h2 class="customer-management-panel-title">
+                    Danh sách khách hàng
+                </h2>
+
+                <span class="customer-management-result-count">
+                    @Model.TongKetQua kết quả
+                </span>
+
+            </div>
+
+            @if (Model.KhachHangs.Count > 0)
+            {
+                <div class="customer-management-table-wrapper">
+
+                    <table class="customer-management-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Khách hàng</th>
+
+                                <th>Liên hệ</th>
+
+                                <th>Địa chỉ</th>
+
+                                <th>Ngày đăng ký</th>
+
+                                <th>Đơn hàng</th>
+
+                                <th>Đã chi tiêu</th>
+
+                                <th>Trạng thái</th>
+
+                                <th>Thao tác</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var khachHang in Model.KhachHangs)
+                            {
+                                <tr>
+
+                                    <td>
+
+                                        <div class="customer-management-user">
+
+                                            <div class="customer-management-avatar">
+
+                                                <i class="bi bi-person"></i>
+
+                                            </div>
+
+                                            <div>
+
+                                                <div class="customer-management-name">
+                                                    @khachHang.HoTen
+                                                </div>
+
+                                                <div class="customer-management-code">
+                                                    KH-@khachHang.NguoiDungID
+                                                    .Substring(
+                                                    0,
+                                                    Math.Min(
+                                                    8,
+                                                    khachHang.NguoiDungID.Length))
+                                                    .ToUpperInvariant()
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+                                    <td>
+
+                                        <div class="customer-management-contact">
+
+                                            <div class="customer-management-email">
+                                                @khachHang.Email
+                                            </div>
+
+                                            @if (!string.IsNullOrWhiteSpace(
+                                                khachHang.SoDienThoai))
+                                            {
+                                                <div class="customer-management-phone">
+
+                                                    <i class="bi bi-telephone"></i>
+
+                                                    @khachHang.SoDienThoai
+
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="customer-management-phone
+                                                    customer-management-empty-text">
+                                                    Chưa cập nhật số điện thoại
+                                                </div>
+                                            }
+
+                                        </div>
+
+                                    </td>
+
+                                    <td>
+
+                                        <div class="customer-management-address">
+
+                                            @if (!string.IsNullOrWhiteSpace(
+                                                khachHang.DiaChi))
+                                            {
+                                                @khachHang.DiaChi
+                                            }
+                                            else
+                                            {
+                                                <span class="customer-management-empty-text">
+                                                    Chưa cập nhật
+                                                </span>
+                                            }
+
+                                        </div>
+
+                                    </td>
+
+                                    <td>
+
+                                        <div class="customer-management-date">
+                                            @khachHang.NgayTao.ToString("dd/MM/yyyy")
+                                        </div>
+
+                                    </td>
+
+                                    <td>
+
+                                        <div class="customer-management-number">
+                                            @khachHang.TongDonHang
+                                        </div>
+
+                                    </td>
+
+                                    <td>
+
+                                        <span class="customer-management-money">
+                                            @khachHang.TongChiTieu.ToString("N0")đ
+                                        </span>
+
+                                    </td>
+
+                                    <td>
+
+                                        @if (khachHang.BiKhoa)
+                                        {
+                                            <span class="customer-management-status locked">
+
+                                                <i class="bi bi-lock-fill"></i>
+
+                                                Đã khóa
+
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="customer-management-status active">
+
+                                                <i class="bi bi-check-circle-fill"></i>
+
+                                                Đang hoạt động
+
+                                            </span>
+                                        }
+
+                                    </td>
+
+                                    <td>
+
+                                        <form asp-controller="QuanLyKhachHang"
+                                              asp-action="ThayDoiTrangThai"
+                                              method="post"
+                                              class="customer-management-action-form"
+                                              onsubmit="return confirm('@(
+                                              khachHang.BiKhoa
+                                                  ? "Bạn có chắc muốn mở khóa tài khoản khách hàng này?"
+                                                  : "Bạn có chắc muốn khóa tài khoản khách hàng này?"
+                                                                                        )');">
+
+                                            <input type="hidden"
+                                                   name="id"
+                                                   value="@khachHang.NguoiDungID" />
+
+                                            @if (khachHang.BiKhoa)
+                                            {
+                                                <button type="submit"
+                                                        class="customer-management-action-button unlock">
+
+                                                    <i class="bi bi-unlock"></i>
+
+                                                    Mở khóa
+
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button type="submit"
+                                                        class="customer-management-action-button lock">
+
+                                                    <i class="bi bi-lock"></i>
+
+                                                    Khóa
+
+                                                </button>
+                                            }
+
+                                        </form>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+            else
+            {
+                <div class="customer-management-empty">
+
+                    <i class="bi bi-people"></i>
+
+                    <div class="customer-management-empty-title">
+                        Không tìm thấy khách hàng
+                    </div>
+
+                    <p class="customer-management-empty-description">
+                        Hãy thay đổi từ khóa hoặc trạng thái lọc để kiểm tra lại.
+                    </p>
+
+                </div>
+            }
+
+        </div>
+
+        @if (Model.TongSoTrang > 1)
+        {
+            <div class="customer-management-pagination">
+
+                @if (Model.TrangHienTai > 1)
+                {
+                    <a asp-controller="QuanLyKhachHang"
+                       asp-action="Index"
+                       asp-route-tuKhoa="@Model.TuKhoa"
+                       asp-route-trangThai="@Model.TrangThai"
+                       asp-route-trang="@(Model.TrangHienTai - 1)"
+                       class="customer-management-page-link"
+                       title="Trang trước">
+
+                        <i class="bi bi-chevron-left"></i>
+
+                    </a>
+                }
+                else
+                {
+                    <span class="customer-management-page-link disabled">
+
+                        <i class="bi bi-chevron-left"></i>
+
+                    </span>
+                }
+
+                @for (int soTrang = 1;
+                     soTrang <= Model.TongSoTrang;
+                     soTrang++)
+                {
+                    string lopTrang =
+                        soTrang == Model.TrangHienTai
+                            ? "current"
+                            : string.Empty;
+
+                    <a asp-controller="QuanLyKhachHang"
+                       asp-action="Index"
+                       asp-route-tuKhoa="@Model.TuKhoa"
+                       asp-route-trangThai="@Model.TrangThai"
+                       asp-route-trang="@soTrang"
+                       class="customer-management-page-link @lopTrang">
+
+                        @soTrang
+
+                    </a>
+                }
+
+                @if (Model.TrangHienTai < Model.TongSoTrang)
+                {
+                    <a asp-controller="QuanLyKhachHang"
+                       asp-action="Index"
+                       asp-route-tuKhoa="@Model.TuKhoa"
+                       asp-route-trangThai="@Model.TrangThai"
+                       asp-route-trang="@(Model.TrangHienTai + 1)"
+                       class="customer-management-page-link"
+                       title="Trang sau">
+
+                        <i class="bi bi-chevron-right"></i>
+
+                    </a>
+                }
+                else
+                {
+                    <span class="customer-management-page-link disabled">
+
+                        <i class="bi bi-chevron-right"></i>
+
+                    </span>
+                }
+
+            </div>
+        }
+
+    </div>
+
+</section>
