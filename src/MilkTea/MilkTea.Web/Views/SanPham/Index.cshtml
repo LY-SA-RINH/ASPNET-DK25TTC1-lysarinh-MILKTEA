@@ -1,7 +1,15 @@
 ﻿@model List<MilkTea.Web.Models.SanPham>
 
 @{
-    ViewData["Title"] = "Tất cả sản phẩm";
+    string? tuKhoa =
+        ViewBag.TuKhoa as string;
+
+    bool dangTimKiem =
+        !string.IsNullOrWhiteSpace(tuKhoa);
+
+    ViewData["Title"] = dangTimKiem
+        ? $"Tìm kiếm: {tuKhoa}"
+        : "Tất cả sản phẩm";
 
     int trangHienTai = ViewBag.TrangHienTai ?? 1;
     int tongSoTrang = ViewBag.TongSoTrang ?? 0;
@@ -41,6 +49,112 @@
 
         .product-page-description strong {
             color: #9a4c00;
+        }
+
+    /* Khu vực tìm kiếm sản phẩm */
+    .product-search-card {
+        margin-bottom: 32px;
+        padding: 20px;
+        border: 1px solid #ead3bf;
+        border-radius: 18px;
+        background: #ffffff;
+        box-shadow: 0 8px 24px rgba(78, 39, 12, 0.07);
+        scroll-margin-top: 110px;
+    }
+
+    .product-search-form {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .product-search-input-wrap {
+        position: relative;
+        min-width: 0;
+    }
+
+        .product-search-input-wrap > i {
+            position: absolute;
+            top: 50%;
+            left: 16px;
+            color: #9b765d;
+            font-size: 18px;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+    .product-search-input {
+        width: 100%;
+        height: 50px;
+        padding: 0 16px 0 47px;
+        border: 1px solid #d9bfa9;
+        border-radius: 12px;
+        color: #4d3424;
+        background: #fffdfb;
+        font-family: inherit;
+        font-size: 15px;
+        outline: none;
+        transition: 0.2s ease;
+    }
+
+        .product-search-input:focus {
+            border-color: #a34e08;
+            box-shadow: 0 0 0 3px rgba(163, 78, 8, 0.12);
+        }
+
+    .product-search-button,
+    .product-search-reset {
+        min-height: 50px;
+        padding: 0 18px;
+        border-radius: 11px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 800;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: 0.2s ease;
+    }
+
+    .product-search-button {
+        border: 1px solid #8d3f05;
+        color: #ffffff;
+        background: #8d3f05;
+        cursor: pointer;
+    }
+
+        .product-search-button:hover {
+            background: #6f2f00;
+            border-color: #6f2f00;
+        }
+
+    .product-search-reset {
+        border: 1px solid #d8b99f;
+        color: #784018;
+        background: #ffffff;
+    }
+
+        .product-search-reset:hover {
+            color: #ffffff;
+            background: #8d3f05;
+            border-color: #8d3f05;
+        }
+
+    .product-search-result {
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px solid #f0e1d5;
+        color: #745a48;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+        .product-search-result strong {
+            color: #934407;
         }
 
     /* Hai nút trên card sản phẩm */
@@ -258,11 +372,62 @@
         border-radius: 18px;
         color: #75523a;
         background: #fff8f0;
-        font-size: 18px;
         text-align: center;
     }
 
+    .product-empty-icon {
+        margin-bottom: 12px;
+        display: block;
+        color: #bd8b65;
+        font-size: 42px;
+    }
+
+    .product-empty-title {
+        margin-bottom: 7px;
+        color: #63391d;
+        font-size: 19px;
+        font-weight: 850;
+    }
+
+    .product-empty-description {
+        margin: 0;
+        color: #846b5a;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .product-empty-reset {
+        min-height: 44px;
+        margin-top: 18px;
+        padding: 0 16px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        color: #ffffff;
+        background: #8d3f05;
+        font-size: 14px;
+        font-weight: 800;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+        .product-empty-reset:hover {
+            color: #ffffff;
+            background: #6f2f00;
+        }
+
     @@media (max-width: 700px) {
+        .product-search-form {
+            grid-template-columns: 1fr;
+        }
+
+        .product-search-button,
+        .product-search-reset {
+            width: 100%;
+        }
+
         .product-card-actions {
             grid-template-columns: 1fr;
         }
@@ -307,16 +472,94 @@
     <div class="product-page-container">
 
         <h1 class="product-page-heading">
-            Tất cả sản phẩm
+            @(dangTimKiem
+                ? "Kết quả tìm kiếm"
+                : "Tất cả sản phẩm")
         </h1>
 
         <p class="product-page-description">
-            MilkTea House hiện có
-            <strong>@tongSoSanPham</strong>
-            sản phẩm, trong đó
-            <strong>@tongSanPhamDangBan</strong>
-            sản phẩm đang được bán.
+
+            @if (dangTimKiem)
+            {
+                <span>
+                    Tìm thấy
+                    <strong>@tongSoSanPham</strong>
+                    sản phẩm phù hợp với từ khóa
+                    <strong>“@tuKhoa”</strong>.
+                </span>
+            }
+            else
+            {
+                <span>
+                    MilkTea House hiện có
+                    <strong>@tongSoSanPham</strong>
+                    sản phẩm, trong đó
+                    <strong>@tongSanPhamDangBan</strong>
+                    sản phẩm đang được bán.
+                </span>
+            }
+
         </p>
+
+        <div id="tim-kiem-san-pham"
+             class="product-search-card">
+
+            <form asp-controller="SanPham"
+                  asp-action="Index"
+                  method="get"
+                  class="product-search-form">
+
+                <div class="product-search-input-wrap">
+
+                    <i class="bi bi-search"></i>
+
+                    <input type="search"
+                           name="tuKhoa"
+                           value="@tuKhoa"
+                           class="product-search-input"
+                           maxlength="100"
+                           autocomplete="off"
+                           placeholder="Nhập tên hoặc mô tả sản phẩm..."
+                           aria-label="Từ khóa tìm kiếm sản phẩm" />
+
+                </div>
+
+                <button type="submit"
+                        class="product-search-button">
+
+                    <i class="bi bi-search"></i>
+
+                    Tìm kiếm
+
+                </button>
+
+                @if (dangTimKiem)
+                {
+                    <a asp-controller="SanPham"
+                       asp-action="Index"
+                       asp-fragment="tim-kiem-san-pham"
+                       class="product-search-reset">
+
+                        <i class="bi bi-x-circle"></i>
+
+                        Xóa tìm kiếm
+
+                    </a>
+                }
+
+            </form>
+
+            @if (dangTimKiem)
+            {
+                <div class="product-search-result">
+
+                    Đang hiển thị kết quả cho:
+                    <strong>“@tuKhoa”</strong>
+
+                </div>
+            }
+
+        </div>
 
         @if (Model != null && Model.Count > 0)
         {
@@ -331,8 +574,8 @@
 
                     <div class="product-card
                         @(!item.TrangThai
-                             ? "temporarily-unavailable"
-                             : "")">
+                              ? "temporarily-unavailable"
+                              : "")">
 
                         <div class="product-image">
 
@@ -459,7 +702,7 @@
                                         <input type="hidden"
                                                name="returnUrl"
                                                value="@(Context.Request.Path +
-                                                                                                       Context.Request.QueryString)" />
+                                                                                                                                                      Context.Request.QueryString)" />
 
                                         <button type="submit"
                                                 class="btn-product-cart">
@@ -518,6 +761,7 @@
                                 <a asp-controller="SanPham"
                                    asp-action="Index"
                                    asp-route-trang="@(trangHienTai - 1)"
+                                   asp-route-tuKhoa="@tuKhoa"
                                    class="phan-trang-nut">
 
                                     <i class="bi bi-chevron-left"></i>
@@ -561,6 +805,7 @@
                                     <a asp-controller="SanPham"
                                        asp-action="Index"
                                        asp-route-trang="@soTrang"
+                                       asp-route-tuKhoa="@tuKhoa"
                                        class="phan-trang-so">
 
                                         @soTrang
@@ -578,6 +823,7 @@
                                 <a asp-controller="SanPham"
                                    asp-action="Index"
                                    asp-route-trang="@(trangHienTai + 1)"
+                                   asp-route-tuKhoa="@tuKhoa"
                                    class="phan-trang-nut">
 
                                     Trang sau
@@ -609,7 +855,41 @@
         {
             <div class="product-empty">
 
-                Hiện chưa có sản phẩm nào trong hệ thống.
+                <i class="bi bi-search product-empty-icon"></i>
+
+                @if (dangTimKiem)
+                {
+                    <div class="product-empty-title">
+                        Không tìm thấy sản phẩm phù hợp
+                    </div>
+
+                    <p class="product-empty-description">
+                        Không có sản phẩm nào khớp với từ khóa
+                        <strong>“@tuKhoa”</strong>.
+                        Hãy thử một từ khóa khác.
+                    </p>
+
+                    <a asp-controller="SanPham"
+                       asp-action="Index"
+                       asp-fragment="tim-kiem-san-pham"
+                       class="product-empty-reset">
+
+                        <i class="bi bi-arrow-counterclockwise"></i>
+
+                        Xem tất cả sản phẩm
+
+                    </a>
+                }
+                else
+                {
+                    <div class="product-empty-title">
+                        Hiện chưa có sản phẩm
+                    </div>
+
+                    <p class="product-empty-description">
+                        Hệ thống chưa có dữ liệu sản phẩm để hiển thị.
+                    </p>
+                }
 
             </div>
         }

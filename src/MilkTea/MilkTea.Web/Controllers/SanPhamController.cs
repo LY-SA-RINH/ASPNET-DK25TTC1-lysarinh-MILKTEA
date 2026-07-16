@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MilkTea.Web.Data;
+using MilkTea.Web.Models;
 
 namespace MilkTea.Web.Controllers
 {
@@ -16,8 +17,10 @@ namespace MilkTea.Web.Controllers
             _context = context;
         }
 
-        // Danh sách tất cả sản phẩm có phân trang
+        // Danh sách sản phẩm, tìm kiếm và phân trang
+        [HttpGet]
         public async Task<IActionResult> Index(
+            string? tuKhoa,
             int trang = 1)
         {
             if (trang < 1)
@@ -25,24 +28,40 @@ namespace MilkTea.Web.Controllers
                 trang = 1;
             }
 
+            tuKhoa = string.IsNullOrWhiteSpace(tuKhoa)
+                ? null
+                : tuKhoa.Trim();
+
+            // Giới hạn độ dài từ khóa để URL và truy vấn gọn hơn.
+            if (tuKhoa != null &&
+                tuKhoa.Length > 100)
+            {
+                tuKhoa = tuKhoa[..100];
+            }
+
             // Hiển thị cả sản phẩm đang bán
             // và sản phẩm tạm ngưng bán.
-            // Sản phẩm đang bán được xếp trước.
-            var truyVanSanPham = _context.SanPhams
-                .AsNoTracking()
-                .OrderByDescending(sp =>
-                    sp.TrangThai)
-                .ThenBy(sp =>
-                    sp.ThuTuHienThi)
-                .ThenBy(sp =>
-                    sp.SanPhamID);
+            IQueryable<SanPham> truyVanSanPham =
+                _context.SanPhams
+                    .AsNoTracking();
+
+            // Tìm theo tên hoặc mô tả sản phẩm.
+            if (!string.IsNullOrWhiteSpace(tuKhoa))
+            {
+                truyVanSanPham =
+                    truyVanSanPham.Where(sp =>
+                        sp.TenSanPham.Contains(tuKhoa) ||
+                        (
+                            sp.MoTa != null &&
+                            sp.MoTa.Contains(tuKhoa)
+                        ));
+            }
 
             int tongSoSanPham =
                 await truyVanSanPham.CountAsync();
 
             int tongSanPhamDangBan =
-                await _context.SanPhams
-                    .AsNoTracking()
+                await truyVanSanPham
                     .CountAsync(sp =>
                         sp.TrangThai);
 
@@ -58,13 +77,21 @@ namespace MilkTea.Web.Controllers
                 trang = tongSoTrang;
             }
 
-            var sanPhams = await truyVanSanPham
-                .Skip(
-                    (trang - 1) *
-                    SoSanPhamMoiTrang)
-                .Take(SoSanPhamMoiTrang)
-                .ToListAsync();
+            List<SanPham> sanPhams =
+                await truyVanSanPham
+                    .OrderByDescending(sp =>
+                        sp.TrangThai)
+                    .ThenBy(sp =>
+                        sp.ThuTuHienThi)
+                    .ThenBy(sp =>
+                        sp.SanPhamID)
+                    .Skip(
+                        (trang - 1) *
+                        SoSanPhamMoiTrang)
+                    .Take(SoSanPhamMoiTrang)
+                    .ToListAsync();
 
+            ViewBag.TuKhoa = tuKhoa;
             ViewBag.TrangHienTai = trang;
             ViewBag.TongSoTrang = tongSoTrang;
             ViewBag.TongSoSanPham = tongSoSanPham;
@@ -75,6 +102,7 @@ namespace MilkTea.Web.Controllers
         }
 
         // Trang chi tiết một sản phẩm
+        [HttpGet]
         public async Task<IActionResult> ChiTiet(
             int id)
         {
@@ -84,10 +112,11 @@ namespace MilkTea.Web.Controllers
             }
 
             // Cho phép xem cả sản phẩm tạm ngưng bán.
-            var sanPham = await _context.SanPhams
-                .AsNoTracking()
-                .FirstOrDefaultAsync(sp =>
-                    sp.SanPhamID == id);
+            SanPham? sanPham =
+                await _context.SanPhams
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(sp =>
+                        sp.SanPhamID == id);
 
             if (sanPham == null)
             {

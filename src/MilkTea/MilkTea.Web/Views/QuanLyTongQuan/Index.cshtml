@@ -63,7 +63,7 @@
 
     .admin-dashboard-statistics {
         display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns: repeat(5, minmax(0, 1fr));
         gap: 16px;
     }
 
@@ -555,8 +555,8 @@
                 </h1>
 
                 <p class="admin-dashboard-description">
-                    Theo dõi nhanh tình hình sản phẩm, đơn hàng và doanh thu
-                    của MilkTea House.
+                    Theo dõi nhanh tình hình sản phẩm, khách hàng, đơn hàng
+                    và doanh thu của MilkTea House.
                 </p>
 
             </div>
@@ -593,6 +593,18 @@
 
                 <span>
                     Quản lý danh mục
+                </span>
+
+            </a>
+
+            <a asp-controller="QuanLyKhachHang"
+               asp-action="Index"
+               class="admin-dashboard-quick-link">
+
+                <i class="bi bi-people"></i>
+
+                <span>
+                    Quản lý khách hàng
                 </span>
 
             </a>

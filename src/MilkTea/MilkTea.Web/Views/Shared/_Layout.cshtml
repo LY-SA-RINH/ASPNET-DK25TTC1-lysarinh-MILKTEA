@@ -195,9 +195,12 @@
 
                 @if (!daDangNhap || laKhachHang)
                 {
-                    <a href="#"
+                    <a asp-controller="SanPham"
+                       asp-action="Index"
+                       asp-fragment="tim-kiem-san-pham"
                        class="header-simple-icon"
-                       title="Tìm kiếm">
+                       title="Tìm kiếm sản phẩm"
+                       aria-label="Tìm kiếm sản phẩm">
 
                         <i class="bi bi-search"></i>
 

@@ -525,10 +525,6 @@
         }
 
     @@media (max-width: 1050px) {
-        .customer-management-statistics {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-        }
-
         .customer-management-filter-form {
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
@@ -642,9 +638,7 @@
                     </div>
 
                     <div class="customer-management-statistic-icon">
-
                         <i class="bi bi-people"></i>
-
                     </div>
 
                 </div>
@@ -664,9 +658,7 @@
                     </div>
 
                     <div class="customer-management-statistic-icon">
-
                         <i class="bi bi-person-check"></i>
-
                     </div>
 
                 </div>
@@ -686,9 +678,7 @@
                     </div>
 
                     <div class="customer-management-statistic-icon">
-
                         <i class="bi bi-person-lock"></i>
-
                     </div>
 
                 </div>
@@ -704,11 +694,8 @@
         <div class="customer-management-filter-card">
 
             <h2 class="customer-management-filter-title">
-
                 <i class="bi bi-funnel"></i>
-
                 Tìm kiếm và lọc khách hàng
-
             </h2>
 
             <form asp-controller="QuanLyKhachHang"
@@ -739,46 +726,20 @@
                     <select id="trangThai"
                             name="trangThai">
 
-                        @if (string.IsNullOrWhiteSpace(Model.TrangThai))
-                        {
-                            <option value="" selected>
-                                Tất cả trạng thái
-                            </option>
-                        }
-                        else
-                        {
-                            <option value="">
-                                Tất cả trạng thái
-                            </option>
-                        }
+                        <option value=""
+                                selected="@(string.IsNullOrWhiteSpace(Model.TrangThai))">
+                            Tất cả trạng thái
+                        </option>
 
-                        @if (Model.TrangThai == "dang-hoat-dong")
-                        {
-                            <option value="dang-hoat-dong"
-                                    selected>
-                                Đang hoạt động
-                            </option>
-                        }
-                        else
-                        {
-                            <option value="dang-hoat-dong">
-                                Đang hoạt động
-                            </option>
-                        }
+                        <option value="dang-hoat-dong"
+                                selected="@(Model.TrangThai == "dang-hoat-dong")">
+                            Đang hoạt động
+                        </option>
 
-                        @if (Model.TrangThai == "da-khoa")
-                        {
-                            <option value="da-khoa"
-                                    selected>
-                                Đã khóa
-                            </option>
-                        }
-                        else
-                        {
-                            <option value="da-khoa">
-                                Đã khóa
-                            </option>
-                        }
+                        <option value="da-khoa"
+                                selected="@(Model.TrangThai == "da-khoa")">
+                            Đã khóa
+                        </option>
 
                     </select>
 
@@ -828,33 +789,31 @@
                     <table class="customer-management-table">
 
                         <thead>
-
                             <tr>
-
                                 <th>Khách hàng</th>
-
                                 <th>Liên hệ</th>
-
                                 <th>Địa chỉ</th>
-
                                 <th>Ngày đăng ký</th>
-
                                 <th>Đơn hàng</th>
-
                                 <th>Đã chi tiêu</th>
-
                                 <th>Trạng thái</th>
-
                                 <th>Thao tác</th>
-
                             </tr>
-
                         </thead>
 
                         <tbody>
 
                             @foreach (var khachHang in Model.KhachHangs)
                             {
+                                string maKhachHang =
+                                    khachHang.NguoiDungID
+                                        .Substring(
+                                            0,
+                                            Math.Min(
+                                                8,
+                                                khachHang.NguoiDungID.Length))
+                                        .ToUpperInvariant();
+
                                 <tr>
 
                                     <td>
@@ -862,9 +821,7 @@
                                         <div class="customer-management-user">
 
                                             <div class="customer-management-avatar">
-
                                                 <i class="bi bi-person"></i>
-
                                             </div>
 
                                             <div>
@@ -874,13 +831,7 @@
                                                 </div>
 
                                                 <div class="customer-management-code">
-                                                    KH-@khachHang.NguoiDungID
-                                                    .Substring(
-                                                    0,
-                                                    Math.Min(
-                                                    8,
-                                                    khachHang.NguoiDungID.Length))
-                                                    .ToUpperInvariant()
+                                                    KH-@maKhachHang
                                                 </div>
 
                                             </div>
@@ -941,27 +892,21 @@
                                     </td>
 
                                     <td>
-
                                         <div class="customer-management-date">
                                             @khachHang.NgayTao.ToString("dd/MM/yyyy")
                                         </div>
-
                                     </td>
 
                                     <td>
-
                                         <div class="customer-management-number">
                                             @khachHang.TongDonHang
                                         </div>
-
                                     </td>
 
                                     <td>
-
                                         <span class="customer-management-money">
                                             @khachHang.TongChiTieu.ToString("N0")đ
                                         </span>
-
                                     </td>
 
                                     <td>
@@ -969,21 +914,15 @@
                                         @if (khachHang.BiKhoa)
                                         {
                                             <span class="customer-management-status locked">
-
                                                 <i class="bi bi-lock-fill"></i>
-
                                                 Đã khóa
-
                                             </span>
                                         }
                                         else
                                         {
                                             <span class="customer-management-status active">
-
                                                 <i class="bi bi-check-circle-fill"></i>
-
                                                 Đang hoạt động
-
                                             </span>
                                         }
 
@@ -1009,22 +948,16 @@
                                             {
                                                 <button type="submit"
                                                         class="customer-management-action-button unlock">
-
                                                     <i class="bi bi-unlock"></i>
-
                                                     Mở khóa
-
                                                 </button>
                                             }
                                             else
                                             {
                                                 <button type="submit"
                                                         class="customer-management-action-button lock">
-
                                                     <i class="bi bi-lock"></i>
-
                                                     Khóa
-
                                                 </button>
                                             }
 
@@ -1073,17 +1006,13 @@
                        asp-route-trang="@(Model.TrangHienTai - 1)"
                        class="customer-management-page-link"
                        title="Trang trước">
-
                         <i class="bi bi-chevron-left"></i>
-
                     </a>
                 }
                 else
                 {
                     <span class="customer-management-page-link disabled">
-
                         <i class="bi bi-chevron-left"></i>
-
                     </span>
                 }
 
@@ -1102,9 +1031,7 @@
                        asp-route-trangThai="@Model.TrangThai"
                        asp-route-trang="@soTrang"
                        class="customer-management-page-link @lopTrang">
-
                         @soTrang
-
                     </a>
                 }
 
@@ -1117,17 +1044,13 @@
                        asp-route-trang="@(Model.TrangHienTai + 1)"
                        class="customer-management-page-link"
                        title="Trang sau">
-
                         <i class="bi bi-chevron-right"></i>
-
                     </a>
                 }
                 else
                 {
                     <span class="customer-management-page-link disabled">
-
                         <i class="bi bi-chevron-right"></i>
-
                     </span>
                 }
 
