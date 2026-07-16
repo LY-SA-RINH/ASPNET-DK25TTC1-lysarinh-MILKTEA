@@ -1,0 +1,1106 @@
+@model MilkTea.Web.Models.QuanLyLienHeViewModel
+
+@{
+    ViewData["Title"] = "Quản lý liên hệ";
+}
+
+<style>
+    .contact-admin-page {
+        min-height: 100vh;
+        padding: 125px 20px 70px;
+        background: #fffdfb;
+    }
+
+    .contact-admin-container {
+        max-width: 1280px;
+        margin: 0 auto;
+    }
+
+    .contact-admin-header {
+        margin-bottom: 25px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .contact-admin-title {
+        margin: 0 0 7px;
+        color: #4a1f08;
+        font-size: 36px;
+        font-weight: 850;
+    }
+
+    .contact-admin-description {
+        margin: 0;
+        color: #7a685d;
+        line-height: 1.6;
+    }
+
+    .contact-admin-back {
+        min-height: 44px;
+        padding: 0 16px;
+        border: 1px solid #d8b99f;
+        border-radius: 11px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: #754018;
+        background: #ffffff;
+        font-weight: 800;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: 0.2s ease;
+    }
+
+    .contact-admin-back:hover {
+        color: #ffffff;
+        background: #8c4109;
+        border-color: #8c4109;
+    }
+
+    .contact-admin-alert {
+        margin-bottom: 18px;
+        padding: 14px 16px;
+        border-radius: 11px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 14px;
+        font-weight: 750;
+    }
+
+    .contact-admin-alert.success {
+        border: 1px solid #bfe2cb;
+        color: #17643a;
+        background: #e8f7ed;
+    }
+
+    .contact-admin-alert.error {
+        border: 1px solid #efc7c7;
+        color: #982b2b;
+        background: #fff0f0;
+    }
+
+    .contact-admin-statistics {
+        margin-bottom: 20px;
+        display: grid;
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .contact-admin-statistic {
+        min-height: 130px;
+        padding: 21px;
+        border: 1px solid #ead7c6;
+        border-radius: 18px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background: #ffffff;
+        box-shadow:
+            0 8px 24px rgba(78, 39, 12, 0.07);
+    }
+
+    .contact-admin-statistic-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .contact-admin-statistic-label {
+        color: #745846;
+        font-size: 14px;
+        font-weight: 750;
+    }
+
+    .contact-admin-statistic-icon {
+        width: 47px;
+        height: 47px;
+        border-radius: 13px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #8e4309;
+        background: #fff1df;
+        font-size: 22px;
+    }
+
+    .contact-admin-statistic-value {
+        margin-top: 14px;
+        color: #4a1f08;
+        font-size: 32px;
+        font-weight: 900;
+        line-height: 1;
+    }
+
+    .contact-admin-statistic.pending {
+        border-color: #efd9a9;
+    }
+
+    .contact-admin-statistic.pending
+    .contact-admin-statistic-icon {
+        color: #9a5b08;
+        background: #fff4d7;
+    }
+
+    .contact-admin-statistic.completed {
+        border-color: #c9e6d3;
+    }
+
+    .contact-admin-statistic.completed
+    .contact-admin-statistic-icon {
+        color: #17653b;
+        background: #e7f6ed;
+    }
+
+    .contact-admin-filter-card {
+        margin-bottom: 20px;
+        padding: 21px;
+        border: 1px solid #ead5c3;
+        border-radius: 18px;
+        background: #ffffff;
+        box-shadow:
+            0 8px 24px rgba(78, 39, 12, 0.07);
+    }
+
+    .contact-admin-filter-title {
+        margin: 0 0 16px;
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: #542708;
+        font-size: 19px;
+        font-weight: 850;
+    }
+
+    .contact-admin-filter-form {
+        display: grid;
+        grid-template-columns:
+            minmax(280px, 1.7fr)
+            minmax(210px, 0.8fr)
+            auto
+            auto;
+        gap: 14px;
+        align-items: end;
+    }
+
+    .contact-admin-field label {
+        margin-bottom: 7px;
+        display: block;
+        color: #67442c;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .contact-admin-field input,
+    .contact-admin-field select {
+        width: 100%;
+        height: 48px;
+        padding: 0 13px;
+        border: 1px solid #d9c1ad;
+        border-radius: 10px;
+        color: #4e3424;
+        background: #fffdfb;
+        outline: none;
+        transition: 0.2s ease;
+    }
+
+    .contact-admin-field input:focus,
+    .contact-admin-field select:focus {
+        border-color: #a65312;
+        box-shadow:
+            0 0 0 3px rgba(166, 83, 18, 0.12);
+    }
+
+    .contact-admin-filter-button,
+    .contact-admin-reset-button {
+        min-height: 48px;
+        padding: 0 19px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-weight: 850;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: 0.2s ease;
+    }
+
+    .contact-admin-filter-button {
+        border: 1px solid #914300;
+        color: #ffffff;
+        background: #914300;
+        cursor: pointer;
+    }
+
+    .contact-admin-filter-button:hover {
+        background: #6f3000;
+        border-color: #6f3000;
+    }
+
+    .contact-admin-reset-button {
+        border: 1px solid #d8b99f;
+        color: #754018;
+        background: #ffffff;
+    }
+
+    .contact-admin-reset-button:hover {
+        color: #ffffff;
+        background: #8c4109;
+        border-color: #8c4109;
+    }
+
+    .contact-admin-panel {
+        border: 1px solid #ead7c6;
+        border-radius: 18px;
+        background: #ffffff;
+        box-shadow:
+            0 8px 24px rgba(78, 39, 12, 0.07);
+        overflow: hidden;
+    }
+
+    .contact-admin-panel-header {
+        padding: 19px 21px;
+        border-bottom: 1px solid #efdfd1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        background: #fffaf5;
+    }
+
+    .contact-admin-panel-title {
+        margin: 0;
+        color: #542708;
+        font-size: 20px;
+        font-weight: 850;
+    }
+
+    .contact-admin-result-count {
+        padding: 6px 10px;
+        border-radius: 999px;
+        color: #764018;
+        background: #f6e6d8;
+        font-size: 12px;
+        font-weight: 850;
+        white-space: nowrap;
+    }
+
+    .contact-admin-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .contact-admin-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .contact-admin-table th,
+    .contact-admin-table td {
+        padding: 14px 15px;
+        border-bottom: 1px solid #f0e3d8;
+        color: #5c4435;
+        font-size: 13px;
+        text-align: left;
+        vertical-align: middle;
+    }
+
+    .contact-admin-table th {
+        color: #67442c;
+        background: #fffdfb;
+        font-weight: 850;
+        white-space: nowrap;
+    }
+
+    .contact-admin-table tbody tr:hover {
+        background: #fffaf5;
+    }
+
+    .contact-admin-code {
+        color: #8a4817;
+        font-weight: 900;
+        white-space: nowrap;
+    }
+
+    .contact-admin-sender {
+        min-width: 190px;
+    }
+
+    .contact-admin-sender-name {
+        color: #4e2e1b;
+        font-weight: 850;
+    }
+
+    .contact-admin-sender-email {
+        margin-top: 4px;
+        color: #857166;
+        font-size: 12px;
+    }
+
+    .contact-admin-account-badge {
+        margin-top: 6px;
+        padding: 4px 7px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        color: #5c4a91;
+        background: #eeeafa;
+        font-size: 10px;
+        font-weight: 850;
+    }
+
+    .contact-admin-message {
+        min-width: 260px;
+        max-width: 390px;
+    }
+
+    .contact-admin-message-title {
+        color: #5a3218;
+        font-weight: 850;
+        line-height: 1.45;
+    }
+
+    .contact-admin-message-preview {
+        margin-top: 5px;
+        color: #8a776b;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .contact-admin-date {
+        min-width: 120px;
+        white-space: nowrap;
+    }
+
+    .contact-admin-date-time {
+        color: #8d776a;
+        font-size: 12px;
+    }
+
+    .contact-admin-status {
+        padding: 7px 10px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        font-size: 11px;
+        font-weight: 850;
+        white-space: nowrap;
+    }
+
+    .contact-admin-status.pending {
+        color: #9a5c08;
+        background: #fff1cf;
+    }
+
+    .contact-admin-status.completed {
+        color: #17653b;
+        background: #e5f6eb;
+    }
+
+    .contact-admin-actions {
+        min-width: 184px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+    }
+
+    .contact-admin-detail,
+    .contact-admin-status-button {
+        min-height: 38px;
+        padding: 6px 11px;
+        border-radius: 9px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 850;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: 0.2s ease;
+    }
+
+    .contact-admin-detail {
+        border: 1px solid #a45619;
+        color: #85400b;
+        background: #ffffff;
+    }
+
+    .contact-admin-detail:hover {
+        color: #ffffff;
+        background: #914300;
+        border-color: #914300;
+    }
+
+    .contact-admin-status-form {
+        margin: 0;
+    }
+
+    .contact-admin-status-button {
+        cursor: pointer;
+    }
+
+    .contact-admin-status-button.complete {
+        border: 1px solid #278453;
+        color: #17653b;
+        background: #ffffff;
+    }
+
+    .contact-admin-status-button.complete:hover {
+        color: #ffffff;
+        background: #278453;
+    }
+
+    .contact-admin-status-button.reopen {
+        border: 1px solid #d19a32;
+        color: #8c5b08;
+        background: #ffffff;
+    }
+
+    .contact-admin-status-button.reopen:hover {
+        color: #ffffff;
+        background: #b9780c;
+    }
+
+    .contact-admin-empty {
+        padding: 60px 20px;
+        color: #8c7566;
+        text-align: center;
+    }
+
+    .contact-admin-empty i {
+        margin-bottom: 12px;
+        display: block;
+        color: #c19a7b;
+        font-size: 43px;
+    }
+
+    .contact-admin-empty-title {
+        margin-bottom: 6px;
+        color: #66452f;
+        font-size: 18px;
+        font-weight: 850;
+    }
+
+    .contact-admin-empty-description {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .contact-admin-pagination {
+        margin-top: 22px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        flex-wrap: wrap;
+    }
+
+    .contact-admin-page-link {
+        min-width: 42px;
+        height: 42px;
+        padding: 0 12px;
+        border: 1px solid #dfc5ae;
+        border-radius: 9px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #744019;
+        background: #ffffff;
+        font-size: 13px;
+        font-weight: 850;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+    .contact-admin-page-link:hover,
+    .contact-admin-page-link.current {
+        color: #ffffff;
+        background: #8b4108;
+        border-color: #8b4108;
+    }
+
+    .contact-admin-page-link.disabled {
+        color: #b6aaa2;
+        background: #f4f0ed;
+        border-color: #e8dfd8;
+        pointer-events: none;
+    }
+
+    @@media (max-width: 1050px) {
+        .contact-admin-filter-form {
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 760px) {
+        .contact-admin-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .contact-admin-statistics {
+            grid-template-columns: 1fr;
+        }
+
+        .contact-admin-filter-form {
+            grid-template-columns: 1fr;
+        }
+
+        .contact-admin-filter-button,
+        .contact-admin-reset-button {
+            width: 100%;
+        }
+    }
+
+    @@media (max-width: 520px) {
+        .contact-admin-page {
+            padding: 110px 12px 45px;
+        }
+
+        .contact-admin-title {
+            font-size: 30px;
+        }
+
+        .contact-admin-filter-card {
+            padding: 18px;
+        }
+
+        .contact-admin-panel-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+    }
+</style>
+
+<section class="contact-admin-page">
+
+    <div class="contact-admin-container">
+
+        <div class="contact-admin-header">
+
+            <div>
+
+                <h1 class="contact-admin-title">
+                    Quản lý liên hệ
+                </h1>
+
+                <p class="contact-admin-description">
+                    Theo dõi, tìm kiếm và cập nhật trạng thái
+                    các nội dung khách hàng đã gửi.
+                </p>
+
+            </div>
+
+            <a asp-controller="QuanLyTongQuan"
+               asp-action="Index"
+               class="contact-admin-back">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Tổng quan quản trị
+
+            </a>
+
+        </div>
+
+        @if (TempData["ThanhCong"] != null)
+        {
+            <div class="contact-admin-alert success">
+
+                <i class="bi bi-check-circle-fill"></i>
+
+                <span>
+                    @TempData["ThanhCong"]
+                </span>
+
+            </div>
+        }
+
+        @if (TempData["Loi"] != null)
+        {
+            <div class="contact-admin-alert error">
+
+                <i class="bi bi-exclamation-triangle-fill"></i>
+
+                <span>
+                    @TempData["Loi"]
+                </span>
+
+            </div>
+        }
+
+        <div class="contact-admin-statistics">
+
+            <div class="contact-admin-statistic">
+
+                <div class="contact-admin-statistic-top">
+
+                    <div class="contact-admin-statistic-label">
+                        Tổng liên hệ
+                    </div>
+
+                    <div class="contact-admin-statistic-icon">
+                        <i class="bi bi-chat-left-text"></i>
+                    </div>
+
+                </div>
+
+                <div class="contact-admin-statistic-value">
+                    @Model.TongLienHe
+                </div>
+
+            </div>
+
+            <div class="contact-admin-statistic pending">
+
+                <div class="contact-admin-statistic-top">
+
+                    <div class="contact-admin-statistic-label">
+                        Chưa xử lý
+                    </div>
+
+                    <div class="contact-admin-statistic-icon">
+                        <i class="bi bi-hourglass-split"></i>
+                    </div>
+
+                </div>
+
+                <div class="contact-admin-statistic-value">
+                    @Model.TongChuaXuLy
+                </div>
+
+            </div>
+
+            <div class="contact-admin-statistic completed">
+
+                <div class="contact-admin-statistic-top">
+
+                    <div class="contact-admin-statistic-label">
+                        Đã xử lý
+                    </div>
+
+                    <div class="contact-admin-statistic-icon">
+                        <i class="bi bi-check2-circle"></i>
+                    </div>
+
+                </div>
+
+                <div class="contact-admin-statistic-value">
+                    @Model.TongDaXuLy
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="contact-admin-filter-card">
+
+            <h2 class="contact-admin-filter-title">
+
+                <i class="bi bi-funnel"></i>
+
+                Tìm kiếm và lọc liên hệ
+
+            </h2>
+
+            <form asp-controller="QuanLyLienHe"
+                  asp-action="Index"
+                  method="get"
+                  class="contact-admin-filter-form">
+
+                <div class="contact-admin-field">
+
+                    <label for="tuKhoa">
+                        Từ khóa
+                    </label>
+
+                    <input type="text"
+                           id="tuKhoa"
+                           name="tuKhoa"
+                           value="@Model.TuKhoa"
+                           maxlength="150"
+                           placeholder="Họ tên, email, điện thoại, tiêu đề..." />
+
+                </div>
+
+                <div class="contact-admin-field">
+
+                    <label for="trangThai">
+                        Trạng thái xử lý
+                    </label>
+
+                    <select id="trangThai"
+                            name="trangThai">
+
+                        <option value=""
+                                selected="@(
+                                    string.IsNullOrWhiteSpace(
+                                        Model.TrangThai))">
+                            Tất cả trạng thái
+                        </option>
+
+                        <option value="chua-xu-ly"
+                                selected="@(
+                                    Model.TrangThai ==
+                                    "chua-xu-ly")">
+                            Chưa xử lý
+                        </option>
+
+                        <option value="da-xu-ly"
+                                selected="@(
+                                    Model.TrangThai ==
+                                    "da-xu-ly")">
+                            Đã xử lý
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <button type="submit"
+                        class="contact-admin-filter-button">
+
+                    <i class="bi bi-search"></i>
+
+                    Tìm kiếm
+
+                </button>
+
+                <a asp-controller="QuanLyLienHe"
+                   asp-action="Index"
+                   class="contact-admin-reset-button">
+
+                    <i class="bi bi-arrow-counterclockwise"></i>
+
+                    Đặt lại
+
+                </a>
+
+            </form>
+
+        </div>
+
+        <div class="contact-admin-panel">
+
+            <div class="contact-admin-panel-header">
+
+                <h2 class="contact-admin-panel-title">
+                    Danh sách liên hệ
+                </h2>
+
+                <span class="contact-admin-result-count">
+                    @Model.TongKetQua kết quả
+                </span>
+
+            </div>
+
+            @if (Model.LienHes.Count > 0)
+            {
+                <div class="contact-admin-table-wrapper">
+
+                    <table class="contact-admin-table">
+
+                        <thead>
+
+                            <tr>
+                                <th>Mã</th>
+                                <th>Người gửi</th>
+                                <th>Nội dung</th>
+                                <th>Ngày gửi</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var lienHe
+                                      in Model.LienHes)
+                            {
+                                string noiDungRutGon =
+                                    lienHe.NoiDung.Length > 95
+                                        ? lienHe.NoiDung
+                                            .Substring(0, 95)
+                                            .Trim() + "..."
+                                        : lienHe.NoiDung;
+
+                                <tr>
+
+                                    <td>
+                                        <span class="contact-admin-code">
+                                            LH-@lienHe.LienHeID
+                                                .ToString("D5")
+                                        </span>
+                                    </td>
+
+                                    <td>
+
+                                        <div class="contact-admin-sender">
+
+                                            <div class="contact-admin-sender-name">
+                                                @lienHe.HoTen
+                                            </div>
+
+                                            <div class="contact-admin-sender-email">
+                                                @lienHe.Email
+                                            </div>
+
+                                            @if (lienHe.CoTaiKhoan)
+                                            {
+                                                <span class="contact-admin-account-badge">
+
+                                                    <i class="bi bi-person-check"></i>
+
+                                                    Có tài khoản
+
+                                                </span>
+                                            }
+
+                                        </div>
+
+                                    </td>
+
+                                    <td>
+
+                                        <div class="contact-admin-message">
+
+                                            <div class="contact-admin-message-title">
+                                                @lienHe.TieuDe
+                                            </div>
+
+                                            <div class="contact-admin-message-preview">
+                                                @noiDungRutGon
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+                                    <td>
+
+                                        <div class="contact-admin-date">
+
+                                            <div>
+                                                @lienHe.NgayGui
+                                                    .ToString("dd/MM/yyyy")
+                                            </div>
+
+                                            <div class="contact-admin-date-time">
+                                                @lienHe.NgayGui
+                                                    .ToString("HH:mm")
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+                                    <td>
+
+                                        @if (lienHe.DaXuLy)
+                                        {
+                                            <span class="contact-admin-status completed">
+
+                                                <i class="bi bi-check-circle-fill"></i>
+
+                                                Đã xử lý
+
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="contact-admin-status pending">
+
+                                                <i class="bi bi-hourglass-split"></i>
+
+                                                Chưa xử lý
+
+                                            </span>
+                                        }
+
+                                    </td>
+
+                                    <td>
+
+                                        <div class="contact-admin-actions">
+
+                                            <a asp-controller="QuanLyLienHe"
+                                               asp-action="ChiTiet"
+                                               asp-route-id="@lienHe.LienHeID"
+                                               class="contact-admin-detail">
+
+                                                <i class="bi bi-eye"></i>
+
+                                                Chi tiết
+
+                                            </a>
+
+                                            <form asp-controller="QuanLyLienHe"
+                                                  asp-action="CapNhatTrangThai"
+                                                  method="post"
+                                                  class="contact-admin-status-form"
+                                                  onsubmit="return confirm('@(
+                                                      lienHe.DaXuLy
+                                                          ? "Bạn có chắc muốn mở lại nội dung liên hệ này?"
+                                                          : "Bạn có chắc muốn đánh dấu nội dung này là đã xử lý?"
+                                                  )');">
+
+                                                <input type="hidden"
+                                                       name="id"
+                                                       value="@lienHe.LienHeID" />
+
+                                                <input type="hidden"
+                                                       name="returnUrl"
+                                                       value="@(Context.Request.Path +
+                                                           Context.Request.QueryString)" />
+
+                                                @if (lienHe.DaXuLy)
+                                                {
+                                                    <input type="hidden"
+                                                           name="thaoTac"
+                                                           value="mo-lai" />
+
+                                                    <button type="submit"
+                                                            class="contact-admin-status-button reopen">
+
+                                                        <i class="bi bi-arrow-counterclockwise"></i>
+
+                                                        Mở lại
+
+                                                    </button>
+                                                }
+                                                else
+                                                {
+                                                    <input type="hidden"
+                                                           name="thaoTac"
+                                                           value="danh-dau-da-xu-ly" />
+
+                                                    <button type="submit"
+                                                            class="contact-admin-status-button complete">
+
+                                                        <i class="bi bi-check2"></i>
+
+                                                        Xử lý
+
+                                                    </button>
+                                                }
+
+                                            </form>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+            else
+            {
+                <div class="contact-admin-empty">
+
+                    <i class="bi bi-chat-left-text"></i>
+
+                    <div class="contact-admin-empty-title">
+                        Không tìm thấy nội dung liên hệ
+                    </div>
+
+                    <p class="contact-admin-empty-description">
+                        Hãy thay đổi từ khóa hoặc trạng thái lọc
+                        để kiểm tra lại.
+                    </p>
+
+                </div>
+            }
+
+        </div>
+
+        @if (Model.TongSoTrang > 1)
+        {
+            <div class="contact-admin-pagination">
+
+                @if (Model.TrangHienTai > 1)
+                {
+                    <a asp-controller="QuanLyLienHe"
+                       asp-action="Index"
+                       asp-route-tuKhoa="@Model.TuKhoa"
+                       asp-route-trangThai="@Model.TrangThai"
+                       asp-route-trang="@(Model.TrangHienTai - 1)"
+                       class="contact-admin-page-link"
+                       title="Trang trước">
+
+                        <i class="bi bi-chevron-left"></i>
+
+                    </a>
+                }
+                else
+                {
+                    <span class="contact-admin-page-link disabled">
+                        <i class="bi bi-chevron-left"></i>
+                    </span>
+                }
+
+                @for (int soTrang = 1;
+                     soTrang <= Model.TongSoTrang;
+                     soTrang++)
+                {
+                    string lopTrang =
+                        soTrang == Model.TrangHienTai
+                            ? "current"
+                            : string.Empty;
+
+                    <a asp-controller="QuanLyLienHe"
+                       asp-action="Index"
+                       asp-route-tuKhoa="@Model.TuKhoa"
+                       asp-route-trangThai="@Model.TrangThai"
+                       asp-route-trang="@soTrang"
+                       class="contact-admin-page-link @lopTrang">
+
+                        @soTrang
+
+                    </a>
+                }
+
+                @if (Model.TrangHienTai < Model.TongSoTrang)
+                {
+                    <a asp-controller="QuanLyLienHe"
+                       asp-action="Index"
+                       asp-route-tuKhoa="@Model.TuKhoa"
+                       asp-route-trangThai="@Model.TrangThai"
+                       asp-route-trang="@(Model.TrangHienTai + 1)"
+                       class="contact-admin-page-link"
+                       title="Trang sau">
+
+                        <i class="bi bi-chevron-right"></i>
+
+                    </a>
+                }
+                else
+                {
+                    <span class="contact-admin-page-link disabled">
+                        <i class="bi bi-chevron-right"></i>
+                    </span>
+                }
+
+            </div>
+        }
+
+    </div>
+
+</section>

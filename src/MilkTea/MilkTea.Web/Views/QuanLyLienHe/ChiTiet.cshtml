@@ -1,0 +1,553 @@
+@model MilkTea.Web.Models.ChiTietLienHeViewModel
+
+@{
+    ViewData["Title"] = "Chi tiết liên hệ";
+}
+
+<style>
+    .contact-detail-page {
+        min-height: 100vh;
+        padding: 125px 20px 70px;
+        background: #fffdfb;
+    }
+
+    .contact-detail-container {
+        max-width: 1050px;
+        margin: 0 auto;
+    }
+
+    .contact-detail-header {
+        margin-bottom: 22px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 18px;
+    }
+
+    .contact-detail-title {
+        margin: 0 0 7px;
+        color: #4a1f08;
+        font-size: 34px;
+        font-weight: 850;
+    }
+
+    .contact-detail-description {
+        margin: 0;
+        color: #7b685d;
+        line-height: 1.6;
+    }
+
+    .contact-detail-back {
+        min-height: 44px;
+        padding: 0 16px;
+        border: 1px solid #d8b99f;
+        border-radius: 11px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: #754018;
+        background: #ffffff;
+        font-weight: 800;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: 0.2s ease;
+    }
+
+    .contact-detail-back:hover {
+        color: #ffffff;
+        background: #8c4109;
+        border-color: #8c4109;
+    }
+
+    .contact-detail-alert {
+        margin-bottom: 18px;
+        padding: 14px 16px;
+        border-radius: 11px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 14px;
+        font-weight: 750;
+    }
+
+    .contact-detail-alert.success {
+        border: 1px solid #bfe2cb;
+        color: #17643a;
+        background: #e8f7ed;
+    }
+
+    .contact-detail-alert.error {
+        border: 1px solid #efc7c7;
+        color: #982b2b;
+        background: #fff0f0;
+    }
+
+    .contact-detail-grid {
+        display: grid;
+        grid-template-columns:
+            minmax(250px, 0.65fr)
+            minmax(0, 1.35fr);
+        gap: 20px;
+        align-items: start;
+    }
+
+    .contact-detail-card {
+        border: 1px solid #ead6c5;
+        border-radius: 19px;
+        background: #ffffff;
+        box-shadow:
+            0 9px 26px rgba(78, 39, 12, 0.07);
+        overflow: hidden;
+    }
+
+    .contact-detail-card-header {
+        padding: 18px 20px;
+        border-bottom: 1px solid #efdfd2;
+        color: #572a0a;
+        background: #fffaf5;
+        font-size: 18px;
+        font-weight: 850;
+    }
+
+    .contact-detail-card-body {
+        padding: 21px;
+    }
+
+    .contact-detail-status {
+        margin-bottom: 20px;
+        padding: 16px;
+        border-radius: 13px;
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        font-weight: 850;
+    }
+
+    .contact-detail-status.pending {
+        color: #8f5909;
+        background: #fff2d4;
+    }
+
+    .contact-detail-status.completed {
+        color: #17643a;
+        background: #e7f6ec;
+    }
+
+    .contact-detail-status i {
+        font-size: 22px;
+    }
+
+    .contact-detail-info-list {
+        display: grid;
+        gap: 15px;
+    }
+
+    .contact-detail-info-item {
+        padding-bottom: 14px;
+        border-bottom: 1px solid #f1e5dc;
+    }
+
+    .contact-detail-info-item:last-child {
+        padding-bottom: 0;
+        border-bottom: 0;
+    }
+
+    .contact-detail-label {
+        margin-bottom: 5px;
+        color: #947c6d;
+        font-size: 11px;
+        font-weight: 850;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .contact-detail-value {
+        color: #553823;
+        font-size: 14px;
+        font-weight: 750;
+        line-height: 1.55;
+        overflow-wrap: anywhere;
+    }
+
+    .contact-detail-value a {
+        color: #8d430b;
+        text-decoration: none;
+    }
+
+    .contact-detail-account {
+        margin-top: 5px;
+        padding: 5px 8px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: #5c4a91;
+        background: #eeeafa;
+        font-size: 10px;
+        font-weight: 850;
+    }
+
+    .contact-detail-subject {
+        margin: 0 0 18px;
+        color: #542b0e;
+        font-size: 24px;
+        font-weight: 850;
+        line-height: 1.4;
+    }
+
+    .contact-detail-message {
+        min-height: 220px;
+        padding: 18px;
+        border: 1px solid #ead8ca;
+        border-radius: 14px;
+        color: #5e493b;
+        background: #fffdfb;
+        line-height: 1.8;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
+
+    .contact-detail-action-area {
+        margin-top: 20px;
+        padding-top: 18px;
+        border-top: 1px solid #efdfd2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+    .contact-detail-action-note {
+        margin: 0;
+        color: #8a776a;
+        font-size: 12px;
+        line-height: 1.55;
+    }
+
+    .contact-detail-action-form {
+        margin: 0;
+    }
+
+    .contact-detail-action-button {
+        min-height: 46px;
+        padding: 0 17px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        font-size: 13px;
+        font-weight: 850;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .contact-detail-action-button.complete {
+        border: 1px solid #278453;
+        color: #ffffff;
+        background: #278453;
+    }
+
+    .contact-detail-action-button.complete:hover {
+        background: #17683f;
+    }
+
+    .contact-detail-action-button.reopen {
+        border: 1px solid #c48718;
+        color: #ffffff;
+        background: #b9780c;
+    }
+
+    .contact-detail-action-button.reopen:hover {
+        background: #945d05;
+    }
+
+    @@media (max-width: 800px) {
+        .contact-detail-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 620px) {
+        .contact-detail-page {
+            padding: 110px 12px 50px;
+        }
+
+        .contact-detail-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .contact-detail-title {
+            font-size: 29px;
+        }
+
+        .contact-detail-action-area {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .contact-detail-action-button {
+            width: 100%;
+        }
+    }
+</style>
+
+<section class="contact-detail-page">
+
+    <div class="contact-detail-container">
+
+        <div class="contact-detail-header">
+
+            <div>
+
+                <h1 class="contact-detail-title">
+                    Chi tiết liên hệ
+                    LH-@Model.LienHeID.ToString("D5")
+                </h1>
+
+                <p class="contact-detail-description">
+                    Xem đầy đủ thông tin và cập nhật trạng thái xử lý.
+                </p>
+
+            </div>
+
+            <a asp-controller="QuanLyLienHe"
+               asp-action="Index"
+               class="contact-detail-back">
+
+                <i class="bi bi-arrow-left"></i>
+
+                Danh sách liên hệ
+
+            </a>
+
+        </div>
+
+        @if (TempData["ThanhCong"] != null)
+        {
+            <div class="contact-detail-alert success">
+
+                <i class="bi bi-check-circle-fill"></i>
+
+                <span>
+                    @TempData["ThanhCong"]
+                </span>
+
+            </div>
+        }
+
+        @if (TempData["Loi"] != null)
+        {
+            <div class="contact-detail-alert error">
+
+                <i class="bi bi-exclamation-triangle-fill"></i>
+
+                <span>
+                    @TempData["Loi"]
+                </span>
+
+            </div>
+        }
+
+        <div class="contact-detail-grid">
+
+            <aside class="contact-detail-card">
+
+                <div class="contact-detail-card-header">
+                    Thông tin người gửi
+                </div>
+
+                <div class="contact-detail-card-body">
+
+                    @if (Model.DaXuLy)
+                    {
+                        <div class="contact-detail-status completed">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            <span>Đã xử lý</span>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="contact-detail-status pending">
+
+                            <i class="bi bi-hourglass-split"></i>
+
+                            <span>Chưa xử lý</span>
+
+                        </div>
+                    }
+
+                    <div class="contact-detail-info-list">
+
+                        <div class="contact-detail-info-item">
+
+                            <div class="contact-detail-label">
+                                Họ và tên
+                            </div>
+
+                            <div class="contact-detail-value">
+                                @Model.HoTen
+                            </div>
+
+                            @if (Model.CoTaiKhoan)
+                            {
+                                <span class="contact-detail-account">
+
+                                    <i class="bi bi-person-check"></i>
+
+                                    Khách hàng có tài khoản
+
+                                </span>
+                            }
+
+                        </div>
+
+                        <div class="contact-detail-info-item">
+
+                            <div class="contact-detail-label">
+                                Email
+                            </div>
+
+                            <div class="contact-detail-value">
+
+                                <a href="mailto:@Model.Email">
+                                    @Model.Email
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                        <div class="contact-detail-info-item">
+
+                            <div class="contact-detail-label">
+                                Số điện thoại
+                            </div>
+
+                            <div class="contact-detail-value">
+
+                                @if (!string.IsNullOrWhiteSpace(
+                                    Model.SoDienThoai))
+                                {
+                                    <a href="tel:@Model.SoDienThoai">
+                                        @Model.SoDienThoai
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span>Chưa cung cấp</span>
+                                }
+
+                            </div>
+
+                        </div>
+
+                        <div class="contact-detail-info-item">
+
+                            <div class="contact-detail-label">
+                                Ngày gửi
+                            </div>
+
+                            <div class="contact-detail-value">
+                                @Model.NgayGui.ToString(
+                                    "dd/MM/yyyy HH:mm")
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </aside>
+
+            <div class="contact-detail-card">
+
+                <div class="contact-detail-card-header">
+                    Nội dung khách hàng gửi
+                </div>
+
+                <div class="contact-detail-card-body">
+
+                    <h2 class="contact-detail-subject">
+                        @Model.TieuDe
+                    </h2>
+
+                    <div class="contact-detail-message">@Model.NoiDung</div>
+
+                    <div class="contact-detail-action-area">
+
+                        <p class="contact-detail-action-note">
+                            Việc cập nhật trạng thái giúp Quản trị viên
+                            theo dõi các nội dung đã được tiếp nhận và xử lý.
+                        </p>
+
+                        <form asp-controller="QuanLyLienHe"
+                              asp-action="CapNhatTrangThai"
+                              method="post"
+                              class="contact-detail-action-form"
+                              onsubmit="return confirm('@(
+                                  Model.DaXuLy
+                                      ? "Bạn có chắc muốn mở lại nội dung liên hệ này?"
+                                      : "Bạn có chắc muốn đánh dấu nội dung này là đã xử lý?"
+                              )');">
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@Model.LienHeID" />
+
+                            <input type="hidden"
+                                   name="returnUrl"
+                                   value="@(Context.Request.Path +
+                                       Context.Request.QueryString)" />
+
+                            @if (Model.DaXuLy)
+                            {
+                                <input type="hidden"
+                                       name="thaoTac"
+                                       value="mo-lai" />
+
+                                <button type="submit"
+                                        class="contact-detail-action-button reopen">
+
+                                    <i class="bi bi-arrow-counterclockwise"></i>
+
+                                    Mở lại liên hệ
+
+                                </button>
+                            }
+                            else
+                            {
+                                <input type="hidden"
+                                       name="thaoTac"
+                                       value="danh-dau-da-xu-ly" />
+
+                                <button type="submit"
+                                        class="contact-detail-action-button complete">
+
+                                    <i class="bi bi-check2-circle"></i>
+
+                                    Đánh dấu đã xử lý
+
+                                </button>
+                            }
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

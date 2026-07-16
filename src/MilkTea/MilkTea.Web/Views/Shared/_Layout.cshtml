@@ -50,6 +50,7 @@
         controllerHienTai == "QuanLyDanhMuc" ||
         controllerHienTai == "QuanLyKhachHang" ||
         controllerHienTai == "QuanLyDonHang" ||
+        controllerHienTai == "QuanLyLienHe" ||
         controllerHienTai == "BaoCaoDoanhThu";
 
     string lopTrangChu =
@@ -95,6 +96,11 @@
 
     string lopQuanLyDonHang =
         controllerHienTai == "QuanLyDonHang"
+            ? "active"
+            : string.Empty;
+
+    string lopQuanLyLienHe =
+        controllerHienTai == "QuanLyLienHe"
             ? "active"
             : string.Empty;
 
@@ -374,6 +380,28 @@
 
                                         <span>
                                             Quản lý đơn hàng
+                                        </span>
+
+                                    </a>
+
+                                </li>
+
+                                <li>
+
+                                    <a asp-controller="QuanLyLienHe"
+                                       asp-action="Index"
+                                       class="dropdown-item
+                                        admin-dropdown-item
+                                        @lopQuanLyLienHe">
+
+                                        <span class="admin-dropdown-icon">
+
+                                            <i class="bi bi-chat-left-text"></i>
+
+                                        </span>
+
+                                        <span>
+                                            Quản lý liên hệ
                                         </span>
 
                                     </a>
