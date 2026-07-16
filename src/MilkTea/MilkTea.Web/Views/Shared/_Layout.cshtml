@@ -48,6 +48,7 @@
         controllerHienTai == "QuanLyTongQuan" ||
         controllerHienTai == "QuanLySanPham" ||
         controllerHienTai == "QuanLyDanhMuc" ||
+        controllerHienTai == "QuanLyKhachHang" ||
         controllerHienTai == "QuanLyDonHang" ||
         controllerHienTai == "BaoCaoDoanhThu";
 
@@ -79,6 +80,11 @@
 
     string lopQuanLyDanhMuc =
         controllerHienTai == "QuanLyDanhMuc"
+            ? "active"
+            : string.Empty;
+
+    string lopQuanLyKhachHang =
+        controllerHienTai == "QuanLyKhachHang"
             ? "active"
             : string.Empty;
 
@@ -316,6 +322,35 @@
 
                                 <li>
 
+                                    <a asp-controller="QuanLyKhachHang"
+                                       asp-action="Index"
+                                       class="dropdown-item
+                                        admin-dropdown-item
+                                        @lopQuanLyKhachHang">
+
+                                        <span class="admin-dropdown-icon">
+
+                                            <i class="bi bi-people"></i>
+
+                                        </span>
+
+                                        <span>
+                                            Quản lý khách hàng
+                                        </span>
+
+                                    </a>
+
+                                </li>
+
+                                <li>
+
+                                    <hr class="dropdown-divider
+                                    admin-dropdown-divider" />
+
+                                </li>
+
+                                <li>
+
                                     <a asp-controller="QuanLyDonHang"
                                        asp-action="Index"
                                        class="dropdown-item
@@ -419,6 +454,8 @@
                           asp-action="DangXuat"
                           method="post"
                           class="header-logout-form">
+
+                        @Html.AntiForgeryToken()
 
                         <button type="submit"
                                 class="header-logout-button"
