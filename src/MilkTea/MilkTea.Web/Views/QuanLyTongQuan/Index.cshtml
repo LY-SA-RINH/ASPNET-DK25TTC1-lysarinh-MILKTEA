@@ -1,4 +1,4 @@
-﻿@model MilkTea.Web.Models.TongQuanQuanTriViewModel
+@model MilkTea.Web.Models.TongQuanQuanTriViewModel
 
 @{
     ViewData["Title"] = "Tổng quan quản trị";
@@ -208,11 +208,11 @@
         transition: 0.2s ease;
     }
 
-        .admin-dashboard-revenue-link:hover {
-            color: #6f3107;
-            background: #ffffff;
-            border-color: #ffffff;
-        }
+    .admin-dashboard-revenue-link:hover {
+        color: #6f3107;
+        background: #ffffff;
+        border-color: #ffffff;
+    }
 
     .admin-dashboard-revenue-icon {
         width: 72px;
@@ -459,7 +459,7 @@
     .admin-dashboard-quick-links {
         margin-top: 20px;
         display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 15px;
     }
 
@@ -487,8 +487,70 @@
         }
 
         .admin-dashboard-quick-link i {
+            flex-shrink: 0;
             font-size: 25px;
         }
+
+    .admin-dashboard-quick-link.contact-link {
+        position: relative;
+        border-color: #ead19c;
+        background: #fffaf0;
+    }
+
+    .admin-dashboard-quick-link.contact-link:hover {
+        color: #ffffff;
+        background: #8d4108;
+        border-color: #8d4108;
+    }
+
+    .admin-dashboard-quick-link-content {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .admin-dashboard-quick-link-title {
+        line-height: 1.35;
+    }
+
+    .admin-dashboard-quick-link-note {
+        color: #927a69;
+        font-size: 11px;
+        font-weight: 750;
+        line-height: 1.35;
+    }
+
+    .admin-dashboard-quick-link:hover
+    .admin-dashboard-quick-link-note {
+        color: rgba(255, 255, 255, 0.82);
+    }
+
+    .admin-dashboard-contact-badge {
+        min-width: 27px;
+        height: 27px;
+        padding: 0 7px;
+        border: 2px solid #ffffff;
+        border-radius: 999px;
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        background: #c33a2d;
+        font-size: 11px;
+        font-weight: 900;
+        line-height: 1;
+        box-shadow: 0 4px 10px rgba(157, 43, 31, 0.25);
+    }
+
+    .admin-dashboard-contact-badge.empty {
+        color: #17653b;
+        background: #dff3e6;
+        border-color: #ffffff;
+    }
 
     @@media (max-width: 1050px) {
         .admin-dashboard-statistics,
@@ -555,8 +617,8 @@
                 </h1>
 
                 <p class="admin-dashboard-description">
-                    Theo dõi nhanh tình hình sản phẩm, khách hàng, đơn hàng
-                    và doanh thu của MilkTea House.
+                    Theo dõi nhanh tình hình sản phẩm, khách hàng, đơn hàng,
+                    liên hệ và doanh thu của MilkTea House.
                 </p>
 
             </div>
@@ -618,6 +680,43 @@
                 <span>
                     Quản lý đơn hàng
                 </span>
+
+            </a>
+
+            <a asp-controller="QuanLyLienHe"
+               asp-action="Index"
+               class="admin-dashboard-quick-link contact-link">
+
+                <i class="bi bi-chat-left-text"></i>
+
+                <span class="admin-dashboard-quick-link-content">
+
+                    <span class="admin-dashboard-quick-link-title">
+                        Quản lý liên hệ
+                    </span>
+
+                    <span class="admin-dashboard-quick-link-note">
+                        @Model.TongLienHeChuaXuLy nội dung chưa xử lý
+                    </span>
+
+                </span>
+
+                @if (Model.TongLienHeChuaXuLy > 0)
+                {
+                    <span class="admin-dashboard-contact-badge"
+                          title="Liên hệ chưa xử lý">
+                        @Model.TongLienHeChuaXuLy
+                    </span>
+                }
+                else
+                {
+                    <span class="admin-dashboard-contact-badge empty"
+                          title="Không có liên hệ chờ xử lý">
+
+                        <i class="bi bi-check2"></i>
+
+                    </span>
+                }
 
             </a>
 

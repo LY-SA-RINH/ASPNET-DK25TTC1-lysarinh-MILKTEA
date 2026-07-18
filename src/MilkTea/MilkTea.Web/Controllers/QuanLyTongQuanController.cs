@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MilkTea.Web.Data;
@@ -9,6 +9,24 @@ namespace MilkTea.Web.Controllers
     [Authorize(Roles = "QuanTriVien")]
     public class QuanLyTongQuanController : Controller
     {
+        private const string TrangThaiChoXacNhan =
+            "Chờ xác nhận";
+
+        private const string TrangThaiDaXacNhan =
+            "Đã xác nhận";
+
+        private const string TrangThaiDangGiao =
+            "Đang giao";
+
+        private const string TrangThaiHoanThanh =
+            "Hoàn thành";
+
+        private const string TrangThaiDaHuy =
+            "Đã hủy";
+
+        private const string TrangThaiLienHeChuaXuLy =
+            "Chưa xử lý";
+
         private readonly MilkTeaDbContext _context;
 
         public QuanLyTongQuanController(
@@ -17,123 +35,123 @@ namespace MilkTea.Web.Controllers
             _context = context;
         }
 
-        // =====================================================
-        // TRANG TỔNG QUAN QUẢN TRỊ
-        // =====================================================
-
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            IQueryable<SanPham> truyVanSanPham =
-                _context.SanPhams
-                    .AsNoTracking();
+            var model =
+                new TongQuanQuanTriViewModel
+                {
+                    // Sản phẩm
+                    TongSanPham =
+                        await _context.SanPhams
+                            .AsNoTracking()
+                            .CountAsync(),
 
-            IQueryable<DonHang> truyVanDonHang =
-                _context.DonHangs
-                    .AsNoTracking();
+                    TongSanPhamDangBan =
+                        await _context.SanPhams
+                            .AsNoTracking()
+                            .CountAsync(sanPham =>
+                                sanPham.TrangThai),
 
-            var model = new TongQuanQuanTriViewModel
-            {
-                // =================================================
-                // THỐNG KÊ SẢN PHẨM
-                // =================================================
+                    TongSanPhamNgungBan =
+                        await _context.SanPhams
+                            .AsNoTracking()
+                            .CountAsync(sanPham =>
+                                !sanPham.TrangThai),
 
-                TongSanPham =
-                    await truyVanSanPham
-                        .CountAsync(),
+                    TongSanPhamHetHang =
+                        await _context.SanPhams
+                            .AsNoTracking()
+                            .CountAsync(sanPham =>
+                                sanPham.SoLuongTon <= 0),
 
-                TongSanPhamDangBan =
-                    await truyVanSanPham
-                        .CountAsync(sp =>
-                            sp.TrangThai),
+                    // Đơn hàng
+                    TongDonHang =
+                        await _context.DonHangs
+                            .AsNoTracking()
+                            .CountAsync(),
 
-                TongSanPhamNgungBan =
-                    await truyVanSanPham
-                        .CountAsync(sp =>
-                            !sp.TrangThai),
+                    TongDonHangChoXacNhan =
+                        await _context.DonHangs
+                            .AsNoTracking()
+                            .CountAsync(donHang =>
+                                donHang.TrangThai ==
+                                TrangThaiChoXacNhan),
 
-                TongSanPhamHetHang =
-                    await truyVanSanPham
-                        .CountAsync(sp =>
-                            sp.SoLuongTon <= 0),
+                    TongDonHangDaXacNhan =
+                        await _context.DonHangs
+                            .AsNoTracking()
+                            .CountAsync(donHang =>
+                                donHang.TrangThai ==
+                                TrangThaiDaXacNhan),
 
-                // =================================================
-                // THỐNG KÊ ĐƠN HÀNG
-                // =================================================
+                    TongDonHangDangGiao =
+                        await _context.DonHangs
+                            .AsNoTracking()
+                            .CountAsync(donHang =>
+                                donHang.TrangThai ==
+                                TrangThaiDangGiao),
 
-                TongDonHang =
-                    await truyVanDonHang
-                        .CountAsync(),
+                    TongDonHangHoanThanh =
+                        await _context.DonHangs
+                            .AsNoTracking()
+                            .CountAsync(donHang =>
+                                donHang.TrangThai ==
+                                TrangThaiHoanThanh),
 
-                TongDonHangChoXacNhan =
-                    await truyVanDonHang
-                        .CountAsync(dh =>
-                            dh.TrangThai == "Chờ xác nhận"),
+                    TongDonHangDaHuy =
+                        await _context.DonHangs
+                            .AsNoTracking()
+                            .CountAsync(donHang =>
+                                donHang.TrangThai ==
+                                TrangThaiDaHuy),
 
-                TongDonHangDaXacNhan =
-                    await truyVanDonHang
-                        .CountAsync(dh =>
-                            dh.TrangThai == "Đã xác nhận"),
+                    DoanhThuDonHoanThanh =
+                        await _context.DonHangs
+                            .AsNoTracking()
+                            .Where(donHang =>
+                                donHang.TrangThai ==
+                                TrangThaiHoanThanh)
+                            .SumAsync(donHang =>
+                                (decimal?)donHang.TongTien)
+                        ?? 0m,
 
-                TongDonHangDangGiao =
-                    await truyVanDonHang
-                        .CountAsync(dh =>
-                            dh.TrangThai == "Đang giao"),
+                    // Liên hệ
+                    TongLienHeChuaXuLy =
+                        await _context.LienHes
+                            .AsNoTracking()
+                            .CountAsync(lienHe =>
+                                lienHe.TrangThai ==
+                                TrangThaiLienHeChuaXuLy),
 
-                TongDonHangHoanThanh =
-                    await truyVanDonHang
-                        .CountAsync(dh =>
-                            dh.TrangThai == "Hoàn thành"),
+                    // Năm đơn hàng mới nhất
+                    DonHangMoiNhat =
+                        await _context.DonHangs
+                            .AsNoTracking()
+                            .OrderByDescending(donHang =>
+                                donHang.NgayDat)
+                            .ThenByDescending(donHang =>
+                                donHang.DonHangID)
+                            .Take(5)
+                            .ToListAsync(),
 
-                TongDonHangDaHuy =
-                    await truyVanDonHang
-                        .CountAsync(dh =>
-                            dh.TrangThai == "Đã hủy"),
-
-                // =================================================
-                // DOANH THU
-                // Chỉ tính đơn hàng đã hoàn thành.
-                // =================================================
-
-                DoanhThuDonHoanThanh =
-                    await truyVanDonHang
-                        .Where(dh =>
-                            dh.TrangThai == "Hoàn thành")
-                        .SumAsync(dh =>
-                            (decimal?)dh.TongTien)
-                    ?? 0m,
-
-                // =================================================
-                // 5 ĐƠN HÀNG MỚI NHẤT
-                // =================================================
-
-                DonHangMoiNhat =
-                    await truyVanDonHang
-                        .OrderByDescending(dh =>
-                            dh.NgayDat)
-                        .ThenByDescending(dh =>
-                            dh.DonHangID)
-                        .Take(5)
-                        .ToListAsync(),
-
-                // =================================================
-                // SẢN PHẨM SẮP HẾT HÀNG
-                // Đang bán và còn từ 1 đến 5 sản phẩm.
-                // =================================================
-
-                SanPhamSapHetHang =
-                    await truyVanSanPham
-                        .Where(sp =>
-                            sp.TrangThai &&
-                            sp.SoLuongTon > 0 &&
-                            sp.SoLuongTon <= 5)
-                        .OrderBy(sp =>
-                            sp.SoLuongTon)
-                        .ThenBy(sp =>
-                            sp.TenSanPham)
-                        .Take(5)
-                        .ToListAsync()
-            };
+                    // Sản phẩm đang bán còn từ 1 đến 10 sản phẩm
+                    SanPhamSapHetHang =
+                        await _context.SanPhams
+                            .AsNoTracking()
+                            .Where(sanPham =>
+                                sanPham.TrangThai &&
+                                sanPham.SoLuongTon > 0 &&
+                                sanPham.SoLuongTon <= 10)
+                            .OrderBy(sanPham =>
+                                sanPham.SoLuongTon)
+                            .ThenBy(sanPham =>
+                                sanPham.ThuTuHienThi)
+                            .ThenBy(sanPham =>
+                                sanPham.SanPhamID)
+                            .Take(8)
+                            .ToListAsync()
+                };
 
             return View(model);
         }

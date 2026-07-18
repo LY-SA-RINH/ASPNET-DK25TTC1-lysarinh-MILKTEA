@@ -1,11 +1,8 @@
-﻿namespace MilkTea.Web.Models
+namespace MilkTea.Web.Models
 {
     public class TongQuanQuanTriViewModel
     {
-        // =====================================================
-        // THỐNG KÊ SẢN PHẨM
-        // =====================================================
-
+        // Thống kê sản phẩm
         public int TongSanPham { get; set; }
 
         public int TongSanPhamDangBan { get; set; }
@@ -14,10 +11,7 @@
 
         public int TongSanPhamHetHang { get; set; }
 
-        // =====================================================
-        // THỐNG KÊ ĐƠN HÀNG
-        // =====================================================
-
+        // Thống kê đơn hàng
         public int TongDonHang { get; set; }
 
         public int TongDonHangChoXacNhan { get; set; }
@@ -30,21 +24,23 @@
 
         public int TongDonHangDaHuy { get; set; }
 
-        // =====================================================
-        // DOANH THU
-        // Chỉ tính những đơn đã hoàn thành.
-        // =====================================================
-
+        // Doanh thu chỉ tính đơn đã hoàn thành
         public decimal DoanhThuDonHoanThanh { get; set; }
 
-        // =====================================================
-        // DANH SÁCH HIỂN THỊ TRÊN TRANG TỔNG QUAN
-        // =====================================================
+        // Liên hệ khách hàng đang chờ xử lý
+        public int TongLienHeChuaXuLy { get; set; }
 
-        public List<DonHang> DonHangMoiNhat { get; set; }
-            = new List<DonHang>();
+        // Dữ liệu hiển thị nhanh trên Tổng quan
+        public List<DonHang> DonHangMoiNhat
+        {
+            get;
+            set;
+        } = new List<DonHang>();
 
-        public List<SanPham> SanPhamSapHetHang { get; set; }
-            = new List<SanPham>();
+        public List<SanPham> SanPhamSapHetHang
+        {
+            get;
+            set;
+        } = new List<SanPham>();
     }
 }
